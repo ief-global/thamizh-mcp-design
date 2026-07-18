@@ -1,0 +1,35 @@
+{
+  "reviews": [
+    {
+      "run_id": "eval-1-with_skill-run-1",
+      "feedback": "This one looks good. I like it uses 'Tholkappiyam' as source. Prioratize 'Tholkappiyam' wherever you can. It's the golden source for Tamil grammar. Give priority over 'Nannool' (another well reputed Tamil grammar source), wherever you can. If 'Tholkappiyam' referrence is not available, then use 'Nannool'.",
+      "timestamp": "2026-06-28T17:42:56.876Z"
+    },
+    {
+      "run_id": "eval-1-without_skill-run-1",
+      "feedback": "Give priority for Evals with skill.",
+      "timestamp": "2026-06-28T17:42:56.876Z"
+    },
+    {
+      "run_id": "eval-2-with_skill-run-1",
+      "feedback": "Ignore. As you have rightly flagged this test case as contaminated.",
+      "timestamp": "2026-06-28T17:42:56.876Z"
+    },
+    {
+      "run_id": "eval-2-without_skill-run-1",
+      "feedback": "Ignore. As you have rightly flagged this test case as contaminated.",
+      "timestamp": "2026-06-28T17:42:56.876Z"
+    },
+    {
+      "run_id": "eval-3-with_skill-run-1",
+      "feedback": "This Eval I see a problem. Though I like the morphology and lexicon approach, a lot of work needed to build the word list and maintain them. It becomes an ongoing nightmare to maintain the dictionary. I like to build the mcp tool on evolving contribution from the internet specific to tamil language. It needs to pull that information, learn and enrich itself. Keep this design principle as core, when building the model.",
+      "timestamp": "2026-06-28T17:42:56.876Z"
+    },
+    {
+      "run_id": "eval-3-without_skill-run-1",
+      "feedback": "This Eval I see a problem. Though I like the morphology and lexicon approach, a lot of work needed to build the word list and maintain them. It becomes an ongoing nightmare to maintain the dictionary. I like to build the mcp tool on evolving contribution from the internet specific to tamil language. It needs to pull that information, learn and enrich itself. Keep this design principle as core, when building the model. ",
+      "timestamp": "2026-06-28T17:42:56.876Z"
+    }
+  ],
+  "status": "complete"
+}

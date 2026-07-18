@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "Names ThamizhiMorph as a grounding source",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Maps fields to specific authentic sources (analyser + lexicon + classical grammar)",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Uses Tholkappiyam's native/borrowed word classes",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Recommends a concrete stack (Python / FastMCP)",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Has sign-off-ready structure (scope + eval/test plan)",
+      "passed": true,
+      "evidence": "all patterns matched"
+    }
+  ],
+  "summary": {
+    "pass_rate": 1.0,
+    "passed": 5,
+    "failed": 0,
+    "total": 5
+  }
+}

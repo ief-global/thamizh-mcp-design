@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>Eval Review: <span id="skill-name"></span></h1>
+        <div class="instructions">Review each output and leave feedback below. Navigate with arrow keys or buttons. When done, copy feedback and paste into Claude Code.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">Outputs</button>
+      <button class="view-tab" onclick="switchView('benchmark')">Benchmark</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">Prompt <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">Output</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">No output files found</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            Previous Output
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            Formal Grades
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">Your Feedback</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="What do you think of this output? Any issues, suggestions, or things that look great?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">Previous feedback</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">Submit All Reviews</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">No benchmark data available. Run a benchmark to see quantitative results here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>Review Complete</h2>
+      <p>Your feedback has been saved. Go back to your Claude Code session and tell Claude you're done reviewing.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "thamizh-mcp-builder", "runs": [{"id": "eval-1-with_skill-run-1", "prompt": "Start the THAMIZH MCP project's planning phase and produce a sign-off-ready blueprint covering origin, root+meaning, formation, grammar.", "eval_id": 1, "outputs": [{"name": "blueprint.md", "type": "text", "content": "# THAMIZH MCP \u2014 Project Blueprint\n\n> Phase 0 deliverable. This is the document to sign off on **before any code is written**. It locks scope,\n> the canonical output contract, the grounding sources, the tool surface, and the stack. Where the brief left\n> a choice open, I made a reasonable call and stated it under **Decision** \u2014 change any of these and the rest\n> of the plan adapts.\n>\n> **The one rule behind everything here:** every claim the server makes traces back to a real Tamil\n> linguistic authority \u2014 an analyser, a lexicon, or a classical grammar rule \u2014 never to the model's own\n> guess. A confident-but-unsourced Tamil grammar answer is the exact failure this project exists to remove.\n\n---\n\n## 0. What you actually need to begin (the \"start checklist\")\n\nBefore Phase 1 (locking sources) you need five things settled. All five are decided in this blueprint:\n\n1. **A locked scope** \u2014 what the v1 answers and, just as importantly, what it does not. \u2192 Section 1.\n2. **A frozen output contract** \u2014 the shape of one word analysis, so tools/sources/evals all serve the same\n   object. \u2192 Section 2, backed by `assets/word_analysis_schema.json`.\n3. **A source-to-field map** \u2014 every output field tied to at least one authentic source, with how you reach\n   it and what happens when it has no entry. \u2192 Section 3.\n4. **A tool surface** \u2014 the MCP tools and their boundaries. \u2192 Section 4.\n5. **A stack decision** \u2014 language + transport, with the reasoning. \u2192 Section 5.\n\nConcrete prerequisites to have in hand before Phase 1 coding (not blockers for sign-off, but the first\nshopping list):\n\n- A machine that can run **`foma` + `flookup`** (the ThamizhiMorph FST engine) and **Python 3.10+**.\n- The **ThamizhiMorph** repo (`sarves/thamizhi-morph`, Apache-2.0) cloned and its FST models built locally.\n- **`open-tamil`** installed (pip) for normalization and grapheme splitting.\n- A decision on **lexicon access** (Madras Tamil Lexicon has no official API) \u2014 see Section 8, risk #1.\n- Sign-off on this blueprint.\n\n---\n\n## 1. Objective & scope\n\n- **One-line objective:** Given a single Tamil word, return a grounded, authentic analysis of its origin,\n  root + meaning, formation, and grammar \u2014 every field attributable to a real Tamil source.\n\n- **In scope (v1):** **single-word analysis** producing four things the user asked for:\n  1. **Origin** \u2014 native vs borrowed, expressed in Tholkappiyam's four-way frame\n     (\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd / \u0ba4\u0bbf\u0bb0\u0bbf\u0b9a\u0bca\u0bb2\u0bcd / \u0ba4\u0bbf\u0b9a\u0bc8\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd / \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd), plus modern loanword languages outside that scheme.\n  2. **Root + meaning** \u2014 the lemma (\u0bb5\u0bc7\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd) and its dictionary gloss.\n  3. **Formation** \u2014 how the surface word is built from its parts (\u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bbf\u0bb2\u0b95\u0bcd\u0b95\u0ba3\u0bae\u0bcd, \u0baa\u0bc1\u0ba3\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bbf / sandhi).\n  4. **Grammar** \u2014 the word class and grammatical features (\u0b9a\u0bca\u0bb2\u0bcd \u0bb5\u0b95\u0bc8, \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8, tense, PNG).\n\n- **Borrowed source languages the v1 will detect and label:**\n  - **Sanskrit / \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd** \u2014 the classical case, with adaptation type \u0ba4\u0bb1\u0bcd\u0b9a\u0bae\u0bae\u0bcd (tatsama) vs \u0ba4\u0bb1\u0bcd\u0baa\u0bb5\u0bae\u0bcd (tadbhava).\n  - **English** \u2014 the dominant modern loanword source; high practical value.\n  - **Other Indo-Aryan (Hindi/Urdu), Perso-Arabic, Telugu/Dravidian-regional** \u2014 **detected and labelled when\n    a source covers them, but not guaranteed.** They fall under the generic `loanword` class with\n    `borrowed_from` set to the source language.\n  - **Decision:** v1 commits to Sanskrit and English as first-class, everything else best-effort. Reason:\n    those two carry the overwhelming majority of real queries and have the best dataset coverage; over-promising\n    on Perso-Arabic/Telugu etymology would force unsourced guesses, which violates the core rule.\n\n- **Out of scope (v1) \u2014 stated deliberately so the boundary is clean:**\n  - **Phrase / sentence parsing.** Input is one word. *Reason:* the four concerns are word-level; sentence\n    parsing multiplies ambiguity and pulls in syntax (\u0ba4\u0bca\u0b9f\u0bb0\u0bbf\u0baf\u0bb2\u0bcd), a different problem. Context-aware POS via\n    ThamizhiPOSt is a Phase-2+ extension, not v1.\n  - **Form generation** (producing inflected forms from a lemma). ThamizhiMorph *can* generate, and it's\n    valuable for spell-check / data augmentation later \u2014 but v1 is an **analyser**, not a generator.\n  - **Spell-check / correction**, **transliteration as a primary feature**, and **a UI**. All later.\n\n- **Primary users:** Tamil speakers, learners, and teachers who want grounded, authentic answers about a\n  word \u2014 and an LLM agent that should cite a Tamil authority instead of improvising.\n\n- **Why single-word v1 is the right call (defending it):** the value proposition is *depth + provenance on\n  one word*, not breadth. A narrow, fully-grounded analyser is shippable, testable against hand-verified\n  fixtures, and demonstrates the core differentiator (authenticity over fluency) before any scope creep.\n\n---\n\n## 2. Canonical output \u2014 the word analysis object\n\n- **Contract:** `assets/word_analysis_schema.json` (`ThamizhWordAnalysis`, JSON Schema draft-07). Frozen for\n  v1. Any change is logged in this section with a reason and date.\n\n- **Shape, in one breath:** a top-level object with `word`, `normalized`, then the four concern blocks\n  `origin`, `lemma`/`all_analyses`/`pos`, `meaning`, `formation`, `grammar`, plus a `gaps` array and a\n  top-level `sources` array. Every concern block carries its own `sources`.\n\n- **Non-negotiable contract properties (these encode the authenticity rules):**\n  - **Provenance on every claim.** Each filled field carries a `sources` entry of `{name, ref, retrieved}`.\n    The agent must be able to say \"root per ThamizhiMorph; meaning per Madras Tamil Lexicon; origin per\n    Tholkappiyam's \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd rule.\"\n  - **Explicit gaps, never fabrication.** If no source covers a field, it goes in `gaps` as\n    `{field, note}` (e.g. \"no lexicon entry found\") \u2014 the model does not fill it.\n  - **All analyses, not one.** `all_analyses` holds every valid morphological reading when the surface form\n    is ambiguous; `origin.alternatives` holds competing origin claims when authorities disagree. The server\n    does not silently disambiguate.\n  - **Authentic vocabulary.** Enums use the real Tamil grammatical terms (\u0baa\u0b95\u0bc1\u0ba4\u0bbf, \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf, \u0b87\u0b9f\u0bc8\u0ba8\u0bbf\u0bb2\u0bc8, \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8,\n    \u0b9a\u0ba8\u0bcd\u0ba4\u0bbf, \u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd; the eight \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8; the four origin classes) \u2014 that is what makes output authentic rather\n    than a plausible paraphrase.\n\n- **Worked target outputs** (also the eval fixtures \u2014 see Section 7): \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd, \u0bb5\u0ba8\u0bcd\u0ba4\u0bbe\u0ba9\u0bcd, \u0baa\u0bc1\u0ba4\u0bcd\u0ba4\u0b95\u0bae\u0bcd,\n  \u0b95\u0bae\u0bcd\u0baa\u0bcd\u0baf\u0bc2\u0b9f\u0bcd\u0b9f\u0bb0\u0bcd. Their expected `formation`/`grammar` are spelled out in `references/tamil-grammar.md` \u00a76 and\n  carried into Section 7 below.\n\n---\n\n## 3. Grounding sources (per output field)\n\nEach output field is mapped to a primary authentic source and a cross-check, with access, licence, and the\n**failure mode** \u2014 what the tool returns when the source has no entry. Rule of thumb from the catalog: a\nfield with no source here is a field the server cannot honestly fill yet.\n\n| Field | Primary source | Cross-check | Access | Licence | Failure mode |\n|---|---|---|---|---|---|\n| `normalized` | open-tamil (`get_letters`) / Nisaba | \u2014 | local pip lib / native | MIT/GPL (verify in repo) | Normalization is mandatory and deterministic; if input is malformed Unicode, return error before any lookup (bad normalization corrupts everything downstream). |\n| `origin.class` (\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd/\u2026/\u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd/loanword) | Thamizhi Word Validator + loanword/etymology data | Madras Lexicon etymology notes; Tholkappiyam rule | local lib + datasets | Validator: see `sarves/thamizhi-validator` repo | `origin.class = \"unknown\"`, record what was checked in `evidence`; do **not** default to native. |\n| `origin.borrowed_from` | loanword datasets (Kaggle \"tamil-loan-words\", `narVidhai/Indic-To-Pure-Tamil`) | Indo-Aryan loanword scholarship (cite as contestable) | downloadable datasets | per-dataset (verify) | `borrowed_from = null`; if class is `loanword`/`\u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd` but language unknown, say so in `evidence`. |\n| `lemma` / root | **ThamizhiMorph** (foma / `flookup`) | open-tamil stemmer | local FST binary + models | **Apache-2.0** | If FST returns no analysis: report gap; fall back to open-tamil stemmer and label the lemma as low-confidence with that provenance. |\n| `all_analyses` / `pos` | ThamizhiMorph (keep **all** analyses) + ThamizhiPOSt for context | UD Tamil treebank | local | Apache-2.0 | Multiple analyses \u2192 return all; zero analyses \u2192 `pos = \"unknown\"`, gap recorded. |\n| `meaning` | **Madras University Tamil Lexicon** (DSAL, U. Chicago) | AU-KBC Tamil WordNet; Cologne OTL | web interface / offline copy (no official REST API) | scholarly, check redistribution terms | `meaning.senses = []` + gap \"no lexicon entry\"; never synthesize a definition. |\n| `formation.components` | ThamizhiMorph FST tags \u2192 **Nann\u016bl \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1** decoder | \u2014 | local | Apache-2.0 (engine) + n/a (rules) | If word is `\u0baa\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0ba4\u0bae\u0bcd` (unanalyzable) say so; if borrowing, flag that decomposition belongs to the source language, not Tamil. |\n| `formation.sandhi` (\u0baa\u0bc1\u0ba3\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bbf) | ThamizhiMorph (it handles Sandhi) decoded into \u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd types | Nann\u016bl rules | local | Apache-2.0 | Empty `sandhi` array when no juncture effect; never invent one. |\n| `grammar` (rule explanation, case, tense, PNG) | **Tholkappiyam (\u0b9a\u0bca\u0bb2\u0bcd\u0bb2\u0ba4\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd) / Nann\u0bc2\u0bb2\u0bcd** rules, encoded; case/POS tags from ThamizhiMorph | UD treebank | encoded in code | n/a (classical authority) | Report which feature couldn't be determined; the \u0b87\u0bb2\u0bcd case ambiguity (5th vs 7th \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8) is returned as **both** readings, not resolved. |\n\n**Phase-1 v1 grounding stack, summarized by concern (the recommended minimum to integrate first):**\n\n- **Origin:** Thamizhi Validator + a loanword/etymology dataset, cross-checked against lexicon etymology\n  notes; classify into Tholkappiyam's four classes.\n- **Root + meaning:** ThamizhiMorph (lemma) + Madras Tamil Lexicon (gloss).\n- **Formation:** ThamizhiMorph FST analysis (sandhi-aware) decoded into the six \u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd.\n- **Grammar:** ThamizhiMorph POS + case tag, explained through the classical rules.\n\n**Reproducibility:** every source is **pinned to a version / commit / data-refresh date** and recorded in\neach `sources[].retrieved`. Reproducibility is part of authenticity \u2014 prefer the locally-runnable, pinnable\noption over a live web call wherever both exist.\n\n---\n\n## 4. Tool surface\n\nOne focused tool per concern (so an agent can compose), plus one workflow tool that returns the whole object.\nAll tools are **read-only**: `readOnlyHint: true`, `openWorldHint: true` (results depend on external\nlinguistic data), `destructiveHint: false`. Every tool reports provenance and reports gaps honestly.\n\n**v1 \u2014 build these:**\n\n- [x] **`analyze_word`** *(workflow / main entry point)* \u2014 `{ word, include? }` \u2192 the full\n  `ThamizhWordAnalysis` object. Composes the focused tools and merges provenance; returns per-section gaps\n  rather than failing whole if one source misses. *This matches the dominant agent intent (\"tell me\n  everything about this word\") in one call.*\n- [x] **`classify_origin`** \u2014 `{ word }` \u2192 `{ class, is_native, borrowed_from, adaptation, evidence,\n  confidence, alternatives, sources }`. Returns competing claims in `alternatives` when authorities disagree.\n- [x] **`get_root`** \u2014 `{ word }` \u2192 `{ lemma, all_analyses[], sources }`. Keeps **all** analyses when\n  ambiguous (ThamizhiMorph primary; open-tamil stemmer fallback).\n- [x] **`get_meaning`** \u2014 `{ word, lang? }` \u2192 `{ senses[{gloss_ta, gloss_en, pos, citation}], sources }`\n  (Madras Lexicon primary; AU-KBC WordNet / Cologne OTL cross-check).\n- [x] **`explain_formation`** \u2014 `{ word }` \u2192 `{ word_type, components[], sandhi[], sources }` (FST tags\n  decoded into Nann\u0bc2\u0bb2\u0bcd \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd).\n- [x] **`explain_grammar`** \u2014 `{ word }` \u2192 `{ word_class, case?, tense?, person_number_gender?, notes,\n  sources }`.\n\n**Optional / later (out of v1 scope, listed so the surface is clear):**\n\n- [ ] `validate_pure_tamil` \u2014 `{ word }` \u2192 `{ is_pure_tamil, reason, source }` (Thamizhi Validator). Cheap;\n  may pull into v1 if origin classification needs it as a sub-call.\n- [ ] `generate_forms` \u2014 `{ lemma, features }` \u2192 surface forms (ThamizhiMorph generator) for\n  spell-check / data augmentation.\n- [ ] `transliterate` \u2014 `{ text, scheme }` for romanized I/O and English-loanword matching.\n\n**Shared conventions (carried into every tool description and the agent system prompt):**\n\n- Every analysis carries a `sources` array; every claim is attributable.\n- Source miss \u2192 `{ status: \"no_entry\", source, note }`, an honest gap \u2014 never a fabricated value.\n- Ambiguous analysis \u2192 return all in `alternatives` / `all_analyses`; do not silently disambiguate.\n\n---\n\n## 5. Stack decision\n\n- **Recommendation: Python core, FastMCP, stdio transport for v1.**\n\n- **Why Python:** the entire Tamil-NLP ecosystem this project must ground against is Python or native-binary.\n  - **ThamizhiMorph** is a `foma` finite-state transducer queried via `flookup` (callable from any language,\n    but its driver, ThamizhiPOSt, and ThamizhiLIP are Python).\n  - **open-tamil**, **ThamizhiLIP**, and most analysers/validators ship as Python packages.\n  - So the analysis logic *wants* to live in Python \u2014 putting the MCP server there too keeps it to one\n    language with direct library calls.\n\n- **The tradeoff (your call to make):**\n  1. **Python MCP server (FastMCP)** \u2014 simplest; one language, direct library calls. **Recommended for v1.**\n  2. **TypeScript MCP SDK calling a Python analysis service** \u2014 choose only if there's a strong reason to\n     prefer the TS SDK (a specific deployment target). It adds an inter-process boundary for **no linguistic\n     benefit** at this stage.\n\n- **Decision (stated, change if you disagree):** **Python + FastMCP, stdio transport.** Stdio because v1 is\n  a local tool an agent launches as a subprocess; switch to streamable HTTP only when you need a remote/hosted\n  deployment. The build mechanics (SDK setup, tool registration, schemas, Inspector, eval harness) come from\n  the **`mcp-builder`** skill in Phase 3 \u2014 this blueprint stays on the domain layer.\n\n---\n\n## 6. Architecture sketch\n\n```\n                \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 MCP tool layer (FastMCP) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n   Agent \u2500\u2500\u25b6    \u2502 analyze_word \u00b7 classify_origin \u00b7 get_root \u00b7 get_meaning \u00b7 explain_formation \u00b7     \u2502\n                \u2502 explain_grammar    (read-only; provenance + honest-gap contract on every tool)     \u2502\n                \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                                                     \u2502\n                       \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                       \u2502  Analysis core (one well-tested module \u2014 NOT in prompts)   \u2502\n                       \u2502  \u2022 normalizer (open-tamil get_letters / Nisaba)            \u2502\n                       \u2502  \u2022 FST-tag \u2192 \u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1 decoder (Nann\u0bc2\u0bb2\u0bcd)                \u2502\n                       \u2502  \u2022 \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 / case-tag mapper, PNG + tense decoder          \u2502\n                       \u2502  \u2022 origin classifier (4-way + loanword) w/ alternatives    \u2502\n                       \u2502  \u2022 provenance + gap assembler \u2192 ThamizhWordAnalysis object \u2502\n                       \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                               \u2502           \u2502           \u2502           \u2502\n                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                    \u2502 ThamizhiMorph\u2502 \u2502 Madras Lex \u2502 \u2502 Validator \u2502 \u2502 loanword/etym    \u2502\n                    \u2502 (foma/flookup)\u2502 \u2502 (offline)  \u2502 \u2502           \u2502 \u2502 datasets         \u2502\n                    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                       each wrapped in a small ADAPTER with a uniform interface:\n                       input = normalized Tamil word; output = fields it can fill + its own provenance\n```\n\n- **Adapters:** one per source, uniform interface (in: a normalized Tamil word; out: the fields it can fill +\n  its provenance). Adding/swapping a source is a contained change.\n- **Analysis core lives in code, not prompts.** The FST-tag\u2192\u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1 decoder and the case/tense/PNG mappers\n  are the project's linguistic IP; re-deriving them on every run is wasted work and a correctness risk, so\n  they are one well-tested module.\n- **Normalization runs first, always.** Tamil letters are multi-codepoint; bad normalization corrupts every\n  downstream lookup.\n- **Version pinning** at the adapter boundary feeds `sources[].retrieved`.\n\n---\n\n## 7. Evaluation plan (Phase 4)\n\nGoal: prove an LLM *using the server* gives authentic, sourced answers \u2014 and an honest gap where no source\nexists. Fixtures are chosen to exercise each concern; expected analyses are hand-verified against the sources\nbefore locking (per `references/tamil-grammar.md` \u00a76).\n\n| Fixture | Why it's in the set | Hand-verified expected (origin \u00b7 root \u00b7 formation \u00b7 grammar) |\n|---|---|---|\n| **\u0bae\u0bb0\u0bae\u0bcd** | clearly native, simple | origin \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd (native) \u00b7 root \u0bae\u0bb0\u0bae\u0bcd \u00b7 `\u0baa\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0ba4\u0bae\u0bcd` (simple) \u00b7 \u0baa\u0bc6\u0baf\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd, \u0b8e\u0bb4\u0bc1\u0bb5\u0bbe\u0baf\u0bcd/nominative |\n| **\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd** | inflected, needs sandhi-aware split + case ambiguity | origin \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd \u00b7 root \u0bae\u0bb0\u0bae\u0bcd \u00b7 `\u0baa\u0b95\u0bc1\u0baa\u0ba4\u0bae\u0bcd`: \u0baa\u0b95\u0bc1\u0ba4\u0bbf \u0bae\u0bb0\u0bae\u0bcd + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 \u0b85\u0ba4\u0bcd\u0ba4\u0bc1 (\u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd: \u0bae\u0bcd\u2192 change) + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf \u0b87\u0bb2\u0bcd \u00b7 grammar **\u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 (locative/\u0b87\u0b9f\u0baa\u0bcd\u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bcd), \u0b92\u0bb0\u0bc1\u0bae\u0bc8 \u2014 also readable as \u0b90\u0ba8\u0bcd\u0ba4\u0bbe\u0bae\u0bcd (ablative); return both** |\n| **\u0baa\u0bc1\u0ba4\u0bcd\u0ba4\u0b95\u0bae\u0bcd** | Sanskrit \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd | origin **\u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd**, Sanskrit *pustaka*, adaptation \u0ba4\u0bb1\u0bcd\u0baa\u0bb5\u0bae\u0bcd \u00b7 meaning \"book\" (cite lexicon) \u00b7 formation: treat as `\u0baa\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0ba4\u0bae\u0bcd` in Tamil; flag decomposition belongs to source language \u00b7 \u0baa\u0bc6\u0baf\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd |\n| **\u0b95\u0bae\u0bcd\u0baa\u0bcd\u0baf\u0bc2\u0b9f\u0bcd\u0b9f\u0bb0\u0bcd** | modern English loanword, outside classical scheme | origin **loanword, source English**; say it's outside the four-way scheme \u00b7 meaning \"computer\" \u00b7 formation: not analyzable by Tamil morphology (transliterated borrowing) \u00b7 \u0baa\u0bc6\u0baf\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd |\n| **\u0b86\u0b9a\u0bbf\u0bb0\u0bbf\u0baf\u0bb0\u0bcd** *(disputed-origin pick)* | contested native-vs-\u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd case | return **competing origin claims with evidence** in `origin.alternatives`; do not adjudicate \u2014 this fixture specifically tests \"name uncertainty\" |\n\n- **Pass criterion (per fixture):** the agent's answer **matches the verified analysis AND cites the right\n  source**; where no source covers a field, it returns an honest gap with **no fabrication**. The\n  no-fabrication check is the single most important behaviour to test.\n- **Negative fixture:** at least one nonsense / out-of-vocabulary string to confirm the server returns gaps\n  rather than a fluent invented analysis.\n- **Harness:** use `mcp-builder`'s evaluation guide in Phase 4.\n\n---\n\n## 8. Open questions & risks\n\n1. **Madras Tamil Lexicon has no official REST API.** *Decision for sign-off:* plan for an **offline copy of\n   the digitized data** (pinnable, reproducible, no live-scrape fragility) with a queried web interface as\n   fallback. Confirm redistribution terms before bundling data. \u2014 *needs your go/no-go.*\n2. **Origin is genuinely contested for some words.** The server **reports competing claims and their\n   evidence; it does not adjudicate.** `origin.alternatives` is a first-class field, not an edge case.\n3. **ThamizhiMorph returns multiple analyses** for one surface form. **Keep all of them**; disambiguation is\n   a downstream concern, not the server's job.\n4. **Licence verification** still owed for open-tamil (MIT/GPL \u2014 check repo) and the loanword datasets\n   (per-dataset) before bundling anything. Apache-2.0 for ThamizhiMorph is confirmed.\n5. **Modern non-English loanwords** (Perso-Arabic, Hindi/Urdu, Telugu) are best-effort in v1 \u2014 flag the\n   limit in tool descriptions so the agent doesn't over-claim.\n6. **`foma`/`flookup` runtime dependency** is a native binary \u2014 confirm it builds/runs on the deployment\n   target early in Phase 1 (it's the linchpin of root, formation, and grammar).\n\n---\n\n## 9. Milestones\n\n1. **Blueprint signed off** (Phase 0 \u2014 *this document*) \u2192\n2. **Sources reachable** (Phase 1): ThamizhiMorph FST runs locally; lexicon access decided; loanword data +\n   validator integrated; each source pinned with a recorded failure mode \u2192\n3. **Tools designed** (Phase 2): finalized tool list + schemas, adapted to the sources actually locked \u2192\n4. **Server runs locally** (Phase 3): FastMCP server, adapters + analysis core, verified in MCP Inspector \u2192\n5. **Eval set passes** (Phase 4): the five fixtures + negative case pass on match-and-cite, with honest gaps\n   and no fabrication.\n\n---\n\n## 10. Sign-off\n\n| Item | Decision in this blueprint | Approve? |\n|---|---|---|\n| Scope = single-word, 4 concerns, Sanskrit+English first-class | Section 1 | \u2610 |\n| Output contract frozen (`word_analysis_schema.json`) | Section 2 | \u2610 |\n| Source-to-field map + failure modes | Section 3 | \u2610 |\n| Tool surface (6 v1 tools, optional 3 later) | Section 4 | \u2610 |\n| Stack = Python + FastMCP, stdio | Section 5 | \u2610 |\n| Lexicon access = offline copy (pending terms check) | Risk #1 | \u2610 |\n\n> Approve the rows above (or redline any) and Phase 1 begins: making the grounding sources concretely\n> reachable. No code is written before this sign-off.\n"}], "grading": {"eval_id": 1, "config": "with_skill", "expectations": [{"text": "Names ThamizhiMorph as a grounding source", "passed": true, "evidence": "all patterns matched"}, {"text": "Maps fields to specific authentic sources (analyser + lexicon + classical grammar)", "passed": true, "evidence": "all patterns matched"}, {"text": "Uses Tholkappiyam's native/borrowed word classes", "passed": true, "evidence": "all patterns matched"}, {"text": "Recommends a concrete stack (Python / FastMCP)", "passed": true, "evidence": "all patterns matched"}, {"text": "Has sign-off-ready structure (scope + eval/test plan)", "passed": true, "evidence": "all patterns matched"}], "summary": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5}}}, {"id": "eval-1-without_skill-run-1", "prompt": "Start the THAMIZH MCP project's planning phase and produce a sign-off-ready blueprint covering origin, root+meaning, formation, grammar.", "eval_id": 1, "outputs": [{"name": "blueprint.md", "type": "text", "content": "# THAMIZH MCP Server \u2014 Planning Blueprint (v1, for sign-off)\n\n**Status:** Draft for approval. No code is written until you sign off on Section 11.\n**Prepared:** 2026-06-28\n**Owner:** You. **Scope of this doc:** the planning phase only \u2014 what you need, what we're building, the contract, and the boundaries.\n\n---\n\n## 0. One-line description\n\nTHAMIZH is a Model Context Protocol (MCP) server that exposes a single tool: give it **one Tamil word**, and it returns a structured linguistic analysis \u2014 whether the word is **native (\u0ba4\u0ba9\u0bbf\u0ba4\u0bcd\u0ba4\u0bae\u0bbf\u0bb4\u0bcd) or borrowed (\u0b95\u0b9f\u0ba9\u0bcd\u0b9a\u0bca\u0bb2\u0bcd)**, its **root and meaning**, its **morphology (how the word is built)**, and the **grammar** that governs it.\n\n---\n\n## 1. What \"done\" looks like (the acceptance test)\n\nYou hand the server a word like **`\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd`** and get back, reliably and in a fixed shape:\n\n- **Origin:** native Tamil.\n- **Root:** `\u0bae\u0bb0\u0bae\u0bcd` (maram) = \"tree\".\n- **Formation:** `\u0bae\u0bb0\u0bae\u0bcd` + locative case suffix `\u0b87\u0bb2\u0bcd`, with the euphonic insertion `\u0bae\u0bb0\u0bae\u0bcd \u2192 \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bc1` (the *attu* sandhi for nouns ending in `-\u0bae\u0bcd`).\n- **Meaning:** \"in/on the tree\".\n- **Grammar:** noun, neuter (\u0b85\u0b83\u0bb1\u0bbf\u0ba3\u0bc8), locative case (\u0b87\u0b9f\u0baa\u0bcd\u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bcd / \u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8).\n\nIf that round-trips correctly for a representative set of test words (Section 9), v1 is done.\n\n---\n\n## 2. What you need before any code (the readiness checklist)\n\nThis is the \"what do I actually need to begin\" answer. Tick each item; the project is blocked until the must-haves are green.\n\n### 2.1 Decisions you must make (I've pre-filled defaults \u2014 change or confirm)\n| # | Decision | Default I'm choosing | Why |\n|---|----------|----------------------|-----|\n| D1 | Language/runtime | **Python 3.11+ with FastMCP (the official `mcp` SDK)** | Best Tamil NLP ecosystem (open-tamil, indic-nlp), fastest path, easiest to test. |\n| D2 | Transport | **stdio** for v1 (local). Add streamable-HTTP later if you host it. | stdio is the standard for desktop MCP clients (Claude Desktop, Cursor). Zero network surface. |\n| D3 | Knowledge source strategy | **Hybrid:** a curated local lexicon/rule-base first; LLM reasoning as a fallback/enrichment layer, clearly flagged. | Pure-LLM answers drift and hallucinate etymology. Pure-dictionary can't handle inflected forms. Hybrid is honest and testable. |\n| D4 | Input script | **Tamil script (UTF-8) as primary**; accept ISO 15919 / romanized as a secondary input with auto-transliteration. | Real users type Tamil; romanized is a convenience. |\n| D5 | Scope of \"word\" | **One orthographic word** (may be inflected/compound). Not sentences, not phrases. | Keeps the tool contract sharp; matches your brief. |\n| D6 | Confidence & honesty | Every field carries a **confidence** and a **source** (\"lexicon\" / \"rule\" / \"inferred\"). Unknown \u2192 say \"unknown\", never guess silently. | Etymology is genuinely contested; the tool must not fabricate. |\n| D7 | Etymology granularity | Native vs borrowed, plus **donor language** when borrowed (Sanskrit, English, Persian/Urdu, Portuguese, etc.). | Matches \"native or borrowed\" and adds the obvious next question for free. |\n\n### 2.2 Data / assets you need to gather\n- **A seed lexicon** of Tamil root words with: lemma, gloss (Tamil + English), part of speech, gender/class (\u0b89\u0baf\u0bb0\u0bcd\u0ba4\u0bbf\u0ba3\u0bc8/\u0b85\u0b83\u0bb1\u0bbf\u0ba3\u0bc8), and an origin tag (native / loan + donor). Start with ~500\u20132,000 high-frequency entries; grow over time.\n- **A loanword list** \u2014 Sanskrit-derived (\u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd), English, Persian/Arabic, Portuguese, Dutch \u2014 to power the origin classifier.\n- **Morphological rule tables:** case suffixes (\u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 \u0b89\u0bb0\u0bc1\u0baa\u0bc1), the sandhi/euphonic-insertion rules (\u0b9a\u0ba8\u0bcd\u0ba4\u0bbf: \u0b85\u0ba4\u0bcd\u0ba4\u0bc1, \u0b87\u0ba9\u0bcd, \u0b87\u0bb1\u0bcd\u0bb1\u0bc1 saari), plural `-\u0b95\u0bb3\u0bcd`, tense markers, pronominal/verbal endings.\n- **A transliteration map** (Tamil \u2194 ISO 15919) for romanized input and for output labels.\n- **Licensing note:** confirm the license of any dictionary data you import (e.g., Madras University Tamil Lexicon, University of Madras / DSAL, Wiktionary). Wiktionary (CC BY-SA) and DSAL are the safest starting points. *This is a must-check before shipping.*\n\n### 2.3 Environment / tooling\n- Python 3.11+, a virtual env, and the `mcp` package (FastMCP).\n- `open-tamil` and/or `indic-nlp-library` for tokenization, transliteration, and basic morphology.\n- An MCP client to test against (Claude Desktop or the `mcp` dev inspector).\n- `pytest` + a golden-file test set (Section 9).\n\n### 2.4 Skills/knowledge in the room\n- Tamil grammar literacy (or a reviewer who has it) to validate the rule tables \u2014 this is the single biggest risk to correctness. **Recommend: line up one Tamil-grammar reviewer before building the rule base.**\n\n---\n\n## 3. The tool contract (the heart of the blueprint)\n\n### 3.1 Tool: `analyze_tamil_word`\n\n**Description (for the model that calls it):** \"Analyze a single Tamil word. Returns its origin (native or borrowed), root, meaning, morphological breakdown, and grammatical features.\"\n\n**Input schema**\n```json\n{\n  \"word\": \"string  \u2014 one Tamil word, in Tamil script or romanized (required)\",\n  \"input_script\": \"enum [tamil, romanized, auto]  \u2014 default: auto\",\n  \"include\": \"array \u2014 optional subset of [origin, root, meaning, morphology, grammar]; default: all\"\n}\n```\n\n**Output schema (v1 \u2014 stable contract)**\n```json\n{\n  \"input\": { \"raw\": \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\", \"normalized\": \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\", \"script_detected\": \"tamil\" },\n  \"origin\": {\n    \"classification\": \"native | borrowed | uncertain\",\n    \"donor_language\": \"string|null\",     // e.g. \"Sanskrit\", \"English\"\n    \"evidence\": \"string\",                // why we think so\n    \"confidence\": 0.0\n  },\n  \"root\": {\n    \"lemma\": \"\u0bae\u0bb0\u0bae\u0bcd\",\n    \"transliteration\": \"maram\",\n    \"part_of_speech\": \"noun | verb | adjective | ...\",\n    \"confidence\": 0.0\n  },\n  \"meaning\": {\n    \"gloss_ta\": \"\u0bae\u0bb0\u0bae\u0bcd\",\n    \"gloss_en\": \"tree\",\n    \"inflected_sense\": \"in/on the tree\",\n    \"confidence\": 0.0\n  },\n  \"morphology\": {\n    \"segments\": [\n      { \"form\": \"\u0bae\u0bb0\u0bae\u0bcd\", \"type\": \"root\", \"gloss\": \"tree\" },\n      { \"form\": \"\u0b85\u0ba4\u0bcd\u0ba4\u0bc1\", \"type\": \"euphonic_increment (\u0b9a\u0ba8\u0bcd\u0ba4\u0bbf)\", \"gloss\": \"linking augment\" },\n      { \"form\": \"\u0b87\u0bb2\u0bcd\", \"type\": \"case_suffix (\u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 \u0b89\u0bb0\u0bc1\u0baa\u0bc1)\", \"gloss\": \"locative\" }\n    ],\n    \"process\": \"root + locative case with -att- augment\",\n    \"confidence\": 0.0\n  },\n  \"grammar\": {\n    \"word_class\": \"noun\",\n    \"gender_class\": \"\u0b85\u0b83\u0bb1\u0bbf\u0ba3\u0bc8 (neuter/non-rational)\",\n    \"number\": \"singular\",\n    \"case\": \"locative (\u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 / \u0b87\u0b9f\u0baa\u0bcd\u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bcd)\",\n    \"tense\": null,\n    \"person\": null,\n    \"notes\": \"string\",\n    \"confidence\": 0.0\n  },\n  \"meta\": {\n    \"sources\": [\"lexicon\", \"rule-engine\", \"inferred\"],\n    \"warnings\": [\"...\"],\n    \"schema_version\": \"1.0\"\n  }\n}\n```\n\n### 3.2 Why a single tool (not five)\nYour brief asks five questions about one word. Bundling them into **one call with an optional `include` filter** keeps the calling model's life simple, returns one coherent object, and avoids five round-trips. We can split later if needed \u2014 the `include` field is the escape hatch.\n\n### 3.3 Error & edge behavior (non-negotiable)\n- Empty/multi-word input \u2192 structured error: `\"Provide exactly one Tamil word.\"`\n- Word not in lexicon \u2192 still return morphology + grammar from rules; mark `root`/`meaning` confidence low and `sources: [\"inferred\"]`.\n- Ambiguous word (multiple analyses, e.g. `\u0b86\u0b9f\u0bc1` = \"goat\" / \"dance/play\") \u2192 return the **top analysis plus an `alternatives` array**; never silently pick one and hide the rest.\n- Non-Tamil input \u2192 `origin.classification: \"uncertain\"` with a clear warning, not a crash.\n\n---\n\n## 4. How the analysis actually works (pipeline, conceptual)\n\n```\nword in\n  \u2192 1. Normalize  (Unicode NFC, strip ZWJ/ZWNJ, detect script, transliterate if romanized)\n  \u2192 2. Segment    (split into root + suffixes using morphological rules + lexicon longest-match)\n  \u2192 3. Lemmatize  (recover the dictionary root from the inflected form; undo sandhi)\n  \u2192 4. Lexicon lookup (root \u2192 gloss, POS, gender, origin tag)\n  \u2192 5. Origin classify (native vs loan; if loan, identify donor \u2014 by lexicon tag, then by\n                        phonological cues, e.g. presence of grantha letters \u0b9c \u0bb7 \u0bb8 \u0bb9 \u0b95\u0bcd\u0bb7 \u2192 likely Sanskrit/loan)\n  \u2192 6. Grammar assemble (map suffixes \u2192 case/tense/person/number/gender)\n  \u2192 7. Confidence + sourcing (tag every field; collect warnings)\n  \u2192 structured JSON out\n```\n\nEach stage is independently testable. Stages 2\u20133 (segmentation + sandhi reversal) are the hardest and where most bugs will live.\n\n---\n\n## 5. Linguistic coverage for v1 (scope fence)\n\n**In scope (v1):**\n- Nouns: all 8 vEtRumai cases, singular/plural, the major sandhi augments (\u0b85\u0ba4\u0bcd\u0ba4\u0bc1, \u0b87\u0ba9\u0bcd, etc.), gender/class.\n- Verbs: basic tense (past/present/future), person/number/gender endings, common forms.\n- Origin: native vs borrowed; donor identification for Sanskrit, English, Persian/Arabic, Portuguese.\n- Compounds: split common \u0baa\u0bc1\u0ba3\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bbf (compound) joins where rules allow.\n\n**Out of scope (v1 \u2014 explicitly deferred):**\n- Full poetic/literary (\u0b9a\u0bc6\u0baf\u0bcd\u0baf\u0bc1\u0bb3\u0bcd) morphology and rare classical forms.\n- Sentence-level parsing, multiple words, idioms.\n- Dialectal and spoken-colloquial variation as first-class (note them, don't fully model them).\n- Exhaustive etymological chains (we give the proximate donor, not the full Indo-European tree).\n\nThese are roadmap, not v1.\n\n---\n\n## 6. Architecture & repo layout (proposed)\n\n```\nthamizh-mcp/\n\u251c\u2500\u2500 server.py            # FastMCP app; defines analyze_tamil_word\n\u251c\u2500\u2500 pipeline/\n\u2502   \u251c\u2500\u2500 normalize.py     # script detect, NFC, transliteration\n\u2502   \u251c\u2500\u2500 segment.py       # morphological segmentation\n\u2502   \u251c\u2500\u2500 lemmatize.py     # sandhi reversal \u2192 root\n\u2502   \u251c\u2500\u2500 origin.py        # native/loan classifier\n\u2502   \u251c\u2500\u2500 grammar.py       # suffix \u2192 grammatical features\n\u2502   \u2514\u2500\u2500 confidence.py    # scoring + sourcing\n\u251c\u2500\u2500 data/\n\u2502   \u251c\u2500\u2500 lexicon.json     # roots: lemma, gloss, pos, gender, origin\n\u2502   \u251c\u2500\u2500 loanwords.json   # donor-language tags\n\u2502   \u251c\u2500\u2500 suffixes.json    # case/tense/person tables\n\u2502   \u2514\u2500\u2500 sandhi.json      # euphonic rules\n\u251c\u2500\u2500 tests/\n\u2502   \u251c\u2500\u2500 golden/          # word \u2192 expected JSON\n\u2502   \u2514\u2500\u2500 test_pipeline.py\n\u251c\u2500\u2500 pyproject.toml\n\u2514\u2500\u2500 README.md            # install + MCP client config\n```\n\n---\n\n## 7. Build phases (after sign-off)\n\n| Phase | Deliverable | Exit criterion |\n|-------|-------------|----------------|\n| P0 | Skeleton FastMCP server, `analyze_tamil_word` returns a stub | Tool shows up + callable in an MCP client |\n| P1 | Normalize + transliteration + script detection | Romanized and Tamil input both normalize correctly |\n| P2 | Lexicon lookup + meaning + POS for **uninflected** roots | Root words return correct gloss/POS |\n| P3 | Morphology: segmentation, sandhi reversal, grammar features | Inflected nouns (cases, plural) parse correctly |\n| P4 | Origin classifier (native/borrowed + donor) | Test loanwords classified correctly |\n| P5 | Verbs (tense/person/number) | Common verb forms parse |\n| P6 | Confidence, sourcing, alternatives, errors | Golden test set passes; honest \"unknown\" behavior verified |\n| P7 | Docs, packaging, client config, license sign-off | Installs clean on a fresh machine |\n\nRecommend shipping a usable internal milestone at **end of P4** (nouns + origin + meaning), then iterating.\n\n---\n\n## 8. Risks & how we de-risk\n\n| Risk | Severity | Mitigation |\n|------|----------|------------|\n| **Etymology is contested** \u2014 sources disagree on native vs Sanskrit | High | Cite the source, return confidence, allow \"uncertain\". Never assert as fact what the field disputes. |\n| **Sandhi reversal is hard** \u2014 many forms, irregularities | High | Rule tables + lexicon longest-match + golden tests; accept partial coverage in v1 and flag low confidence. |\n| **Ambiguity** \u2014 one form, many analyses | Medium | `alternatives` array; surface, don't hide. |\n| **Lexicon licensing** | Medium | Confirm license before importing any dictionary; default to CC-licensed sources (Wiktionary/DSAL). |\n| **LLM hallucination** if used for enrichment | Medium | LLM output is clearly tagged `source: \"inferred\"` and lower confidence; never overrides lexicon/rules. |\n| **Unicode pitfalls** \u2014 ZWJ, grantha letters, normalization | Medium | Normalize to NFC early; explicit handling of grantha (\u0b9c \u0bb7 \u0bb8 \u0bb9) as loan signals. |\n| **Scope creep into sentences/poetry** | Low | Section 5 fence is the contract; defer politely. |\n\n---\n\n## 9. Test plan (golden set \u2014 define these before coding)\n\nA small, hand-validated set covering each behavior. Examples:\n\n| Word | Tests |\n|------|-------|\n| `\u0bae\u0bb0\u0bae\u0bcd` (maram) | native, root=self, meaning=tree, noun, neuter, nominative |\n| `\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd` (marattil) | locative case + att- sandhi |\n| `\u0baa\u0bc1\u0ba4\u0bcd\u0ba4\u0b95\u0bae\u0bcd` (puttakam) | **borrowed** (Sanskrit pustaka), meaning=book |\n| `\u0baa\u0bb8\u0bcd` / `\u0baa\u0bc7\u0bb0\u0bc1\u0ba8\u0bcd\u0ba4\u0bc1` | English loan vs native coinage \u2014 origin contrast |\n| `\u0bb5\u0ba8\u0bcd\u0ba4\u0bbe\u0ba9\u0bcd` (vandhaan) | verb, past tense, 3rd person masculine singular |\n| `\u0baa\u0bc2\u0b95\u0bcd\u0b95\u0bb3\u0bcd` (pookkal) | plural `-\u0b95\u0bb3\u0bcd` |\n| `\u0b86\u0b9f\u0bc1` (aadu) | **ambiguity:** goat (noun) vs play/dance (verb) \u2192 alternatives |\n| `xyz` / English junk | graceful \"uncertain\" + warning |\n\nEach row \u2192 an expected JSON file in `tests/golden/`. CI passes only if all match.\n\n---\n\n## 10. Open questions for you (answer at sign-off; I've defaulted them all)\n\n1. **Runtime:** OK with **Python + FastMCP**? (default: yes)\n2. **First lexicon source:** OK to start from **Wiktionary (CC BY-SA) + DSAL**, license confirmed before import? (default: yes)\n3. **LLM enrichment:** allow an LLM fallback for unknown words, clearly flagged as inferred \u2014 or **rules/lexicon only** for v1? (default: allow, flagged)\n4. **Output language of labels:** grammar terms in **both Tamil and English** (e.g. \"locative (\u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8)\")? (default: both)\n5. **First milestone:** ship at **end of P4** (nouns + origin + meaning) as internal v0.5? (default: yes)\n6. **Reviewer:** do you have a Tamil-grammar reviewer to validate rule tables, or should I scope the rules conservatively? (default: scope conservatively until a reviewer is named)\n\n---\n\n## 11. Sign-off\n\nBy approving, you're agreeing to:\n- The **single-tool contract** in Section 3 and its output schema (v1.0).\n- The **scope fence** in Section 5 (one word; nouns+verbs; deferrals listed).\n- The **defaults** in Sections 2.1 and 10 (Python/FastMCP, stdio, hybrid knowledge, honesty-first confidence/sourcing).\n- The **phase plan** in Section 7, shipping an internal milestone at end of P4.\n\n**Approve as-is** \u2192 I scaffold P0 (skeleton server + stub tool) next.\n**Approve with changes** \u2192 tell me which defaults in Section 10 to flip.\n\n---\n\n### Appendix A \u2014 Glossary (so the schema reads cleanly)\n- **\u0ba4\u0ba9\u0bbf\u0ba4\u0bcd\u0ba4\u0bae\u0bbf\u0bb4\u0bcd / native:** word of Tamil origin, no foreign root.\n- **\u0b95\u0b9f\u0ba9\u0bcd\u0b9a\u0bca\u0bb2\u0bcd / borrowed:** loanword; **\u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd** specifically = Sanskrit-derived.\n- **\u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 (vEtRumai):** the case system (8 cases).\n- **\u0b89\u0bb0\u0bc1\u0baa\u0bc1 (urupu):** case/grammatical suffix.\n- **\u0b9a\u0ba8\u0bcd\u0ba4\u0bbf (sandhi) / \u0baa\u0bc1\u0ba3\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bbf:** euphonic changes and augments at morpheme/word boundaries (e.g. `\u0bae\u0bb0\u0bae\u0bcd + \u0b87\u0bb2\u0bcd \u2192 \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd`).\n- **\u0b89\u0baf\u0bb0\u0bcd\u0ba4\u0bbf\u0ba3\u0bc8 / \u0b85\u0b83\u0bb1\u0bbf\u0ba3\u0bc8:** rational (human/divine) vs non-rational (everything else) gender-class \u2014 the backbone of Tamil agreement.\n- **grantha letters (\u0b9c \u0bb7 \u0bb8 \u0bb9 \u0b95\u0bcd\u0bb7 \u0bb6):** characters used mainly to write loan sounds; a useful (not definitive) signal of borrowing.\n"}], "grading": {"eval_id": 1, "config": "without_skill", "expectations": [{"text": "Names ThamizhiMorph as a grounding source", "passed": false, "evidence": "missing: ThamizhiMorph"}, {"text": "Maps fields to specific authentic sources (analyser + lexicon + classical grammar)", "passed": false, "evidence": "missing: ThamizhiMorph, (?i)tholkappiyam|nann"}, {"text": "Uses Tholkappiyam's native/borrowed word classes", "passed": false, "evidence": "missing: \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd"}, {"text": "Recommends a concrete stack (Python / FastMCP)", "passed": true, "evidence": "all patterns matched"}, {"text": "Has sign-off-ready structure (scope + eval/test plan)", "passed": true, "evidence": "all patterns matched"}], "summary": {"pass_rate": 0.4, "passed": 2, "failed": 3, "total": 5}}}, {"id": "eval-2-with_skill-run-1", "prompt": "Walk through how the server analyzes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd \u2014 what each tool returns and which authentic source grounds each part.", "eval_id": 2, "outputs": [{"name": "walkthrough.md", "type": "text", "content": "# Walkthrough: How the THAMIZH MCP server analyzes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\n\n**Word:** \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd (\"in the tree\")\n**Type:** an inflected, sandhi-bearing noun \u2014 exactly the case the server exists to handle, because a plain LLM will happily guess the split and the case without grounding either.\n\nThis walks through one `analyze_word` call, tracing how the server fans it out to five focused tools, what each returns, and **which authentic source grounds each part** of the answer. The whole point of this server over a bare LLM is that every claim below carries provenance \u2014 root per ThamizhiMorph, meaning per Madras Tamil Lexicon, origin per Tholkappiyam's rule \u2014 and gaps are reported, never invented.\n\n---\n\n## Step 0 \u2014 Normalization (before any tool runs)\n\nThe agent calls `analyze_word({ word: \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\" })`. Before any lookup, the input is Unicode-normalized and grapheme-split.\n\n- **What happens:** the raw string is canonicalized so every downstream FST and dictionary lookup sees the same bytes. Tamil letters are multi-codepoint, so naive splitting corrupts lookups.\n- **Grounding source:** open-tamil `get_letters` (correct Tamil grapheme splitting), optionally Google Nisaba for Brahmic normalization.\n- **Output:** `normalized: \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\"` \u2014 clean, ready for lookup.\n\n> Why this matters: bad normalization silently breaks every later step, so it is done first and pinned to a version.\n\n---\n\n## Step 1 \u2014 `classify_origin` \u2192 the ORIGIN answer\n\n**Question answered:** is this a native Tamil word or a borrowing?\n\n- **What the tool returns:**\n  - `class: \"\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd\"` (the native class)\n  - `is_native: true`\n  - `borrowed_from: null`, `adaptation: null`\n  - `evidence:` the base word \u0bae\u0bb0\u0bae\u0bcd passes pure-Tamil validation and appears in the lexicon with no source-language tag.\n  - `confidence:` high\n  - `alternatives: []` (no competing authority claims this as a loan)\n- **Grounding sources:**\n  - **Thamizhi Word Validator** \u2014 confirms \u0bae\u0bb0\u0bae\u0bcd is a well-formed pure Tamil word (a word that *fails* this check would be a borrowing candidate).\n  - **Loanword datasets** (Kaggle English-loanword set, Indic-To-Pure-Tamil) \u2014 \u0bae\u0bb0\u0bae\u0bcd is absent, so it is not flagged as a borrowing.\n  - **Madras Tamil Lexicon etymology notes** \u2014 the entry carries no \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd/Sanskrit source tag.\n  - **Tholkappiyam (\u0b9a\u0bca\u0bb2\u0bcd\u0bb2\u0ba4\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd)** \u2014 supplies the authentic four-way frame (\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd / \u0ba4\u0bbf\u0bb0\u0bbf\u0b9a\u0bca\u0bb2\u0bcd / \u0ba4\u0bbf\u0b9a\u0bc8\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd / \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd) the class name comes from, rather than a bare native/loan boolean.\n\n> Honesty note built into the design: origin is contested for many words. Here it is not \u2014 but if any authority called \u0bae\u0bb0\u0bae\u0bcd a borrowing, the tool would return that as an `alternatives` entry with its evidence, not silently pick a side.\n\n---\n\n## Step 2 \u2014 `get_root` \u2192 the ROOT answer\n\n**Question answered:** what is the lemma / \u0bb5\u0bc7\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd under this inflected surface form?\n\n- **What the tool returns:**\n  - `lemma: \"\u0bae\u0bb0\u0bae\u0bcd\"`\n  - `all_analyses:` keeps every valid morphological parse ThamizhiMorph emits (the FST handles sandhi, so it correctly strips the locative inflection back to the base noun rather than treating \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd as an unanalyzable string).\n  - For \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd, the analysis resolves to lemma \u0bae\u0bb0\u0bae\u0bcd + noun + locative inflection.\n- **Grounding sources:**\n  - **ThamizhiMorph** (foma finite-state transducer, queried via `flookup`) \u2014 the primary engine, and the *only* maintained Tamil analyser that handles Sandhi, which is what makes the \u0bae\u0bb0\u0bae\u0bcd \u2192 \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd decomposition trustworthy.\n  - **open-tamil stemmer** \u2014 fallback / cross-check.\n\n> Design rule honored here: when the analyser returns more than one valid analysis, the tool keeps them all in `all_analyses` instead of silently disambiguating.\n\n---\n\n## Step 3 \u2014 `get_meaning` \u2192 the MEANING answer\n\n**Question answered:** what does the word mean, per an authentic dictionary?\n\n- **What the tool returns** (meaning is looked up on the **lemma** \u0bae\u0bb0\u0bae\u0bcd, not the inflected surface form):\n  - `senses: [{ gloss_ta: \"\u0bae\u0bb0\u0bae\u0bcd (a tree / wood)\", gloss_en: \"tree; wood, timber\", pos: \"noun\", citation: <Madras Tamil Lexicon entry> }]`\n  - The locative inflection adds \"in / at\" to the surface reading (\"in the tree\"), but the dictionary sense belongs to the lemma.\n- **Grounding sources:**\n  - **Madras University Tamil Lexicon** (via DSAL, U. Chicago) \u2014 the authoritative scholarly definition (gold standard for an \"authentic\" gloss).\n  - **AU-KBC Tamil WordNet** \u2014 structured synset/sense, good for a clean `meaning` field.\n  - **Cologne Online Tamil Lexicon (OTL)** \u2014 second dictionary opinion.\n\n---\n\n## Step 4 \u2014 `explain_formation` \u2192 the FORMATION answer\n\n**Question answered:** how is the surface word built from its parts? This is the heart of the analysis, and where sandhi-aware grounding pays off.\n\n- **What the tool returns:**\n  - `word_type: \"\u0baa\u0b95\u0bc1\u0baa\u0ba4\u0bae\u0bcd\"` (an analyzable/derived word, not a simple \u0baa\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0ba4\u0bae\u0bcd)\n  - `components:` (labeled with Nann\u016bl's \u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1 names, in order)\n\n    | # | part (\u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1) | form | role |\n    |---|---|---|---|\n    | 1 | \u0baa\u0b95\u0bc1\u0ba4\u0bbf (root/base) | \u0bae\u0bb0\u0bae\u0bcd | the core noun carrying the meaning |\n    | 2 | \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 (euphonic augment) | \u0b85\u0ba4\u0bcd\u0ba4\u0bc1 | inserted to join base to the case suffix; \u0bae\u0bb0\u0bae\u0bcd \u2192 \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bc1 |\n    | 3 | \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf (terminal suffix) | \u0b87\u0bb2\u0bcd | the locative case marker (\u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 \u0b89\u0bb0\u0bc1\u0baa\u0bc1) |\n\n  - `sandhi:` `[{ type: \"\u0ba4\u0bbf\u0bb0\u0bbf\u0ba4\u0bb2\u0bcd\", detail: \"\u0bae\u0bb0\u0bae\u0bcd \u2192 \u0bae\u0bb0\u0ba4\u0bcd \u2014 final \u0bae\u0bcd changes at the join (\u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd: \u0ba4\u0bbf\u0bb0\u0bbf\u0ba4\u0bb2\u0bcd)\" }]`\n\n- **Grounding sources:**\n  - **ThamizhiMorph FST tags** \u2014 the raw decomposition (handles the sandhi at the \u0bae\u0bb0\u0bae\u0bcd/\u0b85\u0ba4\u0bcd\u0ba4\u0bc1/\u0b87\u0bb2\u0bcd junctures).\n  - **\u0ba8\u0ba9\u0bcd\u0ba9\u0bc2\u0bb2\u0bcd (\u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bbf\u0bb2\u0b95\u0bcd\u0b95\u0ba3\u0bae\u0bcd)** \u2014 supplies the authentic \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1 labels (\u0baa\u0b95\u0bc1\u0ba4\u0bbf, \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8, \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf, \u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd) so the explanation reads in real Tamil grammatical terms, not a paraphrase. The FST tags are *decoded into* these Nann\u016bl names by the server's linguistic-logic module.\n\n> This matches the hand-verified fixture in the skill's grammar primer: \u0baa\u0b95\u0bc1\u0ba4\u0bbf \u0bae\u0bb0\u0bae\u0bcd + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 \u0b85\u0ba4\u0bcd\u0ba4\u0bc1 (with \u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd \u0bae\u0bb0\u0bae\u0bcd\u2192\u0bae\u0bb0\u0ba4\u0bcd) + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf \u0b87\u0bb2\u0bcd.\n\n---\n\n## Step 5 \u2014 `explain_grammar` \u2192 the GRAMMAR answer\n\n**Question answered:** what is the grammatical category and the case feature behind the word?\n\n- **What the tool returns:**\n  - `word_class: \"\u0baa\u0bc6\u0baf\u0bb0\u0bcd\"` (noun / \u0baa\u0bc6\u0baf\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd)\n  - `case: { number: 7, name: \"\u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8\", function: \"locative / \u0b87\u0b9f\u0baa\u0bcd\u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bcd (in / at / on)\" }`\n  - `person_number_gender:` \u0b92\u0bb0\u0bc1\u0bae\u0bc8 (singular)\n  - `notes:` **the suffix \u0b87\u0bb2\u0bcd is genuinely ambiguous** \u2014 it marks both the 7th case (locative, \"in\") and the 5th case (ablative, \"from\"). The word alone cannot resolve this.\n  - `alternatives:` `{ number: 5, name: \"\u0b90\u0ba8\u0bcd\u0ba4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8\", function: \"ablative (from)\" }` \u2014 returned, not discarded.\n- **Grounding sources:**\n  - **ThamizhiMorph POS + case tag** \u2014 the POS (noun) and inflection class.\n  - **Tholkappiyam / \u0ba8\u0ba9\u0bcd\u0ba9\u0bc2\u0bb2\u0bcd** \u2014 the eight-\u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 system that names the 7th case \u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 and defines the \u0b87\u0bb2\u0bcd \u0b89\u0bb0\u0bc1\u0baa\u0bc1 (and the documented \u0b87\u0bb2\u0bcd = 5th/7th overlap).\n\n> Honesty note honored: rather than guessing locative over ablative, the tool returns **both readings with provenance** \u2014 the honest answer is \"this is locative, but the same form is also readable as ablative.\"\n\n---\n\n## The merged result (`analyze_word` output)\n\n`analyze_word` composes the five tools above into one **word analysis object** (per `word_analysis_schema.json`) and merges provenance:\n\n| Concern | Answer | Grounded by |\n|---|---|---|\n| **normalized** | \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd | open-tamil `get_letters` / Nisaba |\n| **origin** | \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd \u2014 native, not borrowed | Thamizhi Validator + loanword datasets + Lexicon etymology + Tholkappiyam rule |\n| **root (lemma)** | \u0bae\u0bb0\u0bae\u0bcd | ThamizhiMorph (sandhi-aware), open-tamil fallback |\n| **meaning** | tree; wood/timber | Madras Tamil Lexicon (+ AU-KBC WordNet, Cologne OTL) |\n| **formation** | \u0baa\u0b95\u0bc1\u0baa\u0ba4\u0bae\u0bcd: \u0baa\u0b95\u0bc1\u0ba4\u0bbf \u0bae\u0bb0\u0bae\u0bcd + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 \u0b85\u0ba4\u0bcd\u0ba4\u0bc1 (\u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd \u0ba4\u0bbf\u0bb0\u0bbf\u0ba4\u0bb2\u0bcd: \u0bae\u0bb0\u0bae\u0bcd\u2192\u0bae\u0bb0\u0ba4\u0bcd) + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf \u0b87\u0bb2\u0bcd | ThamizhiMorph FST tags \u2192 decoded into Nann\u016bl \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd |\n| **grammar** | \u0baa\u0bc6\u0baf\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd, \u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 (locative, singular); *also* \u0b90\u0ba8\u0bcd\u0ba4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 (ablative) | ThamizhiMorph POS/case + Tholkappiyam/Nann\u016bl |\n\nEvery section carries a `sources` array (`{name, ref, retrieved}`), so the agent can say in plain words:\n\n> \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd is the native Tamil word \u0bae\u0bb0\u0bae\u0bcd ('tree') in the locative case. Root and case per **ThamizhiMorph**; meaning per the **Madras Tamil Lexicon**; the formation labels (\u0baa\u0b95\u0bc1\u0ba4\u0bbf / \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 / \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf, with the \u0bae\u0bb0\u0bae\u0bcd\u2192\u0bae\u0bb0\u0ba4\u0bcd change) per **Nann\u016bl**; the native (\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd) classification per **Tholkappiyam** and the pure-Tamil **Validator**. The locative suffix \u0b87\u0bb2\u0bcd is also readable as ablative \u2014 both are reported.\"\n\n---\n\n## What grounding buys you on this exact word\n\nThree failure modes a plain LLM hits on \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd, and how the grounded design avoids each:\n\n1. **Wrong split.** A model might guess \u0bae\u0bb0 + \u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd or treat the word as a single root. ThamizhiMorph's sandhi-aware FST gives the correct \u0bae\u0bb0\u0bae\u0bcd + \u0b85\u0ba4\u0bcd\u0ba4\u0bc1 + \u0b87\u0bb2\u0bcd, and Nann\u016bl labels it.\n2. **Silent case guess.** A model will usually just say \"locative\" and stop. The server reports the documented \u0b87\u0bb2\u0bcd = locative/ablative ambiguity and returns **both** readings rather than manufacturing certainty.\n3. **Unsourced confidence.** Every claim above names its authority. If any source had *no* entry for \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd (or its lemma), the server would emit an explicit gap \u2014 `{ status: \"no_entry\", source, note }` \u2014 instead of a fluent guess. That honest-gap behavior is the single most important property this server is built to guarantee.\n\n---\n\n### Sources referenced in this walkthrough\n\n- **ThamizhiMorph** \u2014 foma FST analyser/generator (root, formation, POS/case; handles sandhi). GitHub `sarves/thamizhi-morph`, Apache-2.0.\n- **Thamizhi Word Validator** \u2014 pure-Tamil validity check (origin signal). GitHub `sarves/thamizhi-validator`.\n- **Madras University Tamil Lexicon** \u2014 authoritative meaning. DSAL, U. Chicago `dsal.uchicago.edu/dictionaries/tamil-lex/`.\n- **AU-KBC Tamil WordNet / Cologne OTL** \u2014 meaning cross-checks.\n- **Loanword datasets** \u2014 Kaggle Tamil loan-words, `narVidhai/Indic-To-Pure-Tamil` (origin cross-check).\n- **open-tamil** \u2014 normalization / grapheme splitting / fallback stemmer. `Ezhil-Language-Foundation/open-tamil`.\n- **Tholkappiyam (\u0b9a\u0bca\u0bb2\u0bcd\u0bb2\u0ba4\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd)** \u2014 word classes, the four origin classes, the eight \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8.\n- **\u0ba8\u0ba9\u0bcd\u0ba9\u0bc2\u0bb2\u0bcd** \u2014 \u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bbf\u0bb2\u0b95\u0bcd\u0b95\u0ba3\u0bae\u0bcd (the six word-formation parts) and \u0baa\u0bc1\u0ba3\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bbf (sandhi) rules.\n"}], "grading": {"eval_id": 2, "config": "with_skill", "expectations": [{"text": "Decomposes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd into \u0baa\u0b95\u0bc1\u0ba4\u0bbf + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf", "passed": true, "evidence": "all patterns matched"}, {"text": "Identifies the locative case", "passed": true, "evidence": "all patterns matched"}, {"text": "Attributes root/formation to ThamizhiMorph", "passed": true, "evidence": "all patterns matched"}, {"text": "Surfaces the 5th/7th (ablative/locative) ambiguity", "passed": true, "evidence": "all patterns matched"}, {"text": "Classifies origin as \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd (native Tamil)", "passed": true, "evidence": "all patterns matched"}, {"text": "Names a standard lexicon for meaning", "passed": true, "evidence": "all patterns matched"}], "summary": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6}}}, {"id": "eval-2-without_skill-run-1", "prompt": "Walk through how the server analyzes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd \u2014 what each tool returns and which authentic source grounds each part.", "eval_id": 2, "outputs": [{"name": "walkthrough.md", "type": "text", "content": "# How the THAMIZH MCP server analyzes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\n\nA step-by-step trace of one word through the server. The word is **\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd** (\"in the tree\"). For each\ntool call you get: what the agent sends, what the tool returns, and \u2014 the whole point of this project \u2014 which\n**authentic source** grounds that part of the answer. No claim in the final output comes from the LLM's own\nguess; every field is attributable.\n\nThe shape of the final answer is the `ThamizhWordAnalysis` object (`assets/word_analysis_schema.json`). The\ntools that fill it are defined in `references/tool-design.md`. The grounding sources are catalogued in\n`references/sources.md`, and the grammar terms come from `references/tamil-grammar.md`.\n\n---\n\n## Step 0 \u2014 Normalize the input (runs before any analysis)\n\nTamil letters are multi-codepoint grapheme clusters, so the same visible word can arrive in different byte\nsequences. Bad normalization corrupts every downstream lookup, so this happens first, inside `analyze_word`\nbefore it fans out to the focused tools.\n\n- **Input:** `\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd`\n- **Action:** Unicode-normalize and verify grapheme splitting.\n- **Output:** `normalized: \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\"` and the grapheme sequence `\u0bae \u0bb0 \u0ba4\u0bcd \u0ba4\u0bbf \u0bb2\u0bcd`.\n- **Grounded by:** **open-tamil** (`get_letters` for correct Tamil grapheme splitting) and/or Google\n  **Nisaba** for Brahmic-script normalization. *(sources.md \u00a75 Supporting utilities)*\n\nThis is plumbing, not analysis \u2014 but it is the reason the lexicon and FST lookups that follow actually match.\n\n---\n\n## Step 1 \u2014 `classify_origin` \u2192 where the word comes from\n\nThe agent asks: is this native Tamil or borrowed?\n\n- **Input:** `{ \"word\": \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\" }`\n- **Returns:**\n\n```json\n{\n  \"class\": \"\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd\",\n  \"is_native\": true,\n  \"borrowed_from\": null,\n  \"adaptation\": null,\n  \"evidence\": \"Stem \u0bae\u0bb0\u0bae\u0bcd passes pure-Tamil validation; appears in the lexicon with no source-language tag; falls in Tholkappiyam's \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd class (ordinary native words in common use).\",\n  \"confidence\": 0.95,\n  \"alternatives\": [],\n  \"sources\": [\n    { \"name\": \"Thamizhi Word Validator\", \"ref\": \"github.com/sarves/thamizhi-validator\" },\n    { \"name\": \"Madras Tamil Lexicon\", \"ref\": \"dsal.uchicago.edu/dictionaries/tamil-lex/\" },\n    { \"name\": \"Tholkappiyam \u2014 Collatik\u0101ram (origin classes)\", \"ref\": \"\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd rule\" }\n  ]\n}\n```\n\n**Which source grounds what here:**\n\n- The native-vs-borrowed *signal* comes from the **Thamizhi Word Validator** \u2014 the stem `\u0bae\u0bb0\u0bae\u0bcd` is a\n  well-formed pure-Tamil word, which is the strong evidence that it is not a borrowing.\n- The cross-check that it carries **no source-language tag** comes from the **Madras University Tamil\n  Lexicon** etymology notes.\n- The *vocabulary* of the answer \u2014 calling it **\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd** rather than a bare \"native\" boolean \u2014 comes from\n  **Tholkappiyam's** four origin classes (\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd / \u0ba4\u0bbf\u0bb0\u0bbf\u0b9a\u0bca\u0bb2\u0bcd / \u0ba4\u0bbf\u0b9a\u0bc8\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd / \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd). \u0bae\u0bb0\u0bae\u0bcd is an ordinary\n  native word in common use, which is exactly the definition of \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd. *(tamil-grammar.md \u00a72)*\n\nThe `alternatives` array is empty because the authorities agree here. For a contested word (the honesty rule\nin the SKILL), competing origin claims would be returned in that array rather than silently resolved.\n\n---\n\n## Step 2 \u2014 `get_root` \u2192 the lemma / \u0bb5\u0bc7\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd\n\nThe agent asks: strip the inflection down to the dictionary form.\n\n- **Input:** `{ \"word\": \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\" }`\n- **Action under the hood:** the surface word is sent to the **ThamizhiMorph** finite-state transducer via\n  `flookup`, conceptually `echo \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd | flookup tamil-nouns.fst`.\n- **Returns:**\n\n```json\n{\n  \"lemma\": \"\u0bae\u0bb0\u0bae\u0bcd\",\n  \"all_analyses\": [\n    { \"lemma\": \"\u0bae\u0bb0\u0bae\u0bcd\", \"pos\": \"noun\", \"tags\": [\"noun\", \"loc\", \"sg\"] },\n    { \"lemma\": \"\u0bae\u0bb0\u0bae\u0bcd\", \"pos\": \"noun\", \"tags\": [\"noun\", \"abl\", \"sg\"] }\n  ],\n  \"sources\": [\n    { \"name\": \"ThamizhiMorph\", \"ref\": \"github.com/sarves/thamizhi-morph (Apache-2.0)\" }\n  ]\n}\n```\n\n**Which source grounds what here:**\n\n- The root **\u0bae\u0bb0\u0bae\u0bcd** comes from **ThamizhiMorph**, the primary morphological engine. It is the only maintained\n  Tamil analyser that handles Sandhi, which is what lets it reverse \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd back to \u0bae\u0bb0\u0bae\u0bcd correctly.\n  *(sources.md \u00a71)*\n- Note **two analyses are returned, not one.** ThamizhiMorph returns every valid reading when it cannot\n  disambiguate \u2014 the `\u0b87\u0bb2\u0bcd` suffix is ambiguous (more in Step 5). The server keeps both per the \"separate\n  analysis from disambiguation\" rule; it does not silently pick locative.\n- **open-tamil's** stemmer is the documented fallback if ThamizhiMorph is unavailable. *(sources.md \u00a76)*\n\n---\n\n## Step 3 \u2014 `get_meaning` \u2192 the dictionary sense\n\nThe agent asks: what does the root mean?\n\n- **Input:** `{ \"word\": \"\u0bae\u0bb0\u0bae\u0bcd\", \"lang\": \"both\" }` (the agent passes the lemma from Step 2, not the inflected\n  surface form, so it hits the dictionary headword).\n- **Returns:**\n\n```json\n{\n  \"senses\": [\n    {\n      \"gloss_ta\": \"\u0b9a\u0bc6\u0b9f\u0bbf\u0baf\u0bbf\u0ba9\u0bc1\u0bae\u0bcd \u0baa\u0bc6\u0bb0\u0bbf\u0baf, \u0b85\u0b9f\u0bbf\u0bae\u0bb0\u0bae\u0bc1\u0bae\u0bcd \u0b95\u0bbf\u0bb3\u0bc8\u0b95\u0bb3\u0bc1\u0bae\u0bcd \u0b89\u0b9f\u0bc8\u0baf \u0ba4\u0bbe\u0bb5\u0bb0\u0bae\u0bcd\",\n      \"gloss_en\": \"tree; a large woody plant with a trunk and branches\",\n      \"pos\": \"noun\",\n      \"citation\": \"Madras Tamil Lexicon, s.v. \u0bae\u0bb0\u0bae\u0bcd\"\n    }\n  ],\n  \"sources\": [\n    { \"name\": \"Madras University Tamil Lexicon (via DSAL, U. Chicago)\", \"ref\": \"dsal.uchicago.edu/dictionaries/tamil-lex/\" },\n    { \"name\": \"AU-KBC Tamil WordNet\", \"ref\": \"cfilt.iitb.ac.in/indowordnet/\" }\n  ]\n}\n```\n\n**Which source grounds what here:**\n\n- The authoritative definition comes from the **Madras University Tamil Lexicon** (1924\u20131936, via DSAL /\n  University of Chicago) \u2014 the gold-standard scholarly dictionary and the project's primary `meaning` source.\n- The **AU-KBC Tamil WordNet / IndoWordNet** synset is the cross-check, giving a structured sense useful for\n  disambiguation. **Cologne OTL** is the documented second-dictionary opinion. *(sources.md \u00a72, \u00a76)*\n\nThe lookup is on the lemma `\u0bae\u0bb0\u0bae\u0bcd`, which is why Step 2 had to run first \u2014 the dictionary is keyed by\nheadword, not by inflected form.\n\n---\n\n## Step 4 \u2014 `explain_formation` \u2192 how the word is built (\u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1)\n\nThe agent asks: break the surface word into its grammatical parts.\n\n- **Input:** `{ \"word\": \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\" }`\n- **Action under the hood:** decode the **ThamizhiMorph** FST tags from Step 2 back into Nann\u016bl's\n  \u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd using the mapping logic in `tamil-grammar.md \u00a73`.\n- **Returns:**\n\n```json\n{\n  \"word_type\": \"\u0baa\u0b95\u0bc1\u0baa\u0ba4\u0bae\u0bcd\",\n  \"components\": [\n    { \"part\": \"\u0baa\u0b95\u0bc1\u0ba4\u0bbf\",  \"form\": \"\u0bae\u0bb0\u0bae\u0bcd\",  \"role\": \"root / base (the noun stem carrying meaning)\" },\n    { \"part\": \"\u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8\", \"form\": \"\u0b85\u0ba4\u0bcd\u0ba4\u0bc1\", \"role\": \"euphonic augment joining stem to case suffix\" },\n    { \"part\": \"\u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf\", \"form\": \"\u0b87\u0bb2\u0bcd\",   \"role\": \"case suffix (\u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 \u0b89\u0bb0\u0bc1\u0baa\u0bc1 / locative)\" }\n  ],\n  \"sandhi\": [\n    { \"type\": \"\u0ba4\u0bbf\u0bb0\u0bbf\u0ba4\u0bb2\u0bcd\", \"detail\": \"\u0bae\u0bb0\u0bae\u0bcd \u2192 \u0bae\u0bb0\u0ba4\u0bcd \u2014 final \u0bae\u0bcd changes (\u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd) before the \u0b85\u0ba4\u0bcd\u0ba4\u0bc1 \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8.\" }\n  ],\n  \"sources\": [\n    { \"name\": \"ThamizhiMorph (FST analysis, handles Sandhi)\", \"ref\": \"github.com/sarves/thamizhi-morph\" },\n    { \"name\": \"Nann\u016bl \u2014 \u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bbf\u0bb2\u0b95\u0bcd\u0b95\u0ba3\u0bae\u0bcd\", \"ref\": \"six-part word-formation rules\" }\n  ]\n}\n```\n\n**Which source grounds what here:**\n\n- The *split itself* \u2014 that \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd decomposes at all, and where the morpheme boundaries fall \u2014 comes from\n  **ThamizhiMorph**, because it handles Sandhi. Re-deriving sandhi by hand is exactly what we avoid.\n  *(tamil-grammar.md \u00a75)*\n- The *labels* on each part (**\u0baa\u0b95\u0bc1\u0ba4\u0bbf / \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 / \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf**, and the **\u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd \u2192 \u0ba4\u0bbf\u0bb0\u0bbf\u0ba4\u0bb2\u0bcd** classification of the\n  \u0bae\u0bcd\u2192\u0ba4\u0bcd change) come from **Nann\u016bl's** \u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bbf\u0bb2\u0b95\u0bcd\u0b95\u0ba3\u0bae\u0bcd \u2014 the standard medieval grammar for word\n  formation. That is what makes the explanation authentic Tamil grammar rather than a plausible paraphrase.\n- This matches the worked fixture in `tamil-grammar.md \u00a76`: \u0baa\u0b95\u0bc1\u0ba4\u0bbf `\u0bae\u0bb0\u0bae\u0bcd`, \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 `\u0b85\u0ba4\u0bcd\u0ba4\u0bc1`\n  (with \u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd: \u0bae\u0bb0\u0bae\u0bcd \u2192 \u0bae\u0bb0\u0ba4\u0bcd), \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf `\u0b87\u0bb2\u0bcd`. The word is **\u0baa\u0b95\u0bc1\u0baa\u0ba4\u0bae\u0bcd** (analyzable), not \u0baa\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0ba4\u0bae\u0bcd, because it\n  splits into these grammatical parts.\n\n---\n\n## Step 5 \u2014 `explain_grammar` \u2192 the grammatical category and case\n\nThe agent asks: what kind of word is this and what case is it in?\n\n- **Input:** `{ \"word\": \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\" }`\n- **Returns:**\n\n```json\n{\n  \"word_class\": \"\u0baa\u0bc6\u0baf\u0bb0\u0bcd\",\n  \"case\": { \"number\": 7, \"name\": \"\u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8\", \"function\": \"locative / \u0b87\u0b9f\u0baa\u0bcd\u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bcd (\\\"in / at / on\\\")\" },\n  \"tense\": null,\n  \"person_number_gender\": \"\u0b92\u0bb0\u0bc1\u0bae\u0bc8 (singular)\",\n  \"notes\": \"The suffix \u0b87\u0bb2\u0bcd also marks the 5th case (\u0b90\u0ba8\u0bcd\u0ba4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8, ablative / \\\"from\\\"); both readings are valid from the word alone and are returned together \u2014 the server does not guess which one context intends.\",\n  \"sources\": [\n    { \"name\": \"ThamizhiMorph (POS + case tag)\", \"ref\": \"github.com/sarves/thamizhi-morph\" },\n    { \"name\": \"Tholkappiyam / Nann\u016bl \u2014 \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 system\", \"ref\": \"eight-case scheme\" }\n  ]\n}\n```\n\n**Which source grounds what here:**\n\n- The **POS tag** (noun \u2192 \u0baa\u0bc6\u0baf\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd) and the **raw case tag** come from **ThamizhiMorph** (with\n  **ThamizhiPOSt** available for contextual POS if the input were a phrase). The **UD Tamil treebank** is the\n  documented evaluation cross-check. *(sources.md \u00a76)*\n- The *naming and meaning* of the case \u2014 **\u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8**, locative, \u0b87\u0b9f\u0baa\u0bcd\u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bcd \u2014 comes from the\n  **Tholkappiyam / Nann\u016bl** eight-\u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 scheme. *(tamil-grammar.md \u00a74)*\n- The honest ambiguity in `notes` is required by the grammar primer: the suffix **\u0b87\u0bb2\u0bcd** marks *both* the 7th\n  case (locative, \"in\") and the 5th case (ablative, \"from\"). The server cannot resolve this from the word in\n  isolation, so it returns both readings with provenance rather than manufacturing certainty.\n  *(tamil-grammar.md \u00a74, ambiguity note)*\n\n---\n\n## The composed `analyze_word` result\n\n`analyze_word` is the workflow tool the agent calls most often \u2014 \"tell me everything about \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\" in one\ncall. It runs Steps 0\u20135, merges the provenance from each, and returns the full `ThamizhWordAnalysis` object.\nIf one source had missed (e.g. no lexicon entry), that section would carry an explicit gap instead of failing\nthe whole response.\n\n```json\n{\n  \"word\": \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\",\n  \"normalized\": \"\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd\",\n  \"origin\": {\n    \"class\": \"\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd\", \"is_native\": true, \"borrowed_from\": null, \"adaptation\": null,\n    \"confidence\": 0.95,\n    \"sources\": [ { \"name\": \"Thamizhi Word Validator\" }, { \"name\": \"Madras Tamil Lexicon\" }, { \"name\": \"Tholkappiyam\" } ]\n  },\n  \"lemma\": \"\u0bae\u0bb0\u0bae\u0bcd\",\n  \"all_analyses\": [\n    { \"lemma\": \"\u0bae\u0bb0\u0bae\u0bcd\", \"pos\": \"noun\", \"tags\": [\"noun\",\"loc\",\"sg\"] },\n    { \"lemma\": \"\u0bae\u0bb0\u0bae\u0bcd\", \"pos\": \"noun\", \"tags\": [\"noun\",\"abl\",\"sg\"] }\n  ],\n  \"pos\": \"\u0baa\u0bc6\u0baf\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd\",\n  \"meaning\": {\n    \"senses\": [ { \"gloss_ta\": \"\u2026\u0baa\u0bc6\u0bb0\u0bbf\u0baf \u0ba4\u0bbe\u0bb5\u0bb0\u0bae\u0bcd\", \"gloss_en\": \"tree\", \"citation\": \"Madras Tamil Lexicon, s.v. \u0bae\u0bb0\u0bae\u0bcd\" } ],\n    \"sources\": [ { \"name\": \"Madras Tamil Lexicon\" }, { \"name\": \"AU-KBC Tamil WordNet\" } ]\n  },\n  \"formation\": {\n    \"word_type\": \"\u0baa\u0b95\u0bc1\u0baa\u0ba4\u0bae\u0bcd\",\n    \"components\": [\n      { \"part\": \"\u0baa\u0b95\u0bc1\u0ba4\u0bbf\", \"form\": \"\u0bae\u0bb0\u0bae\u0bcd\" },\n      { \"part\": \"\u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8\", \"form\": \"\u0b85\u0ba4\u0bcd\u0ba4\u0bc1\" },\n      { \"part\": \"\u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf\", \"form\": \"\u0b87\u0bb2\u0bcd\" }\n    ],\n    \"sandhi\": [ { \"type\": \"\u0ba4\u0bbf\u0bb0\u0bbf\u0ba4\u0bb2\u0bcd\", \"detail\": \"\u0bae\u0bb0\u0bae\u0bcd \u2192 \u0bae\u0bb0\u0ba4\u0bcd (\u0bae\u0bcd changes)\" } ],\n    \"sources\": [ { \"name\": \"ThamizhiMorph\" }, { \"name\": \"Nann\u016bl\" } ]\n  },\n  \"grammar\": {\n    \"word_class\": \"\u0baa\u0bc6\u0baf\u0bb0\u0bcd\",\n    \"case\": { \"number\": 7, \"name\": \"\u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8\", \"function\": \"locative / \u0b87\u0b9f\u0baa\u0bcd\u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bcd\" },\n    \"person_number_gender\": \"\u0b92\u0bb0\u0bc1\u0bae\u0bc8\",\n    \"notes\": \"\u0b87\u0bb2\u0bcd also reads as 5th case (ablative) \u2014 both returned.\",\n    \"sources\": [ { \"name\": \"ThamizhiMorph\" }, { \"name\": \"Tholkappiyam / Nann\u016bl\" } ]\n  },\n  \"gaps\": [],\n  \"sources\": [\n    { \"name\": \"ThamizhiMorph\", \"ref\": \"github.com/sarves/thamizhi-morph\" },\n    { \"name\": \"Madras Tamil Lexicon\", \"ref\": \"dsal.uchicago.edu/dictionaries/tamil-lex/\" },\n    { \"name\": \"Thamizhi Word Validator\", \"ref\": \"github.com/sarves/thamizhi-validator\" },\n    { \"name\": \"AU-KBC Tamil WordNet\", \"ref\": \"cfilt.iitb.ac.in/indowordnet/\" },\n    { \"name\": \"Tholkappiyam / Nann\u016bl\", \"ref\": \"classical grammar tradition\" }\n  ]\n}\n```\n\n---\n\n## Summary \u2014 five answers, five grounded sources\n\n| Concern | Tool | Answer for \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd | Grounded by (authentic source) |\n|---|---|---|---|\n| **Origin** | `classify_origin` | \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd (native) | Thamizhi Word Validator + Madras Tamil Lexicon etymology, framed by **Tholkappiyam's** four origin classes |\n| **Root** | `get_root` | \u0bae\u0bb0\u0bae\u0bcd | **ThamizhiMorph** FST (Sandhi-aware); open-tamil stemmer fallback |\n| **Meaning** | `get_meaning` | tree / \u0baa\u0bc6\u0bb0\u0bbf\u0baf \u0ba4\u0bbe\u0bb5\u0bb0\u0bae\u0bcd | **Madras University Tamil Lexicon**; AU-KBC WordNet cross-check |\n| **Formation** | `explain_formation` | \u0baa\u0b95\u0bc1\u0ba4\u0bbf \u0bae\u0bb0\u0bae\u0bcd + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 \u0b85\u0ba4\u0bcd\u0ba4\u0bc1 + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf \u0b87\u0bb2\u0bcd (\u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd: \u0bae\u0bcd\u2192\u0ba4\u0bcd) | **ThamizhiMorph** split, decoded into **Nann\u016bl's** \u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1 labels |\n| **Grammar** | `explain_grammar` | \u0baa\u0bc6\u0baf\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd, \u0b8f\u0bb4\u0bbe\u0bae\u0bcd \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 (locative), \u0b92\u0bb0\u0bc1\u0bae\u0bc8 \u2014 *also* 5th case | **ThamizhiMorph** POS/case tag, named via **Tholkappiyam / Nann\u016bl** \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 scheme |\n\n**Two behaviours that make this trustworthy rather than just fluent:**\n\n1. **Every field cites its source.** The agent can truthfully say: \"root per ThamizhiMorph; meaning per\n   Madras Tamil Lexicon; origin per Tholkappiyam's \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd class; formation labelled per Nann\u016bl.\"\n2. **Ambiguity is reported, not hidden.** The \u0b87\u0bb2\u0bcd suffix is genuinely both locative (7th) and ablative (5th);\n   the word alone cannot decide. The server returns both readings with provenance instead of guessing \u2014 which\n   is the single most important behaviour the project tests for. Likewise, if no source covered the word, the\n   answer would be an honest gap, never an invented value.\n"}], "grading": {"eval_id": 2, "config": "without_skill", "expectations": [{"text": "Decomposes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd into \u0baa\u0b95\u0bc1\u0ba4\u0bbf + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf", "passed": true, "evidence": "all patterns matched"}, {"text": "Identifies the locative case", "passed": true, "evidence": "all patterns matched"}, {"text": "Attributes root/formation to ThamizhiMorph", "passed": true, "evidence": "all patterns matched"}, {"text": "Surfaces the 5th/7th (ablative/locative) ambiguity", "passed": true, "evidence": "all patterns matched"}, {"text": "Classifies origin as \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd (native Tamil)", "passed": true, "evidence": "all patterns matched"}, {"text": "Names a standard lexicon for meaning", "passed": true, "evidence": "all patterns matched"}], "summary": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6}}}, {"id": "eval-3-with_skill-run-1", "prompt": "Which language and which specific sources for a grounded Tamil word-analysis MCP, and how to avoid hallucinating grammar?", "eval_id": 3, "outputs": [{"name": "recommendation.md", "type": "text", "content": "# THAMIZH MCP \u2014 language, data sources, and how to stop it hallucinating\n\nThis answers three things for a Tamil word-analysis MCP server: which programming language to build it in, which specific data sources ground each kind of answer, and the architecture that keeps it from inventing Tamil grammar the way a plain chatbot would.\n\nThe whole point of this server over a bare LLM is that **every claim traces back to a real Tamil linguistic authority** \u2014 a morphological analyser, a classical grammar rule, a standard lexicon, or an etymology dataset \u2014 not to the model's own guesses. A confident-but-unsourced Tamil grammar answer is exactly the failure this product exists to remove. The recommendations below are built around that bar.\n\n---\n\n## 1. Programming language: **Python**\n\n**Recommendation: build the analysis core in Python, and run it as a Python MCP server (FastMCP) for v1.**\n\nThe reason is not preference \u2014 it is where the Tamil-NLP ecosystem actually lives. Every authentic source this server must ground against is either a Python package or a native binary with Python tooling around it:\n\n- **ThamizhiMorph** (the primary morphological engine) is a `foma` finite-state transducer. Its core `flookup` binary is callable from any language, but its surrounding tooling \u2014 the tokeniser, the `thamizhi-morph-parse-2.py` driver, the ThamizhiPOSt POS tagger \u2014 is Python, and it depends on `stanza`. *(Verified: the repo is 100% Python with an Apache-2.0 licence.)*\n- **open-tamil**, **ThamizhiLIP / ThamizhiPOSt**, and most other analysers and validators ship as Python packages (pip-installable).\n\nSo the linguistic logic wants to live in Python. You have two viable shapes:\n\n| Option | When to choose it |\n|---|---|\n| **(A) Python MCP server (FastMCP)** \u2014 one language, direct library calls. | **Recommended for v1.** Simplest path; no inter-process boundary. |\n| (B) TypeScript MCP server calling a Python analysis service. | Only if a specific deployment target forces the TS MCP SDK. It adds a process boundary for **zero linguistic benefit** at this stage. |\n\nPick (A) unless there is a hard external reason to prefer the TypeScript SDK. Keep the linguistic decoding logic (turning FST tags into \u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1 parts, mapping case tags to \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 names) in one well-tested Python module rather than re-deriving it per request.\n\n---\n\n## 2. Data sources, mapped to what each one grounds\n\nA word analysis has four concerns the user cares about: **origin** (native vs borrowed), **root + meaning**, **formation** (how the word is built), and **grammar** (class, case, tense). Each concern gets its own authentic source \u2014 and a cross-check, because origin in particular is genuinely contested for many words.\n\n### Origin \u2014 native (\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd) vs borrowed (\u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd / English / other)\n- **Primary:** Thamizhi Word Validator (a word that fails pure-Tamil validation is a borrowing candidate) + loanword/etymology datasets \u2014 the **Indic-To-Pure-Tamil** mappings (Sanskrit-origin \u2192 pure Tamil) and the Kaggle **Tamil loan-words classification** set (English\u2194Tamil).\n- **Cross-check:** the etymology notes in the Madras Tamil Lexicon, plus Tholkappiyam's \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd rule.\n- **Classify into the authentic four-way scheme**, not a native/loan boolean: **\u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd** (core native), **\u0ba4\u0bbf\u0bb0\u0bbf\u0b9a\u0bca\u0bb2\u0bcd** (literary/shifted native), **\u0ba4\u0bbf\u0b9a\u0bc8\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd** (regional), **\u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd** (Sanskrit/Indo-Aryan). For \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd record the adaptation type \u2014 **\u0ba4\u0bb1\u0bcd\u0b9a\u0bae\u0bae\u0bcd** (little change) vs **\u0ba4\u0bb1\u0bcd\u0baa\u0bb5\u0bae\u0bcd** (adapted to Tamil phonology). For modern borrowings outside the classical scheme (English, etc.), label as loanword and name the source language, and say explicitly that the classical scheme predates them.\n\n### Root + meaning\n- **Root / lemma (\u0bb5\u0bc7\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bca\u0bb2\u0bcd):** **ThamizhiMorph** (cross-check: open-tamil stemmer).\n- **Meaning:** **Madras University Tamil Lexicon** (the gold-standard scholarly dictionary, 1924\u20131936, hosted via DSAL / U. Chicago \u2014 *verified, last data refresh Sep 2023, CC BY-NC-ND, no official REST API so plan an offline copy or queried interface*). Cross-check with **AU-KBC Tamil WordNet** (structured synsets/glosses) and the **Cologne Online Tamil Lexicon** as a second opinion.\n\n### Formation \u2014 how the surface word is built (\u0baa\u0b95\u0bc1\u0baa\u0ba4 \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1, sandhi)\n- **ThamizhiMorph FST analysis**, decoded into Nann\u016bl's six \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd (\u0baa\u0b95\u0bc1\u0ba4\u0bbf, \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf, \u0b87\u0b9f\u0bc8\u0ba8\u0bbf\u0bb2\u0bc8, \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8, \u0b9a\u0ba8\u0bcd\u0ba4\u0bbf, \u0bb5\u0bbf\u0b95\u0bbe\u0bb0\u0bae\u0bcd).\n- ThamizhiMorph matters here specifically because it is **the only maintained Tamil analyser that handles Sandhi** *(verified against the project README)* \u2014 and Sandhi is what you must decode to explain word formation honestly. Decode its tags back into the classical terms rather than re-deriving sandhi from scratch.\n\n### Grammar \u2014 word class, case, tense\n- **ThamizhiMorph POS + case tags** (with ThamizhiPOSt for context when the input is more than a bare word), explained through the **classical grammar rules** of **Tholkappiyam (Collatik\u0101ram)** and **Nann\u016bl** \u2014 these supply the authentic output vocabulary (the four \u0b9a\u0bca\u0bb2\u0bcd classes, the eight \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 names).\n\n### Before any lookup: normalization\n- Run **open-tamil `get_letters`** (correct Tamil multi-codepoint grapheme splitting) or Google **Nisaba** first. Bad Unicode normalization silently corrupts every downstream lookup.\n\n### Field \u2192 source map\n\n| Output field | Primary source | Cross-check |\n|---|---|---|\n| `normalized` | open-tamil / Nisaba | \u2014 |\n| `origin.class` | Thamizhi Validator + loanword data | Lexicon etymology, Tholkappiyam rule |\n| `origin.borrowed_from` | Indic-To-Pure-Tamil, Kaggle loanword set | Indo-Aryan loanword scholarship |\n| `lemma` / root | ThamizhiMorph | open-tamil stemmer |\n| `pos` / `grammar.case` | ThamizhiMorph (+ ThamizhiPOSt) | UD Tamil treebank |\n| `meaning` | Madras Tamil Lexicon | AU-KBC WordNet, Cologne OTL |\n| `formation.components` | ThamizhiMorph FST tags \u2192 Nann\u016bl \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bc1 decoding | \u2014 |\n| `grammar` (rule explanation) | Tholkappiyam / Nann\u016bl | \u2014 |\n\n**Rule of thumb:** a field with no source in this table is a field the server cannot honestly fill yet. Either find a source or have the tool report the gap.\n\n*(Tip: `narVidhai/tamil-nlp-catalog` is the meta-catalog of all these resources \u2014 use it to discover more as the project grows.)*\n\n---\n\n## 3. How to make sure it does not hallucinate Tamil grammar\n\nA plain chatbot hallucinates because it is *the source of its own answer*. The architecture below removes that property \u2014 the model can only relay what a source produced. Four principles, all enforced in the tools and the system prompt, not just in the build process:\n\n1. **Provenance on every claim.** Each filled field carries which source produced it, so the agent can say \"root per ThamizhiMorph; meaning per Madras Tamil Lexicon; origin per Tholkappiyam's \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd rule.\" A claim with no attached source is a bug, not an answer. Wrap each source behind a small adapter with a uniform interface (input: a normalized word; output: the fields it can fill + its own provenance).\n\n2. **An honest gap beats a fluent guess.** If no grounding source covers a word, the correct output is `{ \"status\": \"no_entry\", \"source\", \"note\" }` \u2014 for example \"no lexicon entry found\" \u2014 **never** a smooth invented answer. This is the single most important behaviour to test for, because it is the exact failure mode a chatbot falls into. Give every tool an actionable error path that names which source was missing.\n\n3. **Separate analysis from disambiguation \u2014 return all valid readings.** Tamil is morphologically rich; one surface form often has several valid analyses, and ThamizhiMorph itself returns all of them when it cannot disambiguate. Keep them all rather than silently picking one. (Concrete case: the suffix \u0b87\u0bb2\u0bcd marks both the 5th \u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bc8 / ablative \"from\" and the 7th / locative \"in\" \u2014 the word alone cannot resolve which, so return both with provenance.)\n\n4. **Name uncertainty; do not manufacture certainty.** Origin classification is genuinely contested \u2014 a word called \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd by one authority may be argued \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd/\u0ba4\u0bb1\u0bcd\u0baa\u0bb5\u0bae\u0bcd by another. Report the competing claims and their evidence in an `alternatives` field; do not pick one silently.\n\n### The tool surface that enforces this\n- One focused, read-only tool per concern \u2014 `classify_origin`, `get_root`, `get_meaning`, `explain_formation`, `explain_grammar` \u2014 each returning a `sources` array and an honest-gap status.\n- Plus one composed **`analyze_word`** workflow tool returning the whole word-analysis object at once (the dominant agent intent is \"tell me everything about this word\"), which merges provenance and returns per-section gaps rather than failing whole if one source misses.\n- A canonical JSON contract where every analytical field is `required` to carry provenance and gaps are explicit \u2014 so a missing source surfaces structurally instead of being papered over by fluent text.\n\n### Prove it works (evaluation)\nBuild the eval set from real words chosen to exercise each concern, and hand-verify the correct answer against the sources before locking it:\n- a clearly native word (e.g. **\u0bae\u0bb0\u0bae\u0bcd**),\n- an inflected form needing sandhi-aware splitting (e.g. **\u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd**),\n- a Sanskrit loanword / \u0bb5\u0b9f\u0b9a\u0bca\u0bb2\u0bcd (e.g. **\u0baa\u0bc1\u0ba4\u0bcd\u0ba4\u0b95\u0bae\u0bcd** / **\u0b86\u0b9a\u0bbf\u0bb0\u0bbf\u0baf\u0bb0\u0bcd**),\n- an English loanword (e.g. **\u0b95\u0bae\u0bcd\u0baa\u0bcd\u0baf\u0bc2\u0b9f\u0bcd\u0b9f\u0bb0\u0bcd** / **\u0baa\u0bb8\u0bcd**),\n- an ambiguous or disputed case.\n\nThe headline pass/fail test: **when given a word no source covers, does an LLM using the server report the gap, or does it hallucinate a confident answer?** If it reports the gap, the grounding is working.\n\n---\n\n## One-paragraph answer\n\nBuild it in **Python** (a Python FastMCP server for v1), because ThamizhiMorph and essentially every authentic Tamil-NLP source is Python or a native binary with Python tooling. Ground **origin** in the Thamizhi Word Validator plus loanword datasets (Indic-To-Pure-Tamil, Kaggle) cross-checked against lexicon etymology and Tholkappiyam; **root and formation** in ThamizhiMorph (the only maintained analyser that handles Sandhi); **meaning** in the Madras University Tamil Lexicon with AU-KBC WordNet as cross-check; and **grammar** in ThamizhiMorph's tags explained through Tholkappiyam and Nann\u016bl. It avoids chatbot-style hallucination by making the LLM a *relayer*, never a *source*: every field carries provenance, an unsupported word returns an explicit \"no entry found\" gap instead of a guess, ambiguous forms return all valid readings, and contested origins report the disagreement \u2014 all enforced by the JSON contract and proven by an eval that specifically checks the server reports gaps rather than inventing answers.\n"}], "grading": {"eval_id": 3, "config": "with_skill", "expectations": [{"text": "Recommends Python", "passed": true, "evidence": "all patterns matched"}, {"text": "Names ThamizhiMorph and a standard Tamil lexicon", "passed": true, "evidence": "all patterns matched"}, {"text": "Anti-hallucination via provenance/citation + honest gaps", "passed": true, "evidence": "all patterns matched"}, {"text": "Returns all analyses for ambiguous forms", "passed": true, "evidence": "all patterns matched"}], "summary": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4}}}, {"id": "eval-3-without_skill-run-1", "prompt": "Which language and which specific sources for a grounded Tamil word-analysis MCP, and how to avoid hallucinating grammar?", "eval_id": 3, "outputs": [{"name": "recommendation.md", "type": "text", "content": "# Recommendation: Building a Grounded Tamil Word-Analysis MCP\n\n## The short answer\n\n- **Language: Python.** It has the only mature Tamil NLP stack, the cleanest MCP server SDK, and the Unicode/text-handling libraries you need for a Brahmic script. Use the official `mcp` Python SDK (FastMCP-style decorators).\n- **Data sources: curated, citable lexical and morphological resources** \u2014 a real morphological analyzer plus dictionaries (Tamil Lexicon / University of Madras, Agarathi, Wiktionary), not the model's own memory of Tamil grammar.\n- **Anti-hallucination strategy: the model never produces the analysis.** The MCP tools run deterministic lookups against those resources and return structured data with citations. The LLM only orchestrates calls and phrases the result. If a word is not found, the tool says so \u2014 it does not guess.\n\nThat third point is the whole game. The rest of this document explains how to make it real.\n\n---\n\n## 1. Why Python (and not the alternatives)\n\n| Option | Verdict | Reasoning |\n|---|---|---|\n| **Python** | **Recommended** | Mature MCP SDK; the actual Tamil NLP libraries (below) are Python-first; excellent Unicode and grapheme handling; easy to wrap CLI tools and databases as tools. |\n| Node/TypeScript | Viable for the server, weak for the linguistics | The MCP TypeScript SDK is first-class, but you would shell out to Python or Java for every analysis anyway. Adds a process boundary for no benefit unless your team is JS-only. |\n| Java | Only if you commit to a specific analyzer | Some classical morphological tools (e.g. finite-state transducers) ship as Java/C. You can call them from Python via subprocess; you do not need to write the server in Java. |\n\nPython lets the **server** and the **linguistics** live in one language, which matters because the grounding logic (parse, look up, attach citation, refuse if absent) is where bugs hide.\n\n### Tamil-specific implementation notes for whichever language\n\n- Tamil is an abugaita-style Brahmic script. A single \"letter\" (\u0b89\u0baf\u0bbf\u0bb0\u0bcd\u0bae\u0bc6\u0baf\u0bcd, a consonant+vowel cluster) is several Unicode code points. **Never** index or slice by code point \u2014 segment by grapheme cluster. In Python use the `regex` module (`\\X`) or `grapheme`; in JS use `Intl.Segmenter`.\n- Normalize input to **NFC** before any lookup, and strip/standardize variant forms (e.g. legacy TSCII or TAB encodings, the two Unicode forms of certain combos). Inconsistent normalization is the #1 cause of false \"not found\" results.\n- Handle the Tamil **digits, the aaytham (\u0b83), and Grantha characters** explicitly so loanwords and Sanskrit-derived forms don't break the analyzer.\n\n---\n\n## 2. The data sources to use\n\nSplit sources into two layers. **Morphology** answers \"how is this word built?\"; **lexicon** answers \"what does this root/word mean, and is it real?\" You want both, and you want every answer traceable to one of them.\n\n### Layer A \u2014 Morphological analysis (the engine)\n\nThis is what stops grammar hallucination. A morphological analyzer is a *rule- and lexicon-based* system that splits a word into root + suffixes (case, tense, person/number/gender, plural, etc.) deterministically.\n\n1. **Open-Tamil** (`open-tamil`, PyPI) \u2014 Tamil text-processing toolkit: tokenization, letter/grapheme handling, transliteration, basic morphology helpers. Good baseline and pure-Python. Permissive license. **Start here.**\n2. **A finite-state morphological analyzer (FST).** These are the gold standard for agglutinative languages like Tamil because they encode grammar as rules, not as model weights \u2014 so they cannot invent a suffix that doesn't exist.\n   - **HFST / Apertium-style Tamil analyzers** \u2014 open finite-state transducers for Tamil morphology.\n   - **Vaakku / TamilMorph and academic FST analyzers** \u2014 research-grade analyzers for Tamil verb and noun morphology.\n   - Wrap whichever you choose as a subprocess and parse its tagged output into your schema.\n3. **Stanza (Stanford NLP)** \u2014 has a Tamil model (trained on the Tamil Universal Dependencies treebank) for tokenization, lemmatization, POS tagging, and morphological features (UD feature tags). Useful as a cross-check and for sentence-level context. Note: it is statistical, so treat it as *corroboration*, not ground truth \u2014 see the confidence rules below.\n4. **IndicNLP Library / AI4Bharat (IndicXlit, IndicNLP)** \u2014 strong for transliteration, script normalization, and tokenization across Indian languages including Tamil.\n\n> Practical stance: use a **rule-based FST as the primary** morphology source (it is auditable and non-hallucinating), and a statistical model (Stanza) only to disambiguate or corroborate. Never let the statistical model be the sole source of a grammatical claim.\n\n### Layer B \u2014 Lexicon / dictionary (meaning + existence check)\n\n5. **Tamil Lexicon (University of Madras / Madras Tamil Lexicon)** \u2014 the authoritative historical dictionary. Digitized versions are queryable; this is your citation of record for a word's existence and senses.\n6. **Agarathi (agarathi.com)** and **Tamil Virtual Academy** dictionaries \u2014 accessible, well-structured Tamil-Tamil and Tamil-English entries.\n7. **Wiktionary (Tamil + English entries for Tamil words)** \u2014 dumps are downloadable, structured, and include etymology and inflection tables. Good breadth; verify against the Tamil Lexicon for authority.\n8. **Tamil WordNet (IndoWordNet / AU-KBC)** \u2014 synsets, semantic relations, senses. Use for meaning, synonyms, and sense disambiguation.\n9. **Sandhi / grammar rules from classical grammar (Nann\u016bl, Tolk\u0101ppiyam-derived rule sets)** \u2014 for explaining *why* a form changes (\u0baa\u0bc1\u0ba3\u0bb0\u0bcd\u0b9a\u0bcd\u0b9a\u0bbf / sandhi). Encode these as an explicit, citable rule table, not as free-text the model recites.\n\n### How to actually obtain and ship them\n\n- **Download and host the data yourself** (SQLite or a small Postgres) wherever the license permits \u2014 Wiktionary dumps, WordNet, FST data files. Local data = reproducible, fast, offline, and you control the exact version you cite.\n- For sources that are web-only (Agarathi, Tamil Lexicon portals), either get an offline copy where licensed or wrap them behind a cached fetch tool \u2014 but **cache and snapshot** so answers are stable.\n- Record license terms per source and keep an attribution list. The Tamil Lexicon and academic analyzers have specific reuse conditions.\n\n---\n\n## 3. The architecture that prevents hallucination\n\nThe core principle: **the LLM is the narrator, not the linguist.** Every grammatical or lexical fact must come back from a tool that read it from a real source. Build the MCP so that the model *cannot* answer a Tamil-grammar question without calling a tool, and the tool *cannot* answer without a source hit.\n\n### Design the tools as deterministic lookups\n\nExpose narrow, typed tools \u2014 not one \"analyze Tamil\" megatool:\n\n- `analyze_word(word)` \u2192 runs the FST/morphological analyzer; returns root, POS, and an ordered list of suffixes/features, each tagged with the rule that produced it.\n- `lookup_dictionary(word_or_root)` \u2192 returns senses, gloss, etymology, **with the source name and entry ID**.\n- `split_sandhi(word)` \u2192 applies the encoded sandhi rule table; returns the components and the rule reference.\n- `inflect(root, features)` \u2192 generates a form from the FST (so generation is also rule-based, not invented).\n- `transliterate(text, scheme)` \u2192 deterministic, for ISO 15919 / romanization.\n\nEach tool returns **structured JSON**, and every field carries provenance.\n\n### Make \"I don't know\" a first-class result\n\nThis is the single most important anti-hallucination move:\n\n- If the analyzer returns no parse, the tool responds `{\"found\": false, \"reason\": \"no analysis\", \"word\": \"...\"}`. The model is instructed to relay that the word could not be analyzed \u2014 **not** to reconstruct a plausible-sounding parse.\n- Distinguish **\"not in source\"** from **\"source unavailable.\"** Never let a timeout silently become a confident answer.\n- Attach a **confidence/source-type tag**: `rule-based` (FST/dictionary \u2014 high trust) vs `statistical` (Stanza \u2014 corroborating). Surface this so a low-confidence statistical guess is never presented as fact.\n\n### Force grounding at the prompt/contract level\n\n- Ship a system prompt / tool description that states: *answer Tamil linguistic questions only from tool output; if tools return no result, say so; never supply grammar, suffixes, or meanings from your own knowledge.*\n- Have each tool **echo the exact source text or entry** it used, so the final answer can quote and cite (e.g. \"per Madras Tamil Lexicon, entry X\"). Citations are both a feature and a guardrail \u2014 a claim with no citation is, by contract, not allowed out.\n- Where multiple sources disagree, return all of them with their labels and let the answer present the disagreement, rather than silently picking one.\n\n### Validate, then trust\n\n- Build an **eval set** of known words with hand-checked correct analyses (verbs across tenses, nouns across the eight cases, sandhi examples, loanwords, rare/classical forms). Run it on every change. Track recall (did it find real words?) and, crucially, **the rate of fabricated parses on out-of-vocabulary input** \u2014 that number should be zero.\n- Add deliberate **negative tests**: nonsense strings and non-Tamil input must return `found: false`, never a confident parse.\n\n---\n\n## 4. Recommended starting stack (concrete)\n\n- **Server:** Python 3.11+, official `mcp` SDK, FastMCP-style tool decorators.\n- **Text layer:** `regex` (grapheme clusters), Unicode NFC normalization, Open-Tamil for tokenization/transliteration.\n- **Morphology (primary, rule-based):** an HFST/Apertium Tamil FST analyzer wrapped as a subprocess; **secondary/corroborating:** Stanza Tamil model.\n- **Lexicon (local, citable):** Wiktionary Tamil dump + Tamil WordNet loaded into SQLite, with the Madras Tamil Lexicon as the authority of record for existence/senses.\n- **Sandhi/grammar:** an explicit, sourced rule table (Nann\u016bl-based), exposed via `split_sandhi`/`inflect`.\n- **Contract:** every tool returns JSON with `source`, `source_id`, `confidence`, and a `found` flag; system prompt forbids ungrounded linguistic claims.\n\n### Suggested build order\n\n1. Stand up the MCP server with one tool: `lookup_dictionary` against a local Wiktionary/WordNet SQLite. Prove citations flow end to end.\n2. Add `analyze_word` backed by the FST analyzer. Wire in the `found: false` contract.\n3. Add `split_sandhi` and `inflect` from the rule table.\n4. Build the eval set (including negative tests) and gate every change on it.\n5. Add Stanza as corroboration and the confidence tagging.\n\n---\n\n## Bottom line\n\nUse **Python** with the official MCP SDK. Ground every Tamil answer in a **rule-based morphological analyzer (FST) plus citable dictionaries** (Madras Tamil Lexicon, Wiktionary, Tamil WordNet), held locally so versions are stable. Prevent hallucination not with better prompting alone but **structurally**: the model orchestrates and narrates, the tools do deterministic lookups, every fact carries a source, and \"not found\" is an allowed and expected answer. A chatbot hallucinates because it is the source; your MCP won't, because the sources are real, external, and cited.\n"}], "grading": {"eval_id": 3, "config": "without_skill", "expectations": [{"text": "Recommends Python", "passed": true, "evidence": "all patterns matched"}, {"text": "Names ThamizhiMorph and a standard Tamil lexicon", "passed": false, "evidence": "missing: ThamizhiMorph"}, {"text": "Anti-hallucination via provenance/citation + honest gaps", "passed": true, "evidence": "all patterns matched"}, {"text": "Returns all analyses for ambiguous forms", "passed": true, "evidence": "all patterns matched"}], "summary": {"pass_rate": 0.75, "passed": 3, "failed": 1, "total": 4}}}], "previous_feedback": {}, "previous_outputs": {}, "benchmark": {"metadata": {"skill_name": "thamizh-mcp-builder", "skill_path": "<path/to/skill>", "executor_model": "<model-name>", "analyzer_model": "<model-name>", "timestamp": "2026-06-28T17:03:31Z", "evals_run": [1, 2, 3], "runs_per_configuration": 3}, "runs": [{"eval_id": 1, "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 5, "failed": 0, "total": 5, "time_seconds": 154.0, "tokens": 50397, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Names ThamizhiMorph as a grounding source", "passed": true, "evidence": "all patterns matched"}, {"text": "Maps fields to specific authentic sources (analyser + lexicon + classical grammar)", "passed": true, "evidence": "all patterns matched"}, {"text": "Uses Tholkappiyam's native/borrowed word classes", "passed": true, "evidence": "all patterns matched"}, {"text": "Recommends a concrete stack (Python / FastMCP)", "passed": true, "evidence": "all patterns matched"}, {"text": "Has sign-off-ready structure (scope + eval/test plan)", "passed": true, "evidence": "all patterns matched"}], "notes": []}, {"eval_id": 2, "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 109.4, "tokens": 46417, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Decomposes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd into \u0baa\u0b95\u0bc1\u0ba4\u0bbf + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf", "passed": true, "evidence": "all patterns matched"}, {"text": "Identifies the locative case", "passed": true, "evidence": "all patterns matched"}, {"text": "Attributes root/formation to ThamizhiMorph", "passed": true, "evidence": "all patterns matched"}, {"text": "Surfaces the 5th/7th (ablative/locative) ambiguity", "passed": true, "evidence": "all patterns matched"}, {"text": "Classifies origin as \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd (native Tamil)", "passed": true, "evidence": "all patterns matched"}, {"text": "Names a standard lexicon for meaning", "passed": true, "evidence": "all patterns matched"}], "notes": []}, {"eval_id": 3, "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 88.3, "tokens": 55230, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Recommends Python", "passed": true, "evidence": "all patterns matched"}, {"text": "Names ThamizhiMorph and a standard Tamil lexicon", "passed": true, "evidence": "all patterns matched"}, {"text": "Anti-hallucination via provenance/citation + honest gaps", "passed": true, "evidence": "all patterns matched"}, {"text": "Returns all analyses for ambiguous forms", "passed": true, "evidence": "all patterns matched"}], "notes": []}, {"eval_id": 1, "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.4, "passed": 2, "failed": 3, "total": 5, "time_seconds": 122.2, "tokens": 32372, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Names ThamizhiMorph as a grounding source", "passed": false, "evidence": "missing: ThamizhiMorph"}, {"text": "Maps fields to specific authentic sources (analyser + lexicon + classical grammar)", "passed": false, "evidence": "missing: ThamizhiMorph, (?i)tholkappiyam|nann"}, {"text": "Uses Tholkappiyam's native/borrowed word classes", "passed": false, "evidence": "missing: \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd"}, {"text": "Recommends a concrete stack (Python / FastMCP)", "passed": true, "evidence": "all patterns matched"}, {"text": "Has sign-off-ready structure (scope + eval/test plan)", "passed": true, "evidence": "all patterns matched"}], "notes": []}, {"eval_id": 2, "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 102.1, "tokens": 44983, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Decomposes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd into \u0baa\u0b95\u0bc1\u0ba4\u0bbf + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf", "passed": true, "evidence": "all patterns matched"}, {"text": "Identifies the locative case", "passed": true, "evidence": "all patterns matched"}, {"text": "Attributes root/formation to ThamizhiMorph", "passed": true, "evidence": "all patterns matched"}, {"text": "Surfaces the 5th/7th (ablative/locative) ambiguity", "passed": true, "evidence": "all patterns matched"}, {"text": "Classifies origin as \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd (native Tamil)", "passed": true, "evidence": "all patterns matched"}, {"text": "Names a standard lexicon for meaning", "passed": true, "evidence": "all patterns matched"}], "notes": []}, {"eval_id": 3, "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.75, "passed": 3, "failed": 1, "total": 4, "time_seconds": 89.9, "tokens": 29318, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "Recommends Python", "passed": true, "evidence": "all patterns matched"}, {"text": "Names ThamizhiMorph and a standard Tamil lexicon", "passed": false, "evidence": "missing: ThamizhiMorph"}, {"text": "Anti-hallucination via provenance/citation + honest gaps", "passed": true, "evidence": "all patterns matched"}, {"text": "Returns all analyses for ambiguous forms", "passed": true, "evidence": "all patterns matched"}], "notes": []}], "run_summary": {"with_skill": {"pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0}, "time_seconds": {"mean": 117.2333, "stddev": 33.5432, "min": 88.3, "max": 154.0}, "tokens": {"mean": 50681.3333, "stddev": 4413.3747, "min": 46417, "max": 55230}}, "without_skill": {"pass_rate": {"mean": 0.7167, "stddev": 0.3014, "min": 0.4, "max": 1.0}, "time_seconds": {"mean": 104.7333, "stddev": 16.3102, "min": 89.9, "max": 122.2}, "tokens": {"mean": 35557.6667, "stddev": 8304.1803, "min": 29318, "max": 44983}}, "delta": {"pass_rate": "+0.28", "time_seconds": "+12.5", "tokens": "+15124"}}, "notes": []}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">No output files</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "Sheet: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "Error rendering spreadsheet: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + (summary.passed || 0) + ' passed, ' + (summary.failed || 0) + ' failed of ' + (summary.total || 0) + '</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "Saved";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "Will download on submit";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>Benchmark Results</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += metadata.timestamp + " &mdash; ";
+      if (metadata.evals_run) html += "Evals: " + metadata.evals_run.join(", ") + " &mdash; ";
+      html += (metadata.runs_per_configuration || "?") + " runs per configuration";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+
+      html += "<thead><tr><th>Metric</th><th>" + escapeHtml(labelA) + "</th><th>" + escapeHtml(labelB) + "</th><th>Delta</th></tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>Pass Rate</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += "<td>" + fmtStat(b.pass_rate, true) + "</td>";
+      html += '<td class="' + deltaClass(delta.pass_rate) + '">' + (delta.pass_rate || "—") + "</td></tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>Time (s)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += "<td>" + fmtStat(b.time_seconds, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.time_seconds) + '">' + (delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td></tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>Tokens</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += "<td>" + fmtStat(b.tokens, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.tokens) + '">' + (delta.tokens || "—") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) => a - b);
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>Per-Eval Breakdown</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "Eval " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>Config</th><th>Run</th><th>Pass Rate</th>";
+          if (hasTime) html += "<th>Time (s)</th>";
+          if (hasErrors) html += "<th>Crashes During Execution</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + run.run_number + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + (r.passed || 0) + "/" + (r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + (r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>Avg</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>Assertion</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + run.run_number + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>Analysis Notes</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>

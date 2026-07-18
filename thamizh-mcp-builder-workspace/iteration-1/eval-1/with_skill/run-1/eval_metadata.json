@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "planning-blueprint",
+  "prompt": "Start the THAMIZH MCP project's planning phase and produce a sign-off-ready blueprint covering origin, root+meaning, formation, grammar.",
+  "assertions": [
+    "Names ThamizhiMorph as a grounding source",
+    "Maps fields to specific authentic sources (analyser + lexicon + classical grammar)",
+    "Uses Tholkappiyam's native/borrowed word classes",
+    "Recommends a concrete stack (Python / FastMCP)",
+    "Has sign-off-ready structure (scope + eval/test plan)"
+  ]
+}

@@ -1,0 +1,16 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*~
+.idea/
+.vscode/
+
+# Python artifacts (skill workspaces may generate these)
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# Local scratch
+*.tmp
+.env

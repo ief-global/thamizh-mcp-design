@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "config": "without_skill",
+  "expectations": [
+    {
+      "text": "Names ThamizhiMorph as a grounding source",
+      "passed": false,
+      "evidence": "missing: ThamizhiMorph"
+    },
+    {
+      "text": "Maps fields to specific authentic sources (analyser + lexicon + classical grammar)",
+      "passed": false,
+      "evidence": "missing: ThamizhiMorph, (?i)tholkappiyam|nann"
+    },
+    {
+      "text": "Uses Tholkappiyam's native/borrowed word classes",
+      "passed": false,
+      "evidence": "missing: இயற்சொல்"
+    },
+    {
+      "text": "Recommends a concrete stack (Python / FastMCP)",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Has sign-off-ready structure (scope + eval/test plan)",
+      "passed": true,
+      "evidence": "all patterns matched"
+    }
+  ],
+  "summary": {
+    "pass_rate": 0.4,
+    "passed": 2,
+    "failed": 3,
+    "total": 5
+  }
+}

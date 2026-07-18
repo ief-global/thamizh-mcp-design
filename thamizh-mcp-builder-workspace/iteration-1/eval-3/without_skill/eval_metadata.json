@@ -1,0 +1,11 @@
+{
+  "eval_id": 3,
+  "eval_name": "stack-and-grounding",
+  "prompt": "Which language and which specific sources for a grounded Tamil word-analysis MCP, and how to avoid hallucinating grammar?",
+  "assertions": [
+    "Recommends Python",
+    "Names ThamizhiMorph and a standard Tamil lexicon",
+    "Anti-hallucination via provenance/citation + honest gaps",
+    "Returns all analyses for ambiguous forms"
+  ]
+}

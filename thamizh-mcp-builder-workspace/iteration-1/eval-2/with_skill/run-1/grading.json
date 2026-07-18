@@ -1,0 +1,42 @@
+{
+  "eval_id": 2,
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "Decomposes மரத்தில் into பகுதி + சாரியை + விகுதி",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Identifies the locative case",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Attributes root/formation to ThamizhiMorph",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Surfaces the 5th/7th (ablative/locative) ambiguity",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Classifies origin as இயற்சொல் (native Tamil)",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Names a standard lexicon for meaning",
+      "passed": true,
+      "evidence": "all patterns matched"
+    }
+  ],
+  "summary": {
+    "pass_rate": 1.0,
+    "passed": 6,
+    "failed": 0,
+    "total": 6
+  }
+}

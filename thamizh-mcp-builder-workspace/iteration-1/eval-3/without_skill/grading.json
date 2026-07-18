@@ -1,0 +1,28 @@
+{
+  "eval_id": 3,
+  "config": "without_skill",
+  "expectations": [
+    {
+      "text": "Recommends Python",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Names ThamizhiMorph and a standard Tamil lexicon",
+      "passed": false,
+      "evidence": "missing: ThamizhiMorph"
+    },
+    {
+      "text": "Anti-hallucination via provenance/citation + honest gaps",
+      "passed": true,
+      "evidence": "all patterns matched"
+    },
+    {
+      "text": "Returns all analyses for ambiguous forms",
+      "passed": true,
+      "evidence": "all patterns matched"
+    }
+  ],
+  "score": 3,
+  "total": 4
+}

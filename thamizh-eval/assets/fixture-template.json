@@ -1,0 +1,44 @@
+[
+  {
+    "id": "TE-0001",
+    "source": "self-built from blueprint seed word மரத்தில்; pattern follows G8 exam style",
+    "grade": 8,
+    "question_type": "QT07",
+    "category": "L3",
+    "question": "'மரத்தில்' என்ற சொல்லில் உள்ள வேற்றுமை உருபு எது? (அ) ஐ (ஆ) இல் (இ) கு (ஈ) ஆல்",
+    "answer": "(ஆ) இல்",
+    "alternatives": ["இல்", "ஏழாம் வேற்றுமை உருபு இல்"],
+    "score": 1,
+    "verified_against": ["ThamizhiMorph <loc>", "Tholkappiyam வேற்றுமையியல்"],
+    "verified_date": "2026-07-10",
+    "held_out": false
+  },
+  {
+    "id": "TE-0002",
+    "source": "self-built; QT01 style",
+    "grade": 10,
+    "question_type": "QT01",
+    "category": "L5",
+    "question": "'கம்ப்யூட்டர்' என்ற ஆங்கிலச் சொல்லுக்கு நிகரான தமிழ்ச் சொல் ______.",
+    "answer": "கணினி",
+    "alternatives": ["கணிப்பொறி"],
+    "score": 1,
+    "verified_against": ["TVA கலைச்சொல்", "Tamil Wiktionary"],
+    "verified_date": "2026-07-10",
+    "held_out": false
+  },
+  {
+    "id": "TE-0003",
+    "source": "self-built; sandhi split, upper band",
+    "grade": 12,
+    "question_type": "QT04",
+    "category": "L3",
+    "question": "'மரத்தில்' என்ற சொல்லைப் பகுபத உறுப்புகளாகப் பிரித்து எழுதுக.",
+    "answer": "மரம் (பகுதி) + அத்து (சாரியை) + இல் (உருபு); மரம்+அத்து புணர்ச்சியில் மகர ஈறு கெட்டது",
+    "alternatives": ["மரம் + அத்து + இல்"],
+    "score": 3,
+    "verified_against": ["ThamizhiMorph", "Nannūl six-part labels (authority recorded)"],
+    "verified_date": "2026-07-10",
+    "held_out": false
+  }
+]

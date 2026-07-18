@@ -1,0 +1,23 @@
+{
+  "skill_name": "thamizh-mcp-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I want to build the THAMIZH MCP server. Before any code, help me start with the planning phase — what do I actually need to begin this project, and give me a blueprint I can sign off on. The server should take a single Tamil word and tell me whether it's a native Tamil word or borrowed, its root and meaning, how the word is formed, and the grammar behind it.",
+      "expected_output": "A completed planning blueprint (scope, canonical output object, source-to-field mapping, tool surface, stack recommendation with reasoning, eval plan). Names authentic sources (ThamizhiMorph, Madras Tamil Lexicon, Tholkappiyam/Nannool, loanword data) rather than vague 'a Tamil dictionary'.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "For my Tamil word MCP, walk me through exactly how the server would analyze the word மரத்தில் — what each tool returns and which authentic source grounds each part of the answer (origin, root, meaning, formation, grammar).",
+      "expected_output": "Decomposes மரத்தில் into பகுதி/சாரியை/விகுதி, identifies ஏழாம் வேற்றுமை (locative) and notes the 5th/7th ambiguity, classifies as இயற்சொல், and attributes each field to a specific source (ThamizhiMorph for root/formation, lexicon for meaning, classical grammar for case). Maps to the tool surface (analyze_word/get_root/etc.).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Which programming language and which specific data sources should I use to build a Tamil word-analysis MCP that gives grounded, authentic answers — and how do I make sure it doesn't just hallucinate Tamil grammar like a plain chatbot would?",
+      "expected_output": "Recommends Python core (FastMCP) with the reason that the Tamil-NLP ecosystem is Python/native-binary; lists concrete grounding sources with access/licence; and lays out the anti-hallucination design (provenance per field, return all analyses, report disagreement, honest gaps when no source covers a word).",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "metadata": {
+    "skill_name": "thamizh-mcp-builder",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-06-28T17:03:31Z",
+    "evals_run": [
+      1,
+      2,
+      3
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 154.0,
+        "tokens": 50397,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Names ThamizhiMorph as a grounding source",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Maps fields to specific authentic sources (analyser + lexicon + classical grammar)",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Uses Tholkappiyam's native/borrowed word classes",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Recommends a concrete stack (Python / FastMCP)",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Has sign-off-ready structure (scope + eval/test plan)",
+          "passed": true,
+          "evidence": "all patterns matched"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 109.4,
+        "tokens": 46417,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Decomposes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd into \u0baa\u0b95\u0bc1\u0ba4\u0bbf + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Identifies the locative case",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Attributes root/formation to ThamizhiMorph",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Surfaces the 5th/7th (ablative/locative) ambiguity",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Classifies origin as \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd (native Tamil)",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Names a standard lexicon for meaning",
+          "passed": true,
+          "evidence": "all patterns matched"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 88.3,
+        "tokens": 55230,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recommends Python",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Names ThamizhiMorph and a standard Tamil lexicon",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Anti-hallucination via provenance/citation + honest gaps",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Returns all analyses for ambiguous forms",
+          "passed": true,
+          "evidence": "all patterns matched"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.4,
+        "passed": 2,
+        "failed": 3,
+        "total": 5,
+        "time_seconds": 122.2,
+        "tokens": 32372,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Names ThamizhiMorph as a grounding source",
+          "passed": false,
+          "evidence": "missing: ThamizhiMorph"
+        },
+        {
+          "text": "Maps fields to specific authentic sources (analyser + lexicon + classical grammar)",
+          "passed": false,
+          "evidence": "missing: ThamizhiMorph, (?i)tholkappiyam|nann"
+        },
+        {
+          "text": "Uses Tholkappiyam's native/borrowed word classes",
+          "passed": false,
+          "evidence": "missing: \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd"
+        },
+        {
+          "text": "Recommends a concrete stack (Python / FastMCP)",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Has sign-off-ready structure (scope + eval/test plan)",
+          "passed": true,
+          "evidence": "all patterns matched"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 102.1,
+        "tokens": 44983,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Decomposes \u0bae\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd into \u0baa\u0b95\u0bc1\u0ba4\u0bbf + \u0b9a\u0bbe\u0bb0\u0bbf\u0baf\u0bc8 + \u0bb5\u0bbf\u0b95\u0bc1\u0ba4\u0bbf",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Identifies the locative case",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Attributes root/formation to ThamizhiMorph",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Surfaces the 5th/7th (ablative/locative) ambiguity",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Classifies origin as \u0b87\u0baf\u0bb1\u0bcd\u0b9a\u0bca\u0bb2\u0bcd (native Tamil)",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Names a standard lexicon for meaning",
+          "passed": true,
+          "evidence": "all patterns matched"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "time_seconds": 89.9,
+        "tokens": 29318,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recommends Python",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Names ThamizhiMorph and a standard Tamil lexicon",
+          "passed": false,
+          "evidence": "missing: ThamizhiMorph"
+        },
+        {
+          "text": "Anti-hallucination via provenance/citation + honest gaps",
+          "passed": true,
+          "evidence": "all patterns matched"
+        },
+        {
+          "text": "Returns all analyses for ambiguous forms",
+          "passed": true,
+          "evidence": "all patterns matched"
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 117.2333,
+        "stddev": 33.5432,
+        "min": 88.3,
+        "max": 154.0
+      },
+      "tokens": {
+        "mean": 50681.3333,
+        "stddev": 4413.3747,
+        "min": 46417,
+        "max": 55230
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.7167,
+        "stddev": 0.3014,
+        "min": 0.4,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 104.7333,
+        "stddev": 16.3102,
+        "min": 89.9,
+        "max": 122.2
+      },
+      "tokens": {
+        "mean": 35557.6667,
+        "stddev": 8304.1803,
+        "min": 29318,
+        "max": 44983
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.28",
+      "time_seconds": "+12.5",
+      "tokens": "+15124"
+    }
+  },
+  "notes": []
+}

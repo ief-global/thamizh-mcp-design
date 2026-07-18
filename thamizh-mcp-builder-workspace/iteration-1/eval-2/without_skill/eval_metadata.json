@@ -1,0 +1,13 @@
+{
+  "eval_id": 2,
+  "eval_name": "word-walkthrough-marathil",
+  "prompt": "Walk through how the server analyzes மரத்தில் — what each tool returns and which authentic source grounds each part.",
+  "assertions": [
+    "Decomposes மரத்தில் into பகுதி + சாரியை + விகுதி",
+    "Identifies the locative case",
+    "Attributes root/formation to ThamizhiMorph",
+    "Surfaces the 5th/7th (ablative/locative) ambiguity",
+    "Classifies origin as இயற்சொல் (native Tamil)",
+    "Names a standard lexicon for meaning"
+  ]
+}
