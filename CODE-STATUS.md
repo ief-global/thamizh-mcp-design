@@ -18,10 +18,11 @@ All blueprint §6 core tools are built, tested, and merged to `main`:
 | `suggest_native_equivalent` | ✅ | I2PT, attested-only; gated on origin |
 | `explain_formation` | ✅ | பகுபத உறுப்பு decode (2026-07-18) |
 | `explain_grammar` | ✅ | word class + வேற்றுமை + verb tense/முற்று |
-| `enrich_word` | ✅ | forces pull→write-back; the one non-readOnly tool |
+| `enrich_word` | ✅ | forces pull→write-back; non-readOnly |
+| `refresh_sources` | ✅ | batch force-refresh (words / stale sweep); non-readOnly (2026-07-18) |
 
-Not yet built (blueprint §6): `refresh_sources` (batch re-pull); optional `validate_pure_tamil`,
-`generate_forms`, `transliterate`. **73 tests pass** (71 without foma).
+**9 tools live.** Not yet built (blueprint §6): optional `validate_pure_tamil`, `generate_forms`,
+`transliterate`. **87 tests pass** (85 without foma). Transaction logging on by default (see #4 below).
 
 ## Engine shape (matches blueprint §8)
 
@@ -45,9 +46,12 @@ in the SQLite `KnowledgeStore` with per-claim provenance. Linguistic rules live 
    not wrong, just honest-minimal vs the tamil-grammar.md worked examples.
 3. **Schema extended:** `FormationComponent` and `SandhiEvent` gained an optional `authority`
    field (Nannūl for six-part labels, Tholkappiyam for sandhi) to match `tool-design.md`.
-4. **Transaction logging (blueprint §12 data addendum) is NOT built yet.** The store caches
-   resolved *claims*, but there is no per-call gold-record log with `eval_fixture` flagging. This is
-   the `thamizh-data-curation` flywheel and is still a near-term to-do.
+4. ~~Transaction logging is NOT built yet.~~ **DONE (2026-07-18, PR #8).** Every resolved
+   `analyze()` is logged to a `transactions` table (full WordAnalysis + tool label + `eval_fixture`
+   flag), on by default, non-fatal. `data/eval_fixtures.json` is the contamination registry —
+   **`thamizh-data-curation`/`thamizh-eval` should read/extend it**, and read `transactions` directly
+   for extraction (step 1 of the curation pipeline). `KnowledgeStore.transaction_stats()` gives
+   growth metrics. This captures the segmentation/origin gold the `claims` cache never held.
 
 ## Anchors / data locked
 
