@@ -98,3 +98,25 @@ Rationale: `TAMIL-HIGH-RESOURCE-ROADMAP.md` (evidence + sequencing); Saran's dir
 long-term, don't work it).
 
 *Status: active.* *Links: `TAMIL-HIGH-RESOURCE-ROADMAP.md`; blueprint §12.*
+
+## D-007 · 2026-07-18 · OPEN — how the gold corpus aggregates centrally (community contribution path)
+
+Transaction logging (server PR #8) accumulates gold data in **each running instance's local SQLite
+DB**, which is gitignored and machine-local by design (CC BY-SA cache can't ship in the Apache-2.0
+repo; the store is regenerable; avoids binary-in-git merge conflicts). **Consequence:** a local /
+community install accumulates only *its own* usage — there is no mechanism to pool that gold into a
+shared corpus. Central accumulation today = **only the hosted reference instance** (Cloud Run,
+medium-term), whose DB sees all its users' queries; the durable, forward-carried artifact = the
+**versioned Hugging Face datasets** exported by `thamizh-data-curation`. Git carries code + anchors;
+HF carries the grown corpus. (See CODE-STATUS.md → transaction logging.)
+
+**Open question (decide before any "contribute your data" feature):** if we want community installs to
+feed the shared corpus — accelerating the SLM's training data — we need an *explicit, opt-in, consented*
+contribution path. Unresolved sub-decisions: consent + notice model; query-text/PII privacy review;
+per-record license compatibility (evolving-tier text vs derived structured facts); server-side dedup +
+cross-check verification of contributed records; provenance/attribution of contributors; abuse/poisoning
+guardrails. Not needed for v1 (local capture + hosted accumulation suffice); flag so it isn't lost.
+
+*Status: OPEN.* *Revisit when the hosted instance is live and/or community adoption creates pressure to
+pool data — decide the consent + licensing model first.* *Links: blueprint §12; `thamizh-data-curation`
+SKILL.md (contamination guard, license filter); `distribution-roadmap.md`; server `data/eval_fixtures.json`.*
