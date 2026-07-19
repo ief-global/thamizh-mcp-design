@@ -1,14 +1,11 @@
 # Authentic Tamil source catalog
 
-Each grounding source below is mapped to the output field(s) it can fill, with how to reach it, its licence,
-and its **tier**. The tier matters because the two kinds are maintained differently:
+Each grounding source below is mapped to the output field(s) it can fill, with how to reach it, its licence, and its **tier**. The tier matters because the two kinds are maintained differently:
 
 - **Anchor** — stable, authoritative, version-pinned. The ground truth you cross-check against.
-- **Evolving** — community-contributed, internet-fed, pulled at query time, cached, and accumulated so the
-  tool's coverage grows by itself. You can't pin a version — pin the retrieval date + provenance of each fact.
+- **Evolving** — community-contributed, internet-fed, pulled at query time, cached, and accumulated so the tool's coverage grows by itself. You can't pin a version — pin the retrieval date + provenance of each fact.
 
-When a word isn't covered by any source, that gap is a valid output — record the failure mode, don't paper
-over it.
+When a word isn't covered by any source, that gap is a valid output — record the failure mode, don't paper over it.
 
 ## Table of contents
 
@@ -26,33 +23,24 @@ over it.
 ## 1. Morphological analysers  *(anchor)*
 
 These give the **root/lemma**, the **formation**, and **POS/case** tags. Crucially, they are **rule-based**,
-so they need *no per-word maintenance* — the FST generates millions of forms from paradigms. This is the
-answer to "I don't want to hand-build a word list" for everything inflectional.
+so they need *no per-word maintenance* — the FST generates millions of forms from paradigms. This is the answer to "I don't want to hand-build a word list" for everything inflectional.
 
 ### ThamizhiMorph — primary engine
-- **What it gives:** lemma + POS + inflection analysis for nouns, verbs, particles; **handles Sandhi** (the
-  only maintained Tamil analyser that does), essential for decoding word formation. Also a *generator* (15M+
-  verbs, 10M+ nouns from paradigms).
+- **What it gives:** lemma + POS + inflection analysis for nouns, verbs, particles; **handles Sandhi** (the only maintained Tamil analyser that does), essential for decoding word formation. Also a *generator* (15M+ verbs, 10M+ nouns from paradigms).
 - **How it works:** a foma finite-state transducer. `echo தமிழ் | flookup tamil-nouns.fst` →
-  `தமிழ்\tதமிழ்+noun+nom` (lemma + pos + analysis after `+`). Python driver `thamizhi-morph-parse-2.py` adds
-  tokeniser + POS context.
+  `தமிழ்\tதமிழ்+noun+nom` (lemma + pos + analysis after `+`). Python driver `thamizhi-morph-parse-2.py` adds tokeniser + POS context.
 - **Access / licence:** GitHub `sarves/thamizhi-morph`, **Apache-2.0**. FST models, 80K-noun lexicon,
-  18-class verb paradigm, meta-morph rules included. Web portal `http://nlp-tools.uom.lk/thamizhi-morph/`.
-  Needs `foma` + `stanza`.
+  18-class verb paradigm, meta-morph rules included. Web portal `http://nlp-tools.uom.lk/thamizhi-morph/`. Needs `foma` + `stanza`.
 - **Note:** returns *all* valid analyses when it can't disambiguate — keep them all.
 
 ### ThamizhiLIP / ThamizhiPOSt
-- Python APIs for POS + morphological tagging and Universal Dependency parsing; use for contextual POS when
-  input is more than a bare word. `sarves.github.io/thamizhilip`, `github.com/nlpcuom/ThamizhiPOSt`.
+- Python APIs for POS + morphological tagging and Universal Dependency parsing; use for contextual POS when input is more than a bare word. `sarves.github.io/thamizhilip`, `github.com/nlpcuom/ThamizhiPOSt`.
 
 ### Thamizhi Word Validator — purity / native check
-- Validates whether a string is a well-formed **pure Tamil** word — a strong native-vs-borrowed signal (a
-  word that fails pure-Tamil validation is a borrowing candidate). GitHub `sarves/thamizhi-validator`.
+- Validates whether a string is a well-formed **pure Tamil** word — a strong native-vs-borrowed signal (a word that fails pure-Tamil validation is a borrowing candidate). GitHub `sarves/thamizhi-validator`.
 
 ### open-tamil (Ezhil Language Foundation)
-- Lightweight stemmer, `get_letters` (correct multi-codepoint Tamil grapheme splitting), transliteration,
-  encoding converters. `github.com/Ezhil-Language-Foundation/open-tamil`, pip-installable. Good for
-  normalization and as a fallback stemmer.
+- Lightweight stemmer, `get_letters` (correct multi-codepoint Tamil grapheme splitting), transliteration, encoding converters. `github.com/Ezhil-Language-Foundation/open-tamil`, pip-installable. Good for normalization and as a fallback stemmer.
 
 ---
 
@@ -61,23 +49,19 @@ answer to "I don't want to hand-build a word list" for everything inflectional.
 These give **meaning** (and often etymology notes that help with origin).
 
 ### Madras University Tamil Lexicon (via DSAL, U. Chicago) — authoritative meaning *(anchor)*
-- The standard scholarly Tamil dictionary (1924–1936), searchable; entries often include etymology and
-  source-language tags. `https://dsal.uchicago.edu/dictionaries/tamil-lex/`; also the DDSA Tamil Lexicon
-  apps. No official REST API — plan a queried interface or an offline copy of the digitized data. Treat as a
-  pinned anchor (data last refreshed Sep 2023).
+- The standard scholarly Tamil dictionary (1924–1936), searchable; entries often include etymology and source-language tags. `https://dsal.uchicago.edu/dictionaries/tamil-lex/`; also the DDSA Tamil Lexicon apps. No official REST API — plan a queried interface or an offline copy of the digitized data. Treat as a pinned anchor (data last refreshed Sep 2023).
 
 ### Cologne Online Tamil Lexicon (OTL) *(anchor)*
 - Comprehensive Tamil dictionary at the University of Cologne; TSCII interface, mirrored at
   `tamilelibrary.org/lexicon/`. A second dictionary opinion.
 
 ### AU-KBC Tamil WordNet / IndoWordNet — structured senses *(anchor)*
-- Synsets, relations, glosses — structured meanings, better than a flat definition for a clean `meaning`
-  field and sense disambiguation. `cfilt.iitb.ac.in/indowordnet/`, `au-kbc.org/nlp/lex_re.html`.
+- Synsets, relations, glosses — structured meanings, better than a flat definition for a clean `meaning` field and sense disambiguation. 
+- `cfilt.iitb.ac.in/indowordnet/`, 
+- `au-kbc.org/nlp/lex_re.html`.
 
 ### Tamil Wiktionary — evolving meaning/coverage *(evolving)*
-- Community-maintained, constantly growing dictionary with definitions, etymology, and inflection tables.
-  Pull at query time to fill words the anchors miss; cache + provenance-tag the result. This is a primary
-  engine of the self-enriching design for the *meaning* layer.
+- Community-maintained, constantly growing dictionary with definitions, etymology, and inflection tables. Pull at query time to fill words the anchors miss; cache + provenance-tag the result. This is a primary engine of the self-enriching design for the *meaning* layer.
 
 ---
 
@@ -185,3 +169,12 @@ Portuguese/Urdu/Marathi/Telugu loans, where "no attested equivalent" is a freque
 
 Rule of thumb: a field with no source here is a field the server cannot honestly fill yet — pull from the
 evolving tier, and if that also misses, report the gap.
+
+## Addendum 2026-07-18 — Aalamaram treebank (anchor, adoption conditional on license)
+
+**Aalamaram** — largest public Tamil treebank (~10,000 sentences; POS, NER, morphological parsing,
+dependency parsing; UD-based with Tamil-specific clitic/multi-word segmentation). Abirami et al.,
+WILDRE@LREC 2024 (aclanthology.org/2024.wildre-1.11); Sarveswaran co-author. Grounds: morphology
+cross-checks vs ThamizhiMorph, eval fixtures (L3/L4) with sentential context, phrase-level v2, SLM corpus.
+NOT an equivalents source. Access/license: distribution not yet located (not on HF; no public GitHub repo
+found) — verify before use (D-008). Tier: anchor once pinned.

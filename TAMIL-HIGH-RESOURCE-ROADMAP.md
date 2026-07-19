@@ -1,3 +1,6 @@
+> **SUPERSEDED 2026-07-18 by `DESIGN.md` §6** (first objectives revision). Kept for history; do not
+> update the tracks here — DESIGN.md is the living program map.
+
 # Tamil → High-Resource: Program Roadmap
 
 > Living doc. Created 2026-07-10. The Thamizh-MCP blueprint is the *server* spec; this is the *program*

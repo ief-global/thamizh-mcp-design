@@ -120,3 +120,38 @@ guardrails. Not needed for v1 (local capture + hosted accumulation suffice); fla
 *Status: OPEN.* *Revisit when the hosted instance is live and/or community adoption creates pressure to
 pool data — decide the consent + licensing model first.* *Links: blueprint §12; `thamizh-data-curation`
 SKILL.md (contamination guard, license filter); `distribution-roadmap.md`; server `data/eval_fixtures.json`.*
+
+## D-008 · 2026-07-18 · Source-strategy revision: keep I2PT; adopt Aalamaram for what it is
+
+I2PT is stale (small, inactive) but stays — pinned, attested, unique at its one job (Indic→pure-Tamil
+mappings). Equivalents coverage grows via TVA கலைச்சொல் snapshots + Wiktionary {{சொல்வளம்N}} mining, not by
+replacing I2PT. **Aalamaram** (WILDRE@LREC 2024; ~10k-sentence Tamil treebank: POS/NER/morphology/deps;
+Sarveswaran co-author) is ADOPTED as a new anchor-tier source for morphology cross-checks, L3/L4 eval
+fixtures, phrase-level v2, and SLM corpus.
+
+Correction recorded: the proposal "replace I2PT with Aalamaram" conflated data types — Aalamaram is a
+treebank, not an equivalents dataset; the acl-org/acl-anthology URL/license belongs to the ACL Anthology
+site, not to Aalamaram's data. **Blocking pre-step:** locate Aalamaram's actual distribution + verify its
+license (not on HF; no public repo found from the sandbox) — network-open job, batched with Madras/TVA.
+
+*Status: active (adoption conditional on license).* *Links: DESIGN.md §4; sources.md (entry added).*
+
+## D-009 · 2026-07-18 · Hugging Face org `ief-global`: datasets + Spaces demo
+
+Create hf.co/ief-global. GitHub carries code + pinned anchors + design; HF carries the versioned curated
+datasets (gold/silver/disputed) and a Spaces demo that calls the Cloud Run API (no second backend). Survey
+2026-07-18: HF has NO Tamil morphological-segmentation gold, NO loanword→equivalent dataset, NO origin-label
+dataset — our three exports are first-movers. Publish dataset v0 near-term to lock namespace + card
+discipline. NOT adopted: mirroring third-party models under the org. Long-term the SLM lives here.
+
+*Status: active.* *Links: DESIGN.md §5; thamizh-data-curation SKILL.md; D-007 (central accumulation).*
+
+## D-010 · 2026-07-18 · Operating model formalized: design repo (private) ↔ code repo (public)
+
+Cowork (Fable/high-end) plans/architects/decides in `ief-global/thamizh-mcp-design`; Claude Code implements
+in `ief-global/thamizh-mcp`. Sync: CODE-STATUS.md (code→design) · DESIGN.md/blueprint/skills (design→code).
+Never nest; design docs never enter the public repo; git only on Saran's boxes; decisions land here before
+code. Records the GitHub org move ief-admin (user) → **ief-global** (org) done 2026-07-18. DESIGN.md is the
+design repo's top-level doc, superseding TAMIL-HIGH-RESOURCE-ROADMAP.md as program map.
+
+*Status: active.* *Links: DESIGN.md §2; CODE-STATUS.md "Org / repos".*
