@@ -1,6 +1,0 @@
-{"id": "TE-0001", "arm": "test", "run": 0, "got": "இல் (ஏழாம் வேற்றுமை உருபு)", "auto_correct": false, "used_tools": false, "tokens": 76, "category": "L3", "grade": 8, "score": 1}
-{"id": "TE-0002", "arm": "test", "run": 0, "got": "மரம் (பகுதி) + த் (சாரியை) + இல் (ஏழாம் வேற்றுமை உருபு)", "auto_correct": false, "used_tools": false, "tokens": 207, "category": "L3", "grade": 12, "score": 3}
-{"id": "TE-0009", "arm": "test", "run": 0, "got": "ஆன்", "auto_correct": true, "used_tools": false, "tokens": 132, "category": "L3", "grade": 9, "score": 1}
-{"id": "TE-0013", "arm": "test", "run": 0, "got": "வளி மறை", "auto_correct": false, "used_tools": false, "tokens": 14, "category": "L5", "grade": 9, "score": 1}
-{"id": "TE-0021", "arm": "test", "run": 0, "got": "12", "auto_correct": true, "used_tools": false, "tokens": 10, "category": "L1", "grade": 3, "score": 1}
-{"id": "TE-0026", "arm": "test", "run": 0, "got": "திருவள்ளுவர்", "auto_correct": true, "used_tools": false, "tokens": 37, "category": "F", "grade": 6, "score": 1}
