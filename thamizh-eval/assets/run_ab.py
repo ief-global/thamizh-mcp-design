@@ -45,8 +45,10 @@ def matches(got: str, fx: dict) -> bool:
     return False
 
 
-def run_claude(question: str, mcp_config: str | None) -> dict:
+def run_claude(question: str, mcp_config: str | None, model: str | None = None) -> dict:
     cmd = ["claude", "-p", PROMPT.format(q=question), "--output-format", "json"]
+    if model:
+        cmd += ["--model", model]           # eval model-under-test (e.g. sonnet — cheaper than opus)
     if mcp_config:
         cmd += ["--mcp-config", mcp_config, "--allowedTools", THAMIZH_TOOLS]
     try:
@@ -78,22 +80,29 @@ def _done_pairs(path: Path) -> set:
     return done
 
 
-def run_arm(fixtures: list[dict], arm: str, mcp_config: str | None, out: Path, runs: int):
-    """Resumable: each result is appended and flushed the instant it completes, and any (question,run)
-    already present is skipped. Killing the run and re-invoking the same command continues from where
-    it stopped — no completed work is ever redone."""
+def run_arm(fixtures: list[dict], arm: str, mcp_config: str | None, out: Path, runs: int,
+            model: str | None = None, max_new: int | None = None):
+    """Resumable + spaceable: each result is appended and flushed the instant it completes, and any
+    (question,run) already present is skipped. `max_new` caps how many NEW calls this invocation makes
+    (for budget-spaced batches) — re-invoke to continue. No completed work is ever redone."""
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"{arm}.jsonl"
     done = _done_pairs(path)
     if done:
         print(f"resuming {arm}: {len(done)} (question,run) results already present — skipping them",
               file=sys.stderr)
+    new = 0
     with path.open("a", encoding="utf-8") as fh:
         for fx in fixtures:
             for i in range(runs):
                 if (fx["id"], i) in done:
                     continue
-                res = run_claude(fx["question"], mcp_config if arm == "test" else None)
+                if max_new is not None and new >= max_new:
+                    print(f"reached --max-new {max_new}; pausing (re-invoke to resume)", file=sys.stderr)
+                    _write_review(path, out, arm)
+                    return
+                res = run_claude(fx["question"], mcp_config if arm == "test" else None, model)
+                new += 1
                 got = extract(res["text"])
                 row = {"id": fx["id"], "arm": arm, "run": i, "got": got, "auto_correct": matches(got, fx),
                        "used_tools": res["turns"] > 1, "tokens": res["tokens"],
@@ -102,12 +111,16 @@ def run_arm(fixtures: list[dict], arm: str, mcp_config: str | None, out: Path, r
                 fh.flush()
                 print(f'{fx["id"]} run{i} {arm}: {"OK " if row["auto_correct"] else "MISS"} '
                       f'tools={row["used_tools"]} «{got[:40]}»', file=sys.stderr)
+    _write_review(path, out, arm)
+
+
+def _write_review(path: Path, out: Path, arm: str) -> None:
     rows = [json.loads(l) for l in path.read_text("utf-8").splitlines() if l.strip()]
     misses = [r for r in rows if not r["auto_correct"]]
     (out / f"{arm}.review.jsonl").write_text(
         "\n".join(json.dumps(r, ensure_ascii=False) for r in misses), "utf-8")
     print(f"\n{arm}: {sum(r['auto_correct'] for r in rows)}/{len(rows)} auto-correct; "
-          f"{len(misses)} to review → {out}/{arm}.review.jsonl", file=sys.stderr)
+          f"{len(misses)} to review ({len(rows)} done total)", file=sys.stderr)
 
 
 def sp(rows, key=None, val=None):
@@ -145,9 +158,11 @@ if __name__ == "__main__":
     ap.add_argument("--fixtures"); ap.add_argument("--arm", choices=["control", "test"])
     ap.add_argument("--mcp-config"); ap.add_argument("--out", default="results")
     ap.add_argument("--runs", type=int, default=3); ap.add_argument("--score", nargs=2)
+    ap.add_argument("--model", help="eval model-under-test, e.g. sonnet (cheaper than opus)")
+    ap.add_argument("--max-new", type=int, help="cap NEW calls this invocation (budget-spaced batches)")
     a = ap.parse_args()
     if a.score:
         score(*a.score)
     else:
         fx = [json.loads(l) for l in Path(a.fixtures).read_text("utf-8").splitlines() if l]
-        run_arm(fx, a.arm, a.mcp_config, Path(a.out), a.runs)
+        run_arm(fx, a.arm, a.mcp_config, Path(a.out), a.runs, model=a.model, max_new=a.max_new)
