@@ -51,3 +51,13 @@ morphology and answers directly (wrongly) instead of reaching for the grounding 
 
 ✅ End-to-end validated: fixtures → both arms via `claude -p` → auto-score → per-category SP/lift +
 tool-call rate + tokens. Ready for the full 3-run measurement (and the grounded-arm addition).
+
+## Follow-up — tool-description fix landed (2026-07-18, code PR #10)
+
+Acted on routed action #2 immediately: rewrote the MCP tool descriptions to be trigger-led ("Use this
+whenever asked …"), added FastMCP server-level `instructions`, and removed a stale "SCAFFOLD STATUS"
+line from `analyze_word`. **Re-validation on the two questions that had shown 0 tool calls + wrong
+answers:** both now invoke the tools (`num_turns: 3`) and return the correct output — மரத்தில் → `மரம் +
+அத்து + இல் (திரிதல் ம்→த்)`; ஜன்னல் → `சாளரம்`. The invocation gap closes when the descriptions signal
+"use me instead of guessing." The full 3-run A/B (with a grounded-prompt ceiling arm + hardened scoring)
+will quantify the lift across all 28 fixtures next.
