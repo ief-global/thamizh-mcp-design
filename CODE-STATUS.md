@@ -90,3 +90,14 @@ Two tracks, run together, one item at a time:
   the product matters.
 
 Also still OPEN (network session): Madras Lexicon + TVA கலைச்சொல் offline snapshots.
+
+## Phase-4 eval — smoke run finding (2026-07-18)
+
+The eval harness is built (`thamizh-eval/`: `fixtures/v1.jsonl` — 28 anchor-verified Qs; `assets/run_ab.py`
+Claude-first A/B; `assets/mcp.json`). A 6-Q smoke ran end-to-end. **Headline finding — the bottleneck is
+tool *invocation*, not tool quality:** under a neutral prompt the model calls the thamizh tools **0% of the
+time** even when attached, so spontaneous lift ≈ 0. A wiring probe proves the server returns the *correct*
+answer when invoked (`turns:3`, correct `அத்து` on the மரத்தில் split). **Routes a CODE item:** make the MCP
+tool descriptions compelling enough that a model reaches for them unprompted. Also: add a "grounded-prompt"
+eval arm to measure the achievable ceiling; harden scoring (contains-match). Full report:
+`thamizh-eval/results/report-smoke-2026-07-18.md`.

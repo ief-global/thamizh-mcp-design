@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "thamizh": {
+      "command": "uv",
+      "args": ["--directory", "/home/saran/projects/thamizh-mcp", "run", "thamizh-mcp"],
+      "env": {
+        "THAMIZH_DB": "/home/saran/projects/thamizh-mcp-design/thamizh-eval/results/eval-store.sqlite3"
+      }
+    }
+  }
+}

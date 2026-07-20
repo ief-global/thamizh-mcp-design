@@ -1,0 +1,2 @@
+{"id": "TE-0002", "arm": "control", "run": 0, "got": "மரம் (பகுதி) + இல் (வேற்றுமை உருபு) = மரத்து (சாரியை) + இல்", "auto_correct": false, "used_tools": false, "tokens": 54, "category": "L3", "grade": 12, "score": 3}
+{"id": "TE-0013", "arm": "control", "run": 0, "got": "வாதில்", "auto_correct": false, "used_tools": false, "tokens": 13, "category": "L5", "grade": 9, "score": 1}
