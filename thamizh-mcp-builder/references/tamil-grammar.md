@@ -19,6 +19,12 @@ only where Tholkappiyam does not enumerate the point. Concretely:
 
 Always record which authority a grammar claim used, so the priority is auditable.
 
+**Verse-level grounding (D-011, 2026-07-19):** cite down to the **நூற்பா number**, not just the section —
+"தொல்காப்பியம், சொல்லதிகாரம், வேற்றுமையியல், நூற்பா <n>" — once the digitized Tholkappiyam + Nannūl
+editions are pinned as anchor artifacts (candidates: Project Madurai, Tamil Virtual Academy; record the
+edition/recension chosen, as editions vary). Until then, section-level citations are the honest interim
+and should be described as such. `SourceRef` gains an optional `verse` field (additive).
+
 ## Table of contents
 
 - [1. சொல் — word classes](#1-சொல்--word-classes)

@@ -71,6 +71,11 @@ and does its one job (Indic→pure-Tamil mappings). Nothing replaces it; it gets
   **Blocking pre-step:** locate the actual data distribution + verify its license (not on HF; no public
   GitHub repo found from the sandbox; paper PDF / authors are the lead) — network-open job, same bucket as
   the Madras Lexicon + TVA snapshots.
+- **Verse-level classical grounding (D-011, added 2026-07-19):** pin digitized **Tholkappiyam + Nannūl**
+  editions (Project Madurai / Tamil Virtual Academy / better gold source at pinning time) as
+  version-locked anchors, and upgrade rule-table `SourceRef`s from section names to **நூற்பா numbers**
+  (optional `verse` field — additive). Closes the gap that grammar claims cite only at section level
+  while FST claims are commit-pinned.
 - **ILAKKANAM:** already fully incorporated (blueprint §12, thamizh-eval, D-005). The ResearchGate item
   ("Evaluating Linguistic Knowledge of LLMs in Tamil: The ILAKKANAM Benchmark") is the same work's
   published form. Dataset still not public as of 2026-07-18 — thamizh-eval's check-else-build-fixtures
@@ -107,18 +112,20 @@ lock the namespace and the card/versioning discipline; the Spaces demo lands wit
    honest-unknowns) — top code item.
 2. **Run the morphological-lift eval** (thamizh-eval; fixtures → A/B → per-category report). Flagship.
 3. Network-open sourcing session: Madras Lexicon + TVA கலைச்சொல் snapshots **+ locate/license Aalamaram**.
-4. License audit Gate-0 (I2PT MIT verify is overdue) → release rungs 0–1 (uvx → PyPI + Docker/GHCR).
-5. **Create HF `ief-global` org**; first curation export (dataset v0) from the live transactions table.
-6. Registry + tamil-nlp-catalog listings (after Gate-0).
+4. Pin digitized Tholkappiyam + Nannūl editions and add நூற்பா numbers to rule-table SourceRefs
+   (D-011) — batch the text sourcing with the same network-open session.
+5. License audit Gate-0 (I2PT MIT verify is overdue) → release rungs 0–1 (uvx → PyPI + Docker/GHCR).
+6. **Create HF `ief-global` org**; first curation export (dataset v0) from the live transactions table.
+7. Registry + tamil-nlp-catalog listings (after Gate-0).
 
 **MEDIUM (~3–12 mo):**
-7. Hosted reference instance (Cloud Run + Cloudflare, per hosting plan) + REST head → central gold
+8. Hosted reference instance (Cloud Run + Cloudflare, per hosting plan) + REST head → central gold
    accumulation begins (D-007).
-8. Public web tool (ief-global.org) + **HF Spaces demo** calling the same API.
-9. **Full புணரியல் sandhi engine** (the recorded product-quality goal — every விகாரம் named, verb-root
+9. Public web tool (ief-global.org) + **HF Spaces demo** calling the same API.
+10. **Full புணரியல் sandhi engine** (the recorded product-quality goal — every விகாரம் named, verb-root
    changes included).
-10. Aalamaram integration (cross-check + eval fixtures); phrase/sentence v2 (ThamizhiPOSt + Aalamaram).
-11. RAG over de-agglutinated roots; instruction-dataset exports; dataset versions grow on HF.
+11. Aalamaram integration (cross-check + eval fixtures); phrase/sentence v2 (ThamizhiPOSt + Aalamaram).
+12. RAG over de-agglutinated roots; instruction-dataset exports; dataset versions grow on HF.
 
 **LONG (12+ mo — marked, NOT solutioned):** Tamil SLM (grammar-first tokenizer trained on our segmentation
 gold; continued pretraining; instruction-tuning on our curated data; HF corpora join pretraining mix) ·
@@ -131,6 +138,9 @@ consent/licensing model before any pooling feature.
 - **Licenses:** I2PT MIT verify (overdue, vendored+public) · Madras Lexicon + TVA terms before snapshots
   ship · Wiktionary CC BY-SA position before the hosted instance serves cached text · Aalamaram license
   unknown until located. Gate-0 blocks every public rung.
+- **D-011 (scheduled):** grammar citations are section-level until the Tholkappiyam/Nannūl editions
+  are pinned and நூற்பா numbers land in SourceRefs — say "section-level" honestly in public claims
+  until then.
 - **D-007 (OPEN):** community gold-pooling needs consent/privacy/license design first.
 - **ILAKKANAM release watch** — if it publishes, it becomes the held-out test set (our fixtures stay dev).
 - Origin disputes, evolving-source quality, objective-5 hallucination risk — unchanged from blueprint §10,

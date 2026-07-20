@@ -155,3 +155,25 @@ code. Records the GitHub org move ief-admin (user) → **ief-global** (org) done
 design repo's top-level doc, superseding TAMIL-HIGH-RESOURCE-ROADMAP.md as program map.
 
 *Status: active.* *Links: DESIGN.md §2; CODE-STATUS.md "Org / repos".*
+
+## D-011 · 2026-07-19 · Verse-level (நூற்பா) grounding for Tholkappiyam/Nannūl citations
+
+Gap identified by Saran: the encoded rule table cites authorities only at **section level** (e.g.
+"Tholkappiyam, வேற்றுமையியல்") and no digitized edition of either classical text is pinned as anchor
+data — so grammar claims aren't auditable to the exact verse, unlike FST claims (pinned commit).
+
+Decision: **verse-level grounding is now part of the design.** Two steps, to execute during build:
+(1) pin a digitized **Tholkappiyam** and **Nannūl** edition as version-locked anchor artifacts in
+`data/` (candidate sources: Project Madurai, Tamil Virtual Academy — final gold source chosen at
+pinning time, with edition/recension recorded, since editions vary); (2) upgrade the rule table's
+`SourceRef`s from section names to **நூற்பா numbers** (keeping the section name for readability:
+"தொல்காப்பியம், சொல்லதிகாரம், வேற்றுமையியல், நூற்பா <n>"). Schema impact: SourceRef gains an optional
+`verse` field — additive, non-breaking. The LLM chain is unchanged (it still just relays citations);
+this hardens what the citation *is*.
+
+Clarification recorded with it: neither the LLM nor the runtime "reads" Tholkappiyam — grounding =
+human-encoded rule table (design time) + per-claim citations (runtime). Verse pinning completes that
+chain end-to-end.
+
+*Status: active — scheduled, not yet built.* *Links: DESIGN.md §4/§6/§7; tamil-grammar.md source-priority
+note; kb sources-provenance + roadmap articles.*
