@@ -21,6 +21,12 @@ from pathlib import Path
 
 PROMPT = ("பின்வரும் வினாவிற்குச் சுருக்கமாக விடையளிக்கவும். இறுதி விடையை மட்டும் "
           "'விடை:' என்ற முன்னொட்டுடன் ஒரே வரியில் தருக.\n\n{q}")
+# Grounded prompt (D-005 ceiling arm): explicitly invite tool use, so we measure whether the server's
+# grounding improves answers WHEN consulted — separate from spontaneous invocation. Same both arms is
+# not required here: the control arm has no tools, so the nudge is inert there.
+PROMPT_GROUNDED = ("பின்வரும் வினாவிற்குச் சுருக்கமாக விடையளிக்கவும். தமிழ்ச் சொல் பகுப்பாய்வுக் "
+                   "கருவிகள் (thamizh) கிடைத்தால், அவற்றைப் பயன்படுத்தி உறுதிசெய்து விடையளிக்கவும். "
+                   "இறுதி விடையை மட்டும் 'விடை:' என்ற முன்னொட்டுடன் ஒரே வரியில் தருக.\n\n{q}")
 
 # Read-only thamizh tools the test arm may use (auto-approved so `-p` doesn't block on a prompt).
 THAMIZH_TOOLS = ("mcp__thamizh__analyze_word,mcp__thamizh__classify_origin,mcp__thamizh__get_root,"
@@ -50,8 +56,10 @@ def matches(got: str, fx: dict) -> bool:
     return False
 
 
-def run_claude(question: str, mcp_config: str | None, model: str | None = None) -> dict:
-    cmd = ["claude", "-p", PROMPT.format(q=question), "--output-format", "json"]
+def run_claude(question: str, mcp_config: str | None, model: str | None = None,
+               grounded: bool = False) -> dict:
+    prompt = (PROMPT_GROUNDED if grounded else PROMPT).format(q=question)
+    cmd = ["claude", "-p", prompt, "--output-format", "json"]
     if model:
         cmd += ["--model", model]           # eval model-under-test (e.g. sonnet — cheaper than opus)
     if mcp_config:
@@ -86,7 +94,7 @@ def _done_pairs(path: Path) -> set:
 
 
 def run_arm(fixtures: list[dict], arm: str, mcp_config: str | None, out: Path, runs: int,
-            model: str | None = None, max_new: int | None = None):
+            model: str | None = None, max_new: int | None = None, grounded: bool = False):
     """Resumable + spaceable: each result is appended and flushed the instant it completes, and any
     (question,run) already present is skipped. `max_new` caps how many NEW calls this invocation makes
     (for budget-spaced batches) — re-invoke to continue. No completed work is ever redone."""
@@ -106,7 +114,7 @@ def run_arm(fixtures: list[dict], arm: str, mcp_config: str | None, out: Path, r
                     print(f"reached --max-new {max_new}; pausing (re-invoke to resume)", file=sys.stderr)
                     _write_review(path, out, arm)
                     return
-                res = run_claude(fx["question"], mcp_config if arm == "test" else None, model)
+                res = run_claude(fx["question"], mcp_config if arm == "test" else None, model, grounded)
                 new += 1
                 got = extract(res["text"])
                 row = {"id": fx["id"], "arm": arm, "run": i, "got": got, "auto_correct": matches(got, fx),
@@ -165,9 +173,11 @@ if __name__ == "__main__":
     ap.add_argument("--runs", type=int, default=3); ap.add_argument("--score", nargs=2)
     ap.add_argument("--model", help="eval model-under-test, e.g. sonnet (cheaper than opus)")
     ap.add_argument("--max-new", type=int, help="cap NEW calls this invocation (budget-spaced batches)")
+    ap.add_argument("--grounded", action="store_true", help="test arm: prompt the model to use the tools")
     a = ap.parse_args()
     if a.score:
         score(*a.score)
     else:
         fx = [json.loads(l) for l in Path(a.fixtures).read_text("utf-8").splitlines() if l]
-        run_arm(fx, a.arm, a.mcp_config, Path(a.out), a.runs, model=a.model, max_new=a.max_new)
+        run_arm(fx, a.arm, a.mcp_config, Path(a.out), a.runs,
+                model=a.model, max_new=a.max_new, grounded=a.grounded)
