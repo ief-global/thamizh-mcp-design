@@ -101,3 +101,10 @@ answer when invoked (`turns:3`, correct `அத்து` on the மரத்த
 tool descriptions compelling enough that a model reaches for them unprompted. Also: add a "grounded-prompt"
 eval arm to measure the achievable ceiling; harden scoring (contains-match). Full report:
 `thamizh-eval/results/report-smoke-2026-07-18.md`.
+
+**Update (2026-07-19):** ✅ tool-description fix landed (code PR #10) — re-validation shows the two failing
+smoke questions now invoke the tools + answer correctly. Scoring hardened (contains-match for gold ≥3 chars,
+fixes short-answer-with-gloss false negatives). **Full 3-run A/B over all 28 fixtures is running now**;
+lift report to follow. ✅ D-011 schema part landed (PR #11 — optional `SourceRef.verse`); verse *numbers*
+await pinning a digitized edition — **Saran chose Project Madurai** (2026-07-19), batched into the
+network-open session (with Madras Lexicon + TVA + Aalamaram). No verse numbers hardcoded from memory.

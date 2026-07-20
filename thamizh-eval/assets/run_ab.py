@@ -33,6 +33,18 @@ def norm(s: str) -> str:
     return "".join(ch for ch in s if ch.isalnum() or 0x0B80 <= ord(ch) <= 0x0BFF)
 
 
+def matches(got: str, fx: dict) -> bool:
+    """Correct if a gold (answer or alternative) equals the response, or — for golds of >=3 chars —
+    appears within it (handles short Tamil answers wrapped in a gloss, e.g. 'இல் (ஏழாம் வேற்றுமை உருபு)').
+    Short/numeric golds require exact match to avoid spurious substring hits. Misses still go to review."""
+    gn = norm(got)
+    for g in [fx["answer"], *fx.get("alternatives", [])]:
+        gg = norm(g)
+        if gg and (gg == gn or (len(gg) >= 3 and gg in gn)):
+            return True
+    return False
+
+
 def run_claude(question: str, mcp_config: str | None) -> dict:
     cmd = ["claude", "-p", PROMPT.format(q=question), "--output-format", "json"]
     if mcp_config:
@@ -61,7 +73,7 @@ def run_arm(fixtures: list[dict], arm: str, mcp_config: str | None, out: Path, r
         for i in range(runs):
             res = run_claude(fx["question"], mcp_config if arm == "test" else None)
             got = extract(res["text"])
-            ok = norm(got) == norm(fx["answer"]) or any(norm(got) == norm(a) for a in fx.get("alternatives", []))
+            ok = matches(got, fx)
             rows.append({"id": fx["id"], "arm": arm, "run": i, "got": got, "auto_correct": ok,
                          "used_tools": res["turns"] > 1, "tokens": res["tokens"],
                          "category": fx["category"], "grade": fx["grade"], "score": fx["score"]})
