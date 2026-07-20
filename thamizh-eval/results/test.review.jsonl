@@ -1,3 +1,0 @@
-{"id": "TE-0001", "arm": "test", "run": 0, "got": "இல் (ஏழாம் வேற்றுமை உருபு)", "auto_correct": false, "used_tools": false, "tokens": 76, "category": "L3", "grade": 8, "score": 1}
-{"id": "TE-0002", "arm": "test", "run": 0, "got": "மரம் (பகுதி) + த் (சாரியை) + இல் (ஏழாம் வேற்றுமை உருபு)", "auto_correct": false, "used_tools": false, "tokens": 207, "category": "L3", "grade": 12, "score": 3}
-{"id": "TE-0013", "arm": "test", "run": 0, "got": "வளி மறை", "auto_correct": false, "used_tools": false, "tokens": 14, "category": "L5", "grade": 9, "score": 1}

@@ -19,3 +19,10 @@ __pycache__/
 *.sqlite3
 *.sqlite3-wal
 *.sqlite3-shm
+
+# Eval RUN OUTPUTS are regenerable per-run artifacts — track the human-readable .md reports only,
+# not the raw jsonl/logs/summaries or the per-run result subdirs (control/test/calib/opus-run/...).
+thamizh-eval/results/*.jsonl
+thamizh-eval/results/*.log
+thamizh-eval/results/*.txt
+thamizh-eval/results/*/
