@@ -67,20 +67,42 @@ def extract(resp: str) -> str:
     return resp.strip()
 
 
+def _done_pairs(path: Path) -> set:
+    """(id, run) pairs already recorded in an arm's jsonl — the resume checkpoint."""
+    done = set()
+    if path.exists():
+        for line in path.read_text("utf-8").splitlines():
+            if line.strip():
+                r = json.loads(line)
+                done.add((r["id"], r["run"]))
+    return done
+
+
 def run_arm(fixtures: list[dict], arm: str, mcp_config: str | None, out: Path, runs: int):
-    rows = []
-    for fx in fixtures:
-        for i in range(runs):
-            res = run_claude(fx["question"], mcp_config if arm == "test" else None)
-            got = extract(res["text"])
-            ok = matches(got, fx)
-            rows.append({"id": fx["id"], "arm": arm, "run": i, "got": got, "auto_correct": ok,
-                         "used_tools": res["turns"] > 1, "tokens": res["tokens"],
-                         "category": fx["category"], "grade": fx["grade"], "score": fx["score"]})
-            print(f'{fx["id"]} run{i} {arm}: {"OK " if ok else "MISS"}  tools={res["turns"]>1}  «{got[:40]}»',
-                  file=sys.stderr)
+    """Resumable: each result is appended and flushed the instant it completes, and any (question,run)
+    already present is skipped. Killing the run and re-invoking the same command continues from where
+    it stopped — no completed work is ever redone."""
     out.mkdir(parents=True, exist_ok=True)
-    (out / f"{arm}.jsonl").write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in rows), "utf-8")
+    path = out / f"{arm}.jsonl"
+    done = _done_pairs(path)
+    if done:
+        print(f"resuming {arm}: {len(done)} (question,run) results already present — skipping them",
+              file=sys.stderr)
+    with path.open("a", encoding="utf-8") as fh:
+        for fx in fixtures:
+            for i in range(runs):
+                if (fx["id"], i) in done:
+                    continue
+                res = run_claude(fx["question"], mcp_config if arm == "test" else None)
+                got = extract(res["text"])
+                row = {"id": fx["id"], "arm": arm, "run": i, "got": got, "auto_correct": matches(got, fx),
+                       "used_tools": res["turns"] > 1, "tokens": res["tokens"],
+                       "category": fx["category"], "grade": fx["grade"], "score": fx["score"]}
+                fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+                fh.flush()
+                print(f'{fx["id"]} run{i} {arm}: {"OK " if row["auto_correct"] else "MISS"} '
+                      f'tools={row["used_tools"]} «{got[:40]}»', file=sys.stderr)
+    rows = [json.loads(l) for l in path.read_text("utf-8").splitlines() if l.strip()]
     misses = [r for r in rows if not r["auto_correct"]]
     (out / f"{arm}.review.jsonl").write_text(
         "\n".join(json.dumps(r, ensure_ascii=False) for r in misses), "utf-8")
