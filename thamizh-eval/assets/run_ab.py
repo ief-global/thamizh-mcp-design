@@ -42,6 +42,11 @@ def matches(got: str, fx: dict) -> bool:
         gg = norm(g)
         if gg and (gg == gn or (len(gg) >= 3 and gg in gn)):
             return True
+    # multi-part answers (e.g. "மரம் + அத்து + இல்"): correct if EVERY part appears in the response
+    if "+" in fx["answer"]:
+        parts = [p for p in (norm(x) for x in fx["answer"].split("+")) if len(p) >= 2]
+        if parts and all(p in gn for p in parts):
+            return True
     return False
 
 
