@@ -22,7 +22,31 @@ All blueprint §6 core tools are built, tested, and merged to `main`:
 | `refresh_sources` | ✅ | batch force-refresh (words / stale sweep); non-readOnly (2026-07-18) |
 
 **9 tools live.** Not yet built (blueprint §6): optional `validate_pure_tamil`, `generate_forms`,
-`transliterate`. **87 tests pass** (85 without foma). Transaction logging on by default (see #4 below).
+`transliterate`. **109 tests pass** (107 without foma). Transaction logging on by default (see #4 below).
+
+## Web/REST head live — 2026-07-26 (blueprint §8 "heads over one engine" now proven)
+
+FastAPI head + browser UI over the **same engine — zero engine changes were needed**, which validates
+the one-engine/many-heads design. `GET /` UI · `GET /api/analyze` · `GET /healthz`; network/meaning OFF
+by default. **Why:** terminals do not shape Tamil script (vowel signs detach/reorder), so CLI output is
+unusable for demos; browsers shape it correctly. Runs 24/7 on minnaham (systemd) at
+**http://minnaham:8080** — now the project's main manual-test surface, and every word tested there
+feeds the `transactions` gold log. Also fixed a real packaging bug: the Dockerfile installed the empty
+transitional `foma-bin`, so the container had **no working FST**.
+
+**This unblocks design items early:** the REST head (DESIGN.md §6 item 7) exists ahead of schedule, and
+the public web tool / HF Spaces demo (item 8) now have a working front end to build on.
+
+## FST coverage gaps closed — 2026-07-20 (was the top-priority product gap)
+
+`analyze_word` had been returning `unknown` for many everyday verbs. Cause: the primary FSTs lack those
+lemmas / irregular tense stems. Guesser FSTs were rejected — they return **wrong lemmas** (கொடுத் for
+கொடு), i.e. confident errors instead of honest gaps. Fix: a curated **ANCHOR** paradigm table
+(`data/verb_paradigms.json`), consulted **only on an FST miss**, closed (unlisted → honest gap), same
+grounding model as the decoder rule tables (D-011). Coverage on the common-verb sweep: **past 24/24,
+present 18/18, future 18/18**. Causative இடைநிலை decode fixed too (செய்வித்தான் → செய்+வி+த்+ஆன்).
+Future 3sgn is deliberately excluded — Tamil future neuter `-உம்` is tagged nonfinite by the FST itself.
+**Still open:** non-finite forms (கொடுக்க / கொடுத்து / கொடுக்கும்) and more lemmas.
 
 ## Engine shape (matches blueprint §8)
 
