@@ -132,3 +132,14 @@ fixes short-answer-with-gloss false negatives). **Full 3-run A/B over all 28 fix
 lift report to follow. ✅ D-011 schema part landed (PR #11 — optional `SourceRef.verse`); verse *numbers*
 await pinning a digitized edition — **Saran chose Project Madurai** (2026-07-19), batched into the
 network-open session (with Madras Lexicon + TVA + Aalamaram). No verse numbers hardcoded from memory.
+
+## ▶ Next direction (agreed 2026-07-26): TESTING-DRIVEN development
+
+Saran is testing the live web app (http://minnaham:8080) and will bring back observed gaps,
+clarification questions, and UI tweaks. **Those findings drive the next build** — fix what real use
+exposes, rather than working the backlog blind. Design side: expect fix/tweak requests grounded in
+actual usage, and treat the web app as the shared reference surface when discussing behaviour.
+
+The Phase-4 eval stays paused; note its achievable ceiling rose with the coverage fixes, so a
+re-measure is more meaningful than before. Other queued work is listed under "Agreed direction
+(2026-07-18)" above, unchanged.
