@@ -209,3 +209,33 @@ Still genuinely open (sourcing tasks, NOT blockers): Madras Lexicon (DSAL) terms
 
 *Status: settled.* *Supersedes the Gate-0-as-blocker framing in DESIGN.md §6/§7.* *Links:
 `thamizh-mcp/LICENSING.md`; D-007 (data pooling); D-008 (Aalamaram); D-011 (verse citations).*
+
+## D-013 · 2026-07-26 · The public app is a separate deliverable from the MCP product
+
+Domain **`thamizh-ai.org`** purchased (Cloudflare, under IEF). Hyphenated over `thamizhai.org`: the
+joined form reads as **தமிழை** (accusative of தமிழ்) to native speakers, which buries the "AI" signal;
+the hyphen also matches the existing `ief-global.org`. Brand may still be styled **Thamizh-AI / தமிழ்AI**.
+
+**Two things, deliberately separate — do not conflate their requirements:**
+
+| | `thamizh-mcp` (the product others install) | `thamizh-ai.org` (our app) |
+|---|---|---|
+| How it runs | `uvx` / `pip` / Docker, local, stdio | long-running service, multi-user |
+| Data store | **SQLite, zero-config** (a file on first run) | **Postgres** in a container |
+| Requires | Python + foma + bundled pinned data | container runtime + Postgres |
+| Corpus | the user's own local cache | the shared gold corpus (D-007 accumulation point) |
+
+**Nobody installing `thamizh-mcp` will ever be required to run containers or Postgres.** Zero-config
+local install is a feature we protect. Postgres is an **optional backend for server deployments**;
+SQLite stays the default. This needs a thin storage abstraction in `store/knowledge.py` (currently
+SQLite-coupled: `import sqlite3`, `INSERT OR REPLACE`, `AUTOINCREMENT`) with both backends tested.
+
+**Layers of the app:** browser UI → FastAPI head → the same plain-Python engine → Postgres (growing
+data) + pinned anchor data baked into the container image. No queue, no load balancer — it is a small app.
+
+**Hosting:** runs on **minnaham** for now (real disk, no cold starts, foma native). Public access, when
+needed, via **Tailscale Funnel** first (Saran also wants to learn it). Cloud vendor deliberately NOT
+chosen yet — containerising keeps that door open; decide with real traffic, not credits.
+
+*Status: active.* *Links: `thamizh-mcp-hosting-plan.md` (its Cloud Run recommendation is no longer the
+default), D-007 (central accumulation), D-012 (licensing settled).*
