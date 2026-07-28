@@ -177,3 +177,35 @@ chain end-to-end.
 
 *Status: active — scheduled, not yet built.* *Links: DESIGN.md §4/§6/§7; tamil-grammar.md source-priority
 note; kb sources-provenance + roadmap articles.*
+
+## D-012 · 2026-07-26 · Licensing SETTLED — mixed-licence product, cleared for public serving
+
+Earlier docs framed licensing as an open blocker ("Gate-0 licence audit blocks every public rung";
+per-file "verify before redistribution" flags). **Saran, for IEF (project owner), settled this on
+2026-07-26: every source we ship is cleared for use INCLUDING the public hosted service.**
+
+- **I2PT** — MIT, openly redistributable (upstream aggregates openly-licensed community lists).
+  Cleared. But deliberately **PROVISIONAL**: to be superseded by authenticated gold sources
+  (TVA/govt கலைச்சொல் and comparable); the `SourceAdapter` interface makes that a drop-in swap.
+- **Tamil Wiktionary** — CC BY-SA, cleared for use *and public serving*, with attribution; the content
+  stays CC BY-SA and is never relicensed under Apache-2.0.
+- **The model:** a mixed-licence product with **per-source classification**. This works precisely
+  because every claim already carries its source — the provenance machinery that makes answers
+  auditable also makes licences classifiable per record. Exports ship per-source subsets rather than
+  diluting one dataset's licence.
+- **`meaning` stays ENABLED in the public app.** Surfacing meanings — including wrong ones — is a
+  *purpose* of the public demo: scholars pinpoint errors so the data improves. Disabling it would
+  remove the feedback loop that the whole scholar-engagement strategy depends on.
+- **Privacy:** a short privacy note goes in the thamizhai GitHub project / site (analyses are logged
+  as linguistic data). Relates to D-007, which remains open only for *pooling contributions from other
+  installs*, not for the hosted instance's own logging.
+
+Authority in code: **`LICENSING.md` in the thamizh-mcp repo** — written to be the canonical answer so
+this is not re-litigated. Stale flags cleared from NOTICE, data/PINS.md, CLAUDE.md, CONTRIBUTING.md,
+TESTING-ON-LINUX.md.
+
+Still genuinely open (sourcing tasks, NOT blockers): Madras Lexicon (DSAL) terms · Aalamaram licence
+(D-008) · pinning a digitised Tholkappiyam/Nannūl edition for நூற்பா citations (Project Madurai chosen).
+
+*Status: settled.* *Supersedes the Gate-0-as-blocker framing in DESIGN.md §6/§7.* *Links:
+`thamizh-mcp/LICENSING.md`; D-007 (data pooling); D-008 (Aalamaram); D-011 (verse citations).*
