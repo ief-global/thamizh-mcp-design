@@ -1,0 +1,10 @@
+{
+  "$comment": "Shared, portable permissions for this repo. Committed so they travel to every clone. This is a docs/design repo -- no build or test commands to allow, just the safety rails for phone-driven remote-control sessions.",
+  "permissions": {
+    "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git push --force-with-lease:*)",
+      "Bash(git reset --hard:*)"
+    ]
+  }
+}
