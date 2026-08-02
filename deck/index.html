@@ -9,8 +9,11 @@
     --ink:#241c1c; --muted:#6f6260; --line:#e2d9d3; --bg:#fbf8f5; --card:#fff;
     --accent:#7a1f2b; --accent2:#2f3d6b; --ok:#1f6b4a; --warn:#8a6a1f;
     --tamil:"Noto Sans Tamil","Latha","Nirmala UI","Tamil Sangam MN","Lohit Tamil",sans-serif;
-    --ui:system-ui,-apple-system,"Segoe UI",sans-serif;
-    --mono:ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+    /* Tamil fonts are appended to the UI and mono stacks so that Tamil glyphs inside small labels
+       and output blocks fall back DETERMINISTICALLY to Noto Sans Tamil rather than to whatever the
+       host's fontconfig happens to pick (Latin still comes from the first font that has it). */
+    --ui:system-ui,-apple-system,"Segoe UI","Noto Sans Tamil","Latha","Nirmala UI",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono",Menlo,Consolas,"Noto Sans Tamil","Latha",monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -36,7 +39,9 @@
   ul{list-style:none;font-size:2.7vh;line-height:1.5}
   li{margin:1.5vh 0;padding-left:3.2vh;position:relative;max-width:54ch}
   li::before{content:"—";position:absolute;left:0;color:var(--accent)}
-  .ta{font-family:var(--tamil)}
+  /* Tamil must never inherit letter-spacing or uppercasing from a label style — it has no case,
+     and tracking pulls conjuncts apart. Any Tamil inside a UI label is wrapped in .ta. */
+  .ta{font-family:var(--tamil);letter-spacing:normal;text-transform:none}
   .accent{color:var(--accent)}
   .muted{color:var(--muted)}
   .center{align-items:center;text-align:center}
