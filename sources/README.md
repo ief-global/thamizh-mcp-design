@@ -1,8 +1,16 @@
 # Source materials
 
-Reference documents used to build (and audit) the grammar rule tables that ship in the **public**
-`thamizh-mcp` repo. **These documents stay in this private repo.** Only the *derived, cited rule
-tables* ship publicly.
+Reference documents used to build (and audit) the grammar rule tables that ship in the
+`thamizh-mcp` code repo.
+
+⚠️ **This repo is public.** What may be redistributed depends on the source, not on the repo:
+
+- **TVA course books** (`tva/`) carry no redistribution grant, so the ePUBs are **gitignored** and
+  never committed. Only the *derived, cited rule tables* ship. Check `git check-ignore` before
+  adding anything under `tva/`.
+- **Project Madurai classical etexts** (`classical/`) explicitly grant free distribution provided
+  their header stays intact, so those DO ship — as version-locked artifacts in the code repo's
+  `data/classical/`, header included.
 
 ## Why the split
 
@@ -20,7 +28,8 @@ sources/
 │   ├── A021-sol/           சொல்   — A0211 பெயர்ச்சொல் · A0212 வினைச்சொல்
 │   │                                A0213 இடைச்சொல், உரிச்சொல் · A0214 சொற்றொடரியல்
 │   └── CITATION.md         how to cite a TVA lesson inside a rule table
-└── classical/              future: pinned digitised Tholkappiyam / Nannūl editions (D-011)
+└── classical/              PINNED (D-011 closed): Tholkappiyam + Nannūl, Project Madurai
+                            → artifacts live in thamizh-mcp/data/classical/
 ```
 
 ⚠️ The எழுத்து course is **C021**, not A011. This file previously said `A011-eluthu` / `A0111`–`A0114`;
@@ -38,8 +47,10 @@ those ids do not exist. Corrected 2026-08-02 against the actual TVA material.
 ## How these become code
 
 1. Read the lesson section that defines a rule inventory (e.g. the நிகழ்கால இடைநிலை list).
-2. Encode it as a cited table in the public repo under `data/grammar/*.json`, carrying `authority`,
-   the TVA lesson id, `verified_by` and `verified_date`.
+2. Encode it as a cited table in the code repo under `data/grammar/*.json`, carrying `source_priority`,
+   `authority`, the TVA lesson id, `verified_by` and `verified_date`.
+   ⚠️ Verify every நூற்பா number against `thamizh-mcp/data/classical/*.json` — **TVA renumbers**
+   (its 336/319/136 are 337/320/137). `tests/test_citations.py` enforces this.
 3. The decoder consumes the table; every claim it emits can then name its source.
 4. A Tamil scholar can audit the linguistics by reading the JSON — no Python required.
 
@@ -49,7 +60,7 @@ suggests — check before extracting:
 | rule table | authority நூற்பா | extracted from |
 |---|---|---|
 | `idainilai.json` | 142, 143, 144 | A0212 §6.2 **and** C0212 §6.2 (two independent attestations) |
-| `vikuthi.json` | **140** (closed 37→40 inventory), 336 | **C0212 §6.1**, A0212 §3.2.1 |
+| `vikuthi.json` | **140** (closed 37→40 inventory), **337** | **C0212 §6.1**, A0212 §3.2.1 |
 | `sariyai.json` | 133, **243**, **244** | **C0214 §4.2**, C0212 §5.3.4 |
 | `verrumai_urubu.json` | 240–242, 291–303, 315 | A0211 §§5–6, C0214 §4.1 |
 | `vikaram.json` | 153, **154**, 157 | **C0213 §1.6**, C0212 §5.3.6 |
