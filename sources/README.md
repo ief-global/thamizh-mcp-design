@@ -15,13 +15,16 @@ complete third-party textbooks is a different act with a different licence quest
 ```
 sources/
 ├── tva/                    Tamil Virtual Academy (Govt. of Tamil Nadu, degree-level accredited)
-│   ├── A011-eluthu/        எழுத்து — A0111 மொழி அமைப்பு · A0112 எழுத்தின் பிறப்பும் பத இலக்கணமும்
-│   │                                A0113 புணர்ச்சி-1 · A0114 புணர்ச்சி-2
+│   ├── C021-eluthu/        எழுத்து — C0211 மொழி அமைப்பு · C0212 எழுத்தின் பிறப்பும் பத இலக்கணமும்
+│   │                                C0213 புணர்ச்சி-1 · C0214 புணர்ச்சி-2
 │   ├── A021-sol/           சொல்   — A0211 பெயர்ச்சொல் · A0212 வினைச்சொல்
 │   │                                A0213 இடைச்சொல், உரிச்சொல் · A0214 சொற்றொடரியல்
 │   └── CITATION.md         how to cite a TVA lesson inside a rule table
 └── classical/              future: pinned digitised Tholkappiyam / Nannūl editions (D-011)
 ```
+
+⚠️ The எழுத்து course is **C021**, not A011. This file previously said `A011-eluthu` / `A0111`–`A0114`;
+those ids do not exist. Corrected 2026-08-02 against the actual TVA material.
 
 ## Formats — prefer ePUB
 
@@ -40,5 +43,22 @@ sources/
 3. The decoder consumes the table; every claim it emits can then name its source.
 4. A Tamil scholar can audit the linguistics by reading the JSON — no Python required.
 
+**Where the rules actually live.** The lesson that governs a rule is not always the one the topic name
+suggests — check before extracting:
+
+| rule table | authority நூற்பா | extracted from |
+|---|---|---|
+| `idainilai.json` | 142, 143, 144 | A0212 §6.2 **and** C0212 §6.2 (two independent attestations) |
+| `vikuthi.json` | **140** (closed 37→40 inventory), 336 | **C0212 §6.1**, A0212 §3.2.1 |
+| `sariyai.json` | 133, **243**, **244** | **C0214 §4.2**, C0212 §5.3.4 |
+| `verrumai_urubu.json` | 240–242, 291–303, 315 | A0211 §§5–6, C0214 §4.1 |
+| `vikaram.json` | 153, **154**, 157 | **C0213 §1.6**, C0212 §5.3.6 |
+
+**C0212 (எழுத்தின் பிறப்பும் பத இலக்கணமும்) is the பதவியல் lesson** — it, not the சொல் course, is the
+authority for the six பகுபத உறுப்பு (நூற்பா 133) and for the விகுதி / இடைநிலை inventories. விகுதி and
+சாரியை are *not* in A021-sol at all. C0212 also re-quotes நூற்பா 142/143 independently, which
+re-confirms the இடைநிலை fix from a second lesson.
+
 First table built this way: `data/grammar/idainilai.json` (tense markers), after the
-வருகிறான் → வா + **கிறு** + ஆன் correction on 2026-08-02.
+வருகிறான் → வா + **கிறு** + ஆன் correction on 2026-08-02. Four more followed the same day
+(விகுதி, சாரியை, வேற்றுமை உருபு, விகாரம்) — see `DECODER-AUDIT-D014.md`.

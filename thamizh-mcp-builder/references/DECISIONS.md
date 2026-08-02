@@ -272,5 +272,32 @@ bytes, not Unicode.
 **Known gap (recorded, not fabricated):** strong-verb PAST doubling (படித்தான் = படி + த்[சந்தி] +
 த்[இடைநிலை] + ஆன்) is not recoverable from the FST tag, which reports only `past=த்`.
 
-*Status: active.* *Links: `thamizh-mcp/data/grammar/idainilai.json`; `sources/README.md`;
-D-011 (verse citations); D-012 (licensing).*
+### Outcome — 2026-08-02, second pass
+
+The normalisation layer generalised past இடைநிலை. **Four more cited tables** now sit beside it, each
+carrying its நூற்பா: `vikuthi.json` (140 — the closed 37→40 inventory; 336), `sariyai.json` (133, 243,
+244 — the seventeen பொதுச் சாரியை), `verrumai_urubu.json` (240–242, 291–303, 315), `vikaram.json`
+(153, 154, 157 — the three விகாரம்).
+
+**Auditing every other decoder emission found eight further instances of the same confusion**, which
+settles the open question in the Decision above: the இடைநிலை bug was not an isolated typo but the
+first symptom found. Full evidence, with live-FST tag surfaces, in `DECODER-AUDIT-D014.md`. Summary:
+`euph=` (a சாரியை) dropped entirely, so வந்தனன் loses an உறுப்பு · `கள்` emitted as part of the
+விகுதி (நூற்பா 336 gives ஈர்/ஆர் alone; கள் is a modern accretion) · `3pln=அன` is சாரியை அன் + விகுதி
+அ, and `3pln` is unmapped · `opt=` (வியங்கோள்) dropped · case உருபு truncated to one form per case ·
+சொல்லுருபு (`உடைய`, `இலிருந்து`) displayed as if it were the உருபு · மரம்→மரத்து misnamed திரிதல்
+when it is கெடுதல் + தோன்றல் · `SandhiEvent.type` uses a term that is not one of Nannūl's three.
+
+**Source correction:** the எழுத்து course is **C021** (C0211–C0214), not A011. And the rules do not
+live where the topic name suggests — **விகுதி and சாரியை are not in A021-sol at all**; C0212 is the
+பதவியல் lesson and the authority for பகுபத உறுப்பு. See `sources/README.md`.
+
+**Open, needs Saran's ruling (label unchanged meanwhile):** is causative `வி` an **இடைநிலை** (what we
+emit — Nannūl defines இடைநிலை positionally, and வி does sit medially in செய்+வி+த்+ஆன்) or a **விகுதி**
+(TVA C0212 §6.1.7 and A0212 both list வி, பி, கு, சு, டு, து, பு, று as பிறவினை **விகுதி**)?
+
+**Second known gap:** the நான்காம் வேற்றுமை நூற்பா is not quoted anywhere in TVA A0211 — recorded as
+`verse: null`, never filled from memory.
+
+*Status: active.* *Links: `thamizh-mcp/data/grammar/{idainilai,vikuthi,sariyai,verrumai_urubu,vikaram}.json`;
+`DECODER-AUDIT-D014.md`; `sources/README.md`; D-011 (verse citations); D-012 (licensing).*
