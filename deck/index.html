@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thamizh-AI — grounding AI in authentic Tamil grammar</title>
+<style>
+  :root{
+    --ink:#241c1c; --muted:#6f6260; --line:#e2d9d3; --bg:#fbf8f5; --card:#fff;
+    --accent:#7a1f2b; --accent2:#2f3d6b; --ok:#1f6b4a; --warn:#8a6a1f;
+    --tamil:"Noto Sans Tamil","Latha","Nirmala UI","Tamil Sangam MN","Lohit Tamil",sans-serif;
+    --ui:system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#2a2422;font-family:var(--tamil);color:var(--ink);overflow:hidden}
+
+  .slide{
+    position:fixed;inset:0;display:none;flex-direction:column;justify-content:center;
+    background:var(--bg);padding:5vh 7vw;
+  }
+  .slide.on{display:flex}
+  .slide::after{
+    content:attr(data-n);position:absolute;bottom:2.4vh;right:3vw;
+    font-family:var(--ui);font-size:1.5vh;color:var(--muted);letter-spacing:.1em;
+  }
+  .kicker{font-family:var(--ui);font-size:1.7vh;letter-spacing:.18em;text-transform:uppercase;
+          color:var(--accent);font-weight:600;margin-bottom:2.2vh}
+  h1{font-size:7.2vh;line-height:1.1;letter-spacing:-.01em}
+  h2{font-size:5vh;line-height:1.15;margin-bottom:3vh}
+  h3{font-size:2.9vh;margin-bottom:1.6vh;color:var(--accent2)}
+  p{font-size:2.7vh;line-height:1.55;max-width:52ch}
+  .lede{font-size:3.1vh;color:var(--muted);margin-top:2.5vh;max-width:56ch}
+  .big{font-size:4vh;line-height:1.4}
+  ul{list-style:none;font-size:2.7vh;line-height:1.5}
+  li{margin:1.5vh 0;padding-left:3.2vh;position:relative;max-width:54ch}
+  li::before{content:"—";position:absolute;left:0;color:var(--accent)}
+  .ta{font-family:var(--tamil)}
+  .accent{color:var(--accent)}
+  .muted{color:var(--muted)}
+  .center{align-items:center;text-align:center}
+
+  /* two-column */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:start}
+  .cols.tight{gap:3vw}
+
+  /* comparison cards */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:2.5vw;margin-top:2vh}
+  .box{border:1px solid var(--line);border-radius:1.2vh;padding:2.6vh 2.4vw;background:var(--card)}
+  .box.bad{border-left:.7vh solid var(--accent)}
+  .box.good{border-left:.7vh solid var(--ok)}
+  .box .lab{font-family:var(--ui);font-size:1.6vh;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--muted);margin-bottom:1.4vh;font-weight:600}
+  .box .val{font-size:3.4vh;line-height:1.35}
+  .box .note{font-family:var(--ui);font-size:1.8vh;color:var(--muted);margin-top:1.2vh}
+
+  /* formation parts */
+  .parts{display:flex;gap:1.4vw;align-items:stretch;flex-wrap:wrap;margin:2.5vh 0}
+  .part{border:1px solid var(--line);border-left:.6vh solid var(--accent2);border-radius:1vh;
+        padding:1.8vh 1.8vw;background:var(--card);min-width:11vw}
+  .part .k{font-family:var(--ui);font-size:1.6vh;color:var(--muted);letter-spacing:.06em}
+  .part .v{font-size:4.2vh;line-height:1.25;margin-top:.5vh}
+  .plus{align-self:center;font-size:3.4vh;color:var(--muted)}
+
+  /* output block */
+  .out{background:#efe9e3;border-radius:1vh;padding:2.4vh 2.2vw;font-size:2.5vh;line-height:1.6;
+       border-left:.6vh solid var(--accent2)}
+  .out .src{font-family:var(--ui);font-size:1.7vh;color:var(--muted)}
+  code{font-family:var(--mono);font-size:.9em}
+
+  table{border-collapse:collapse;width:100%;font-size:2.3vh;margin-top:1.5vh}
+  th,td{text-align:left;padding:1.3vh 1.2vw;border-bottom:1px solid var(--line)}
+  th{font-family:var(--ui);font-size:1.6vh;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  td.num{font-family:var(--ui);font-variant-numeric:tabular-nums;font-weight:600}
+
+  .stat{display:flex;gap:4vw;margin-top:3vh;flex-wrap:wrap}
+  .stat div{min-width:9vw}
+  .stat b{display:block;font-family:var(--ui);font-size:6vh;color:var(--accent);line-height:1;
+          font-variant-numeric:tabular-nums}
+  .stat span{font-family:var(--ui);font-size:1.8vh;color:var(--muted)}
+
+  .flow{font-family:var(--mono);font-size:2.1vh;line-height:1.9;background:var(--card);
+        border:1px solid var(--line);border-radius:1vh;padding:2.4vh 2vw;white-space:pre-wrap}
+
+  /* speaker notes */
+  .notes{position:fixed;left:0;right:0;bottom:0;background:#1c1917;color:#f0e9e4;
+         font-family:var(--ui);font-size:2vh;line-height:1.5;padding:2.4vh 4vw;display:none;
+         border-top:.4vh solid var(--accent);max-height:38vh;overflow:auto}
+  body.notes-on .notes.cur{display:block}
+  .hint{position:fixed;bottom:2.2vh;left:3vw;font-family:var(--ui);font-size:1.5vh;color:var(--muted);
+        opacity:.75}
+
+  @media print{
+    body{overflow:visible;background:#fff}
+    .slide{position:relative;display:flex!important;height:100vh;page-break-after:always;inset:auto}
+    .notes,.hint{display:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- 1 ───────────────────────────────────────────────── -->
+<section class="slide on center" data-n="1">
+  <div class="kicker">International Educational Foundation</div>
+  <h1>தமிழ்<span class="accent">AI</span></h1>
+  <p class="lede">Grounding AI in authentic Tamil grammar.<br>
+     An open-source engine that answers Tamil word questions from
+     <span class="ta">தொல்காப்பியம்</span> and <span class="ta">நன்னூல்</span> —
+     with citations, and the honesty to say <em>“I don’t know.”</em></p>
+</section>
+<div class="notes" data-for="1">Set the frame in one line: this is not a chatbot — it is the grammar layer underneath one.</div>
+
+<!-- 2 ───────────────────────────────────────────────── -->
+<section class="slide" data-n="2">
+  <div class="kicker">The problem</div>
+  <h2>AI speaks Tamil fluently.<br>It gets Tamil grammar wrong — <span class="accent">confidently</span>.</h2>
+  <div class="vs">
+    <div class="box bad">
+      <div class="lab">Split <span class="ta">மரத்தில்</span> into <span class="ta">பகுபத உறுப்பு</span></div>
+      <div class="val ta">மரம் + <span class="accent">த்து</span> + இல்</div>
+      <div class="note">wrong — the <span class="ta">சாரியை</span> is <span class="ta">அத்து</span></div>
+    </div>
+    <div class="box bad">
+      <div class="lab">Pure-Tamil word for <span class="ta">ஜன்னல்</span>?</div>
+      <div class="val ta accent">“வளி மறை” · “வாதில்”</div>
+      <div class="note">these words <strong>do not exist</strong> — invented on the spot</div>
+    </div>
+  </div>
+  <p class="lede">Both recorded in our own A/B tests, asked in Tamil, with no tool attached.</p>
+</section>
+<div class="notes" data-for="2">The second box is the killer. Not a wrong answer picked from real options — fabricated Tamil, delivered fluently. That is the failure mode this project exists to remove. Correct answer for ஜன்னல் is சாளரம்.</div>
+
+<!-- 3 ───────────────────────────────────────────────── -->
+<section class="slide" data-n="3">
+  <div class="kicker">Why it happens — the evidence</div>
+  <h2>Measured, not anecdotal</h2>
+  <div class="cols tight">
+    <div>
+      <h3>ILAKKANAM benchmark</h3>
+      <table>
+        <tr><th>Model</th><th>Score</th></tr>
+        <tr><td>Gemini 2.5</td><td class="num">79.6%</td></tr>
+        <tr><td>Claude Sonnet 4.5</td><td class="num">71.1%</td></tr>
+        <tr><td>Open-source models</td><td class="num">37.9–60.7%</td></tr>
+      </table>
+      <p class="note muted" style="font-family:var(--ui);font-size:1.8vh;margin-top:1.5vh">
+        820 school-exam questions, Grades 1–13 · arXiv 2511.12387, Univ. of Jaffna</p>
+    </div>
+    <div>
+      <ul>
+        <li>Accuracy <strong>falls</strong> as grade and complexity rise</li>
+        <li>Naming a grammar category doesn’t predict getting it right</li>
+        <li>The paper’s conclusion: models ride <strong>exposure, not understanding</strong></li>
+        <li>Tamil is agglutinative — tokenizers shred words, costing <strong>3–5× more context</strong> than English</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<div class="notes" data-for="3">Cite the paper by name — this audience respects sources. Our tool doesn't fix the model; it gives the model somewhere to look things up.</div>
+
+<!-- 4 ───────────────────────────────────────────────── -->
+<section class="slide" data-n="4">
+  <div class="kicker">What we built</div>
+  <h2>A Tamil grammar engine that an AI can call</h2>
+  <div class="parts">
+    <div class="part"><div class="k">1 · Analyzer</div><div class="v" style="font-size:2.6vh;line-height:1.4">
+      root · formation · sandhi<br>case · class · origin<br>meaning · equivalent</div></div>
+    <div class="part"><div class="k">2 · Citations</div><div class="v" style="font-size:2.6vh;line-height:1.4">
+      every claim carries<br>its source, authority<br>and date</div></div>
+    <div class="part"><div class="k">3 · Honest gaps</div><div class="v" style="font-size:2.6vh;line-height:1.4">
+      no source? → a <em>gap</em>.<br>Never a guess.<br>Never a coinage.</div></div>
+  </div>
+  <p class="lede">Layer 3 is the product. Anyone can build layer 1.</p>
+</section>
+<div class="notes" data-for="4">Emphasise: the refusal to guess is the differentiator, not the analysis itself.</div>
+
+<!-- 5 ───────────────────────────────────────────────── -->
+<section class="slide" data-n="5">
+  <div class="kicker">Live · formation</div>
+  <h2 class="ta">மரத்தில்</h2>
+  <div class="parts">
+    <div class="part"><div class="k">பகுதி · root</div><div class="v ta">மரம்</div></div>
+    <div class="plus">+</div>
+    <div class="part"><div class="k">சாரியை · increment</div><div class="v ta">அத்து</div></div>
+    <div class="plus">+</div>
+    <div class="part"><div class="k">விகுதி · suffix</div><div class="v ta">இல்</div></div>
+  </div>
+  <div class="out">
+    <span class="ta">புணர்ச்சி: <strong>திரிதல்</strong> — மரம் → மரத் (ம் → த்)</span><br>
+    <span class="ta">வேற்றுமை: ஏழாம் · சொல் வகை: பெயர்</span>
+    <div class="src">authority: Nannūl (labels) · Tholkappiyam (case, sandhi)</div>
+  </div>
+</section>
+<div class="notes" data-for="5">This is exactly what a student is asked to do in an exam. Note it names the sandhi change and cites which authority governs which part.</div>
+
+<!-- 6 ───────────────────────────────────────────────── -->
+<section class="slide" data-n="6">
+  <div class="kicker">Live · verb paradigm</div>
+  <h2>One root, many surfaces</h2>
+  <div class="vs">
+    <div class="box"><div class="lab">Past</div>
+      <div class="val ta">வந்தான் → <strong>வா</strong> + த் + ஆன்</div>
+      <div class="note ta">இறந்தகாலம் · படர்க்கை ஆண்பால் ஒருமை</div></div>
+    <div class="box"><div class="lab">Present</div>
+      <div class="val ta">வருகிறான் → <strong>வா</strong> + கிற் + ஆன்</div>
+      <div class="note ta">நிகழ்காலம்</div></div>
+  </div>
+  <p class="lede">The surface says <span class="ta">வரு-</span>. The root is <span class="ta accent">வா</span>.
+     A pattern-matcher answers <span class="ta">வரு</span>; this knows the paradigm.</p>
+</section>
+<div class="notes" data-for="6">Suppletive stems are exactly where naive tools and LLMs fail. Good place to invite a word from the audience.</div>
+
+<!-- 7 ───────────────────────────────────────────────── -->
+<section class="slide" data-n="7">
+  <div class="kicker">Live · attested equivalents</div>
+  <h2 class="ta">அகராதி</h2>
+  <table>
+    <tr><th>Equivalent</th><th>Attested in</th></tr>
+    <tr><td class="ta" style="font-size:3.2vh">அகரவரிசை</td><td class="muted">viruba · tamilmandram</td></tr>
+    <tr><td class="ta" style="font-size:3.2vh">அகரநிரல்</td><td class="muted">tamilmandram</td></tr>
+    <tr><td class="ta" style="font-size:3.2vh">அகரமுதலி</td><td class="muted">tamilmandram</td></tr>
+  </table>
+  <p class="lede">Every candidate names the glossary that attests it.
+     The machine is <strong>structurally incapable</strong> of coining a word here.</p>
+</section>
+<div class="notes" data-for="7">The merge layer drops any candidate lacking an attestation source. That is enforced in code, not by prompting.</div>
+
+<!-- 8 ───────────────────────────────────────────────── -->
+<section class="slide" data-n="8">
+  <div class="kicker">Live · origin by orthography</div>
+  <h2>Rules, not vibes</h2>
+  <div class="vs">
+    <div class="box"><div class="lab">ரயில்</div>
+      <div class="val">loanword</div>
+      <div class="note ta">word-initial ‘ர்’ cannot begin a native Tamil word —
+        தொல்காப்பியம் மொழிமரபு, முதல் எழுத்து</div></div>
+    <div class="box"><div class="lab">ஜோதி</div>
+      <div class="val ta">வடசொல்</div>
+      <div class="note">contains the Grantha letter <span class="ta">ஜ</span>,
+        outside the native Tamil <span class="ta">எழுத்து</span> set</div></div>
+  </div>
+  <p class="lede">Detected across Sanskrit, English, Urdu/Persian, Portuguese, Marathi, Telugu and Hindi.</p>
+</section>
+<div class="notes" data-for="8">Classical phonotactic rules, encoded once and tested — not a model's impression. Coverage by language is uneven and we say so.</div>
+
+<!-- 9 ───────────────────────────────────────────────── -->
+<section class="slide" data-n="9">
+  <div class="kicker">The honesty moment</div>
+  <h2 class="ta">புத்தகம்</h2>
+  <div class="out" style="border-left-color:var(--warn)">
+    <strong>origin: unknown</strong><br>
+    <span class="muted">“attested as a borrowed word, but no orthographic marker distinguishes
+    <span class="ta">வடசொல்</span> from loanword — source language undetermined”</span><br><br>
+    <span class="ta">attested equivalents: நூல் · சுவடி நூல்</span>
+  </div>
+  <p class="lede">Everyone here knows this is from Sanskrit <em>pustaka</em>.
+     <strong>The tool won’t claim it</strong> — its sources can’t prove it.</p>
+</section>
+<div class="notes" data-for="9">LAND THIS ONE. It shows the tool reports what it can ground, not what it can guess — then invite them to help close exactly this gap. This slide buys more trust than any accuracy number.</div>
+
+<!-- 10 ──────────────────────────────────────────────── -->
+<section class="slide" data-n="10">
+  <div class="kicker">How it works</div>
+  <h2>One engine, many front doors</h2>
+  <div class="flow">word → normalize
+  → knowledge store (cached? serve with provenance)
+  → miss: source adapters
+       <span style="color:#7a1f2b">anchors</span>   ThamizhiMorph FST · Tholkappiyam rule table · கலைச்சொல்
+       <span style="color:#2f3d6b">evolving</span>  Tamil Wiktionary · தனித்தமிழ் lists
+  → decoder (FST tags → உறுப்பு · case → வேற்றுமை · authority tagger)
+  → merge + write back
+  → heads:  MCP tools  |  REST + web  |  CLI</div>
+  <p class="lede">We <strong>wrap</strong> ThamizhiMorph (Sarveswaran, Dias &amp; Butt 2021) —
+    93.3% coverage and 97.9% correct lemmas on a 612-word corpus — rather than rebuild it.</p>
+</section>
+<div class="notes" data-for="10">Key point for technical listeners: Tamil words are GENERATED, not listed. One root yields thousands of forms, so no dictionary can enumerate them — that's why the core is a rule engine, not a database.</div>
+
+<!-- 11 ──────────────────────────────────────────────── -->
+<section class="slide" data-n="11">
+  <div class="kicker">Who it is for</div>
+  <h2>Four audiences, one engine</h2>
+  <ul>
+    <li><strong>App developers</strong> — a Tamil grammar helper for school students becomes one API call; no Tamil-grammar expertise required</li>
+    <li><strong>Teachers &amp; students</strong> — answers that carry their authority, so they can be <em>verified</em>, not merely trusted</li>
+    <li><strong>Scholars</strong> — a machine-readable, citable encoding of classical grammar rules</li>
+    <li><strong>The language itself</strong> — every analysis is logged as verified data, seeding the corpus future Tamil models will need</li>
+  </ul>
+  <p class="lede">Tamil is “low-resource” because it lacks data.
+     <strong>This creates data by being used.</strong></p>
+</section>
+<div class="notes" data-for="11">The last bullet is the long game — the flywheel. Usage → gold corpus → better Tamil models → more usage.</div>
+
+<!-- 12 ──────────────────────────────────────────────── -->
+<section class="slide" data-n="12">
+  <div class="kicker">Where we honestly are</div>
+  <h2>Working — and unfinished</h2>
+  <div class="stat">
+    <div><b>9</b><span>MCP tools</span></div>
+    <div><b>109</b><span>automated tests</span></div>
+    <div><b>2,063</b><span>attested equivalents</span></div>
+    <div><b>0</b><span>invented words</span></div>
+  </div>
+  <div class="cols tight" style="margin-top:3.5vh">
+    <div><h3>Done</h3><ul style="font-size:2.3vh">
+      <li>Full analysis pipeline, provenance on every claim</li>
+      <li>Open source, Apache-2.0, under IEF</li></ul></div>
+    <div><h3>Not yet</h3><ul style="font-size:2.3vh">
+      <li>Madras Lexicon &amp; <span class="ta">கலைச்சொல்</span> glossaries not yet pinned</li>
+      <li>Citations are chapter-level, not <span class="ta">நூற்பா</span>-level</li>
+      <li>Single words only — no phrases yet</li></ul></div>
+  </div>
+</section>
+<div class="notes" data-for="12">Saying this out loud BUILDS credibility with scholars rather than costing it — and it is the natural bridge to the ask.</div>
+
+<!-- 13 ──────────────────────────────────────────────── -->
+<section class="slide" data-n="13">
+  <div class="kicker">The ask</div>
+  <h2>What we need from this room</h2>
+  <ul>
+    <li><strong>Scholars</strong> — help encode the rules correctly; adjudicate disputed origins</li>
+    <li><strong>Teachers</strong> — tell us the questions students actually ask, so we test against them</li>
+    <li><strong>Developers</strong> — build with it; every gap you hit makes it better</li>
+    <li><strong>Everyone</strong> — which classical editions should we pin as the authority?</li>
+  </ul>
+  <p class="lede">That last choice should be made by Tamil scholars, not by engineers.</p>
+</section>
+<div class="notes" data-for="13">Make the edition question a genuine invitation — it is real, it is open, and it gives them ownership.</div>
+
+<!-- 14 ──────────────────────────────────────────────── -->
+<section class="slide center" data-n="14">
+  <h1 style="font-size:5.6vh;max-width:22ch">“An AI that speaks Tamil<br>should also <span class="accent">know</span> Tamil.”</h1>
+  <p class="lede">Open source · <span class="ta">தொல்காப்பியம்</span>-first · every claim cited ·
+     honest about what it doesn’t know</p>
+  <p style="font-family:var(--ui);font-size:2vh;color:var(--muted);margin-top:4vh">
+     github.com/ief-global/thamizh-mcp &nbsp;·&nbsp; thamizh-ai.org</p>
+</section>
+<div class="notes" data-for="14">Close here. Then offer to take any Tamil word from the audience live.</div>
+
+<div class="hint">← → navigate · <b>N</b> speaker notes · <b>F</b> fullscreen</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const notes  = [...document.querySelectorAll('.notes')];
+  let i = 0;
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('on', k === i));
+    notes.forEach(nd => nd.classList.toggle('cur', nd.dataset.for === slides[i].dataset.n));
+    location.hash = i + 1;
+  }
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); show(i+1); }
+    else if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key))     { e.preventDefault(); show(i-1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End')  show(slides.length-1);
+    else if (e.key.toLowerCase() === 'n') document.body.classList.toggle('notes-on');
+    else if (e.key.toLowerCase() === 'f') {
+      document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    }
+  });
+  // click right half = forward, left half = back
+  document.addEventListener('click', e => show(e.clientX > innerWidth/2 ? i+1 : i-1));
+  show((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body>
+</html>
