@@ -207,9 +207,36 @@ third-case உருபு as **ஒடு** alone (வேற்றுமைய�
 Tholkappiyam names the three விகாரம் as `மெய் பிறிது ஆதல் மிகுதல் குன்றல்` (புணரியல் 7) where Nannūl 154
 says `தோன்றல், திரிதல், கெடுதல்`. Record both; never collapse one into the other.
 
-*Status: Tholkappiyam CLOSED; Nannūl carried via TVA. Residual: mirror the Project Madurai text into
-`data/` as a version-locked artifact (currently URL-referenced).* *Links: DESIGN.md §4a/§6/§7;
-`sources/classical/README.md`; tamil-grammar.md source-priority table; D-014 (cited rule tables).*
+### Update — 2026-08-02 (later) · BOTH texts version-locked; TVA renumbering caught
+
+Saran's call: pin **Nannūl** from Project Madurai too, since TVA quotes only the handful of verses
+its lessons need and real usage will hit verses outside that set. Project Madurai publishes the
+complete work (1–462) as a single page. Both texts are now local artifacts:
+
+`thamizh-mcp/data/classical/{tholkappiyam,nannul}.json` — built by `scripts/build_classical.py`,
+raw-byte SHA256 per source in `data/PINS.md`, `--verify` re-derives from upstream to detect drift.
+They ship in the **public** repo because Project Madurai grants free distribution with the header
+intact; the header and edition credits travel inside each artifact. That licence distinction — not
+the content — is why these ship where the TVA books do not (`LICENSING.md`).
+
+**The pinning immediately proved its worth: TVA's Nannūl numbering is unreliable.** Three verse
+numbers already written into tables or notes were wrong — இர்/ஈர் is **337** not 336, தெரிநிலை-வினை
+is **320** not 319, the 23 வினைப் பகாப்பதம் is **137** not 136. Corrected. This vindicates the
+standing rule (never write a verse number from memory *or from a secondary source*) and adds a
+mechanism: `tests/test_citations.py` asserts that every நூற்பா cited by any `data/grammar/*.json`
+resolves in the pinned artifacts, and that every table declares `source_priority`. The bad-citation
+guard was verified by deliberately breaking a citation and watching it fail.
+
+**Upstream data quality, recorded:** the three Tholkappiyam pages declare `charset=windows-1252`
+while serving UTF-8, baking 28 U+FFFD into the text; every Tamil-context one is **ஃ** — the only
+character that transcode lost — and three are ©. The build repairs this mechanically and records the
+counts (25 ஃ, 3 ©); no other substitution is made. Nannūl needed none. Nannūl நூற்பா 73 and 176 are
+absent from the upstream etext itself and are recorded as gaps, never reconstructed.
+
+*Status: CLOSED. Both golden sources are local, checksummed, licence-cleared and test-enforced —
+no further sourcing work is needed to cite either authority at verse level.* *Links: DESIGN.md
+§4a/§6/§7; `sources/classical/README.md`; `thamizh-mcp/data/PINS.md`, `LICENSING.md`,
+`scripts/build_classical.py`, `tests/test_citations.py`; D-014 (cited rule tables).*
 
 ## D-012 · 2026-07-26 · Licensing SETTLED — mixed-licence product, cleared for public serving
 

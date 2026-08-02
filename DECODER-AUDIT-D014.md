@@ -38,7 +38,7 @@ itself remains unrecoverable, but the சாரியை half is now recoverable
 ### A2. `கள்` is emitted as part of the விகுதி
 `decoder.py:258` emits `feats[pcode]` raw, so வந்தீர்கள் → விகுதி **ஈர்கள்**, வந்தார்கள் → **ஆர்கள்**.
 
-TVA A0212 §3.2.1, quoting நூற்பா 336 (`இர் ஈர் ஈற்ற இரண்டும் இருதிணைப் பன்மை முன்னிலை`):
+TVA A0212 §3.2.1, quoting the இர்/ஈர் நூற்பா (`இர் ஈர் ஈற்ற இரண்டும் இருதிணைப் பன்மை முன்னிலை`):
 > முன்னிலைப் பன்மைக்குரிய வினைமுற்று விகுதிகள் **இர், ஈர்** என்பனவாகும். … இன்றைய வழக்கில்
 > நிற்கிறீர்கள், பேசினீர்கள் என்பன போல ரகர ஒற்றும் **கள் விகுதியும் சேர்த்துப்** பேசும் முறையே
 > மிகுதியாக உள்ளது. … இந்த வினைமுற்றுகள் முற்காலத்தில் இர், ஈர் என்னும் விகுதிகளை **மட்டும்**
@@ -134,12 +134,14 @@ until Saran rules.
 
 ## D. Bonus: நூற்பா numbers now available (advances D-011)
 
+⚠️ **Numbers below were taken from TVA and three proved WRONG** against the Project Madurai edition pinned later the same day: இர்/ஈர் is **337** (TVA: 336), தெரிநிலை-வினை is **320** (TVA: 319), the 23 வினைப் பகாப்பதம் is **137** (TVA: 136). Corrected inline. Always check against `thamizh-mcp/data/classical/nannul.json`.
+
 Verified verbatim in the ePUBs, so they can be cited without a pinned edition:
 
 | topic | நூற்பா | lesson |
 |---|---|---|
 | six பகுபத உறுப்பு | **133** | C0212 §5.3 |
-| வினைப் பகாப்பதம், 23 மாதிரி | 136 | A0212 |
+| வினைப் பகாப்பதம், 23 மாதிரி | **137** | A0212 |
 | இயல்பு புணர்ச்சி | **153** | C0213 §1.6.1 |
 | three விகாரம் | **154** | C0213 §1.6.2 |
 | several விகாரம் in one join | **157** | C0213 §1.6.2 |
@@ -157,8 +159,8 @@ Verified verbatim in the ePUBs, so they can be cited without a pinned edition:
 | 1st / 2nd / 3rd வேற்றுமை | **295 / 296 / 297** | A0211 §§5.2–5.4 |
 | 5th / 6th / 7th / 8th வேற்றுமை | **299 / 300 / 301+302 / 303** | A0211 §§6.1–6.4 |
 | முதல்/சினை உருபு | **315** | A0211 §6.5 |
-| தெரிநிலை வினை six பொருள் | 319 | A0212 §1.1.1 |
-| முன்னிலைப் பன்மை விகுதி இர்/ஈர் | **336** | A0212 §3.2.1 |
+| தெரிநிலை வினை six பொருள் | **320** | A0212 §1.1.1 |
+| முன்னிலைப் பன்மை விகுதி இர்/ஈர் | **337** | A0212 §3.2.1 |
 | வினையெச்ச வாய்பாடு (12) | 343 | A0212 §5.6.1 |
 | சினைவினை | 345 | A0212 §5.7.1 |
 | வினையெச்ச மாற்றம் | 346 | A0212 §5.8.6 |

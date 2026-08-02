@@ -101,8 +101,50 @@ Extracted verbatim from the pinned edition on 2026-08-02.
 2. **The authorities genuinely differ on the third case.** Tholkappiyam gives **ஒடு** only
    (வேற்றுமையியல் 12); Nannūl 297 gives ஆல், ஆன், ஒடு, ஓடு. Record the difference; do not collapse it.
 
+## Both texts are now version-locked artifacts (2026-08-02)
+
+`thamizh-mcp/data/classical/{tholkappiyam,nannul}.json`, built by `scripts/build_classical.py`,
+checksummed in `data/PINS.md`, rebuildable with `--verify` to detect upstream drift. **Nannūl is
+pinned too** — Project Madurai publishes the complete work (1–462) at
+<https://www.projectmadurai.org/pm_etexts/utf8/pmuni0147.html>, edition of Mani Thirunavukkarasu
+Mudaliar (1926), etext by Dr. Thomas Malten (Univ. of Köln).
+
+Because Project Madurai grants free distribution with the header intact, these artifacts ship in the
+**public** repo — unlike the TVA course books. The distinction is licence, not content.
+
+### ⚠️ The reason pinning Nannūl mattered — TVA renumbers
+
+Nannūl verse numbers taken from the TVA course books do **not** all match the complete edition. Two
+were wrong in tables already written:
+
+| claim | TVA said | pinned edition | |
+|---|---|---|---|
+| இர் ஈர் ஈற்ற இரண்டும் இருதிணைப் பன்மை முன்னிலை | 336 | **337** | corrected |
+| செய்பவன் கருவி நிலம் செயல் காலம் செய்பொருள் | 319 | **320** | corrected |
+| நட வா மடி சீ விடு கூ (23 வினைப் பகாப்பதம்) | 136 | **137** | corrected |
+
+TVA quotes only the handful of verses its lessons need, and its numbering drifts. A comprehensive
+pinned edition is the only reliable source for a verse number — which is exactly the reasoning that
+prompted pinning Nannūl. `thamizh-mcp/tests/test_citations.py` now enforces that every நூற்பா cited
+by a rule table resolves in these artifacts, so this class of error cannot recur silently.
+
+Also corrected: நூற்பா 153/154/157 (விகாரம்) sit in **உயிரீற்றுப் புணரியல்**, not "புணரியல்" —
+harmless for citation since Nannūl numbering is continuous, but the இயல் label was wrong.
+
+### Upstream data quality
+
+- **Tholkappiyam pages declare `charset=windows-1252` while serving UTF-8.** The mis-transcode baked
+  28 U+FFFD into the text. Every Tamil-context one is **ஃ** (அஃறிணை, னஃகான், அஃது, ஒன்பஃது) — the
+  only character that transcode lost — and three are ©. The build repairs them mechanically and
+  records the counts. No other substitution. Nannūl's page is clean UTF-8 and needed no repair.
+- **Nannūl நூற்பா 73 and 176 are absent from the upstream etext** (72→74, 175→177). Recorded in the
+  artifact's `coverage` block, never reconstructed.
+- Tholkappiyam extraction: 1486 நூற்பா; the grammar-critical இயல் are gap-free. Four verses
+  elsewhere (வினையியல் 9, பொருளியல் 2, மெய்ப்பாட்டியல் 17, உவமயியல் 7) remain unextracted and are
+  recorded per-இயல்.
+
 ## Still open
 
-- Mirror the Project Madurai text into `data/` as a version-locked artifact (currently URL-referenced).
-- No separate Nannūl edition pinned — Nannūl arrives via TVA quotation. Pin one if a claim ever needs a
-  நூற்பா that TVA does not print (e.g. the நான்காம் வேற்றுமை நூற்பா, absent from A0211).
+- Nothing blocking. Both golden sources are local, checksummed, and test-enforced.
+- Optional: extract சொல்லதிகாரம் வேற்றுமைமயங்கியல் (35 நூற்பா) and விளிமரபு (37) — Tholkappiyam
+  material relevant to the வேற்றுமை table but not yet needed by the decoder.
