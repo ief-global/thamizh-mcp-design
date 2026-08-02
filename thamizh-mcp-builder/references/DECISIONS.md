@@ -239,3 +239,38 @@ chosen yet — containerising keeps that door open; decide with real traffic, no
 
 *Status: active.* *Links: `thamizh-mcp-hosting-plan.md` (its Cloud Run recommendation is no longer the
 default), D-007 (central accumulation), D-012 (licensing settled).*
+
+## D-014 · 2026-08-02 · Grammar rules are cited DATA tables, normalising FST surface → Nannūl உறுப்பு
+
+**Trigger.** Reviewing the deck, Saran (formal TVA A021 coursework) found வருகிறான் split as
+வா + **கிற்** + ஆன். `கிற்` is not a valid நிகழ்கால இடைநிலை — the three valid ones are **கிறு, கின்று,
+ஆநின்று**. Correct: வா + **கிறு** + ஆன். Present tense was wrong in every case.
+
+**Root cause — architectural, not a typo.** We conflated ThamizhiMorph's **computational
+segmentation** (the surface morph where the string splits) with **பகுபத உறுப்பிலக்கணம்** (the named
+grammatical constituent). The decoder already normalised FST tags for POS and வேற்றுமை; இடைநிலை had no
+such layer, so a surface morph was emitted as if it were a grammatical label.
+
+**Decision.**
+1. **Every FST output passes through a normalisation layer** before it is presented as grammar. The
+   FST is an *anchor for morphological analysis*, not an authority on classical grammatical naming.
+2. **Grammar rules live in cited JSON tables** (`data/grammar/*.json`), each carrying its `authority`
+   (Nannūl/Tholkappiyam), the TVA lesson verified against, `verified_by` and `verified_date`. Encoded
+   as data so a Tamil scholar can **audit the linguistics without reading Python** — the same
+   provenance discipline we apply to answers, applied to our own rules.
+3. **வல்லினம் doubling is சந்தி, not part of the இடைநிலை** (Saran's ruling): படிக்கிறான் =
+   படி + க்(சந்தி) + கிறு(இடைநிலை) + ஆன். சந்தி may fall before or after the இடைநிலை.
+4. **Unmapped forms pass through unchanged, never guessed** — consistent with the honest-gap rule.
+
+**Source materials.** TVA course PDFs/ePUBs live in the PRIVATE design repo under `sources/tva/`
+(structure + citation convention tracked; the documents themselves gitignored pending a redistribution
+check). Only derived cited rule tables ship in the public repo — grammar facts are citable
+scholarship; redistributing complete Govt-of-Tamil-Nadu textbooks is a separate question.
+**Prefer ePUB**: the TVA PDFs embed TAU-Valluvar (pre-Unicode), so extraction yields legacy TSCII/TAB
+bytes, not Unicode.
+
+**Known gap (recorded, not fabricated):** strong-verb PAST doubling (படித்தான் = படி + த்[சந்தி] +
+த்[இடைநிலை] + ஆன்) is not recoverable from the FST tag, which reports only `past=த்`.
+
+*Status: active.* *Links: `thamizh-mcp/data/grammar/idainilai.json`; `sources/README.md`;
+D-011 (verse citations); D-012 (licensing).*
