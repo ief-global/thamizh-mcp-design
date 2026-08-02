@@ -32,8 +32,10 @@ intact.
 Edition credits recorded in the source: *Etext Preparation & PDF version:* Dr. K. Kalyanasundaram,
 Lausanne, Switzerland. *Proof-reading & Web version:* Mr. N. D. Logasundaram, Chennai, Tamilnadu.
 
-We cite verses and credit Project Madurai; we do not redistribute the full text from the public repo.
-Where the project does surface Project Madurai material, the header above travels with it.
+Project Madurai's grant is explicit — *freely distribute, provided this header page is kept intact* —
+so unlike the TVA course books these texts **do** ship in the public repo, as
+`thamizh-mcp/data/classical/*.json`, with the header carried in each artifact's `attribution` field.
+See `thamizh-mcp/LICENSING.md`.
 
 ## Verse numbering — READ THIS BEFORE CITING
 
@@ -59,9 +61,9 @@ Verified இயல் structure and verse counts:
 | புள்ளிமயங்கியல் | 1–110 | உரியியல் | 1–98 |
 | குற்றியலுகரப்புணரியல் | 1–77 | எச்சவியல் | 1–67 |
 
-**Nannūl numbering is continuous** across the whole work, so a bare நூற்பா number is unambiguous
-there — `நன்னூல், நூற்பா 244`. Nannūl verses reach us through the TVA course material, which quotes
-them verbatim with their numbers (`sources/tva/`), so no separate Nannūl edition is pinned yet.
+**Nannūl numbering is continuous** across the whole work (1–462), so a bare நூற்பா number is
+unambiguous there — `நன்னூல், நூற்பா 244`. Nannūl is pinned from Project Madurai as well; do **not**
+take verse numbers from the TVA course books, which quote selectively and renumber (see below).
 
 ## Verses used by the shipped rule tables
 
@@ -105,7 +107,7 @@ Extracted verbatim from the pinned edition on 2026-08-02.
 
 `thamizh-mcp/data/classical/{tholkappiyam,nannul}.json`, built by `scripts/build_classical.py`,
 checksummed in `data/PINS.md`, rebuildable with `--verify` to detect upstream drift. **Nannūl is
-pinned too** — Project Madurai publishes the complete work (1–462) at
+pinned too, complete at 462 நூற்பா** — Project Madurai publishes it at
 <https://www.projectmadurai.org/pm_etexts/utf8/pmuni0147.html>, edition of Mani Thirunavukkarasu
 Mudaliar (1926), etext by Dr. Thomas Malten (Univ. of Köln).
 
@@ -137,8 +139,19 @@ harmless for citation since Nannūl numbering is continuous, but the இயல�
   28 U+FFFD into the text. Every Tamil-context one is **ஃ** (அஃறிணை, னஃகான், அஃது, ஒன்பஃது) — the
   only character that transcode lost — and three are ©. The build repairs them mechanically and
   records the counts. No other substitution. Nannūl's page is clean UTF-8 and needed no repair.
-- **Nannūl நூற்பா 73 and 176 are absent from the upstream etext** (72→74, 175→177). Recorded in the
-  artifact's `coverage` block, never reconstructed.
+- **Nannūl is complete — all 462.** நூற்பா 73 and 176 are absent from the primary etext (72→74,
+  175→177) and are filled from Project Madurai's second, older Nannūl page,
+  <https://www.projectmadurai.org/pm_etexts/utf8/pmuni0152.html>, marked per-verse in the artifact's
+  `supplemented` block. The primary is deliberately NOT switched: pmuni0147 is the 2021 revision
+  with modern word-split orthography (ஆன ஒன்று ஆதி ஓர் புடை ஒப்பு இனமே) where pmuni0152 is 2002 with
+  the older joined orthography (ஆனஒன் றாதியோர் புடையொப் பினமே). Swapping wholesale would downgrade
+  460 verses to gain two, so those two differ in style from the rest by design.
+- **The Nannūl source's markup leaks into verse text**, found by eyeballing the committed artifact.
+  Three distinct leaks, all now stripped and regression-guarded: the table of contents mimics verse
+  openers (`1.0 …`) and parsed as நூற்பா 1–3; section headings repeat mid-body carrying verse ranges
+  (`2. எழுத்ததிகாரம் 56 - 257`) and OVERWROTE the genuine நூற்பா 2 and 3; and the colophon plus the
+  webpage footer were glued onto நூற்பா 462. The colophon `நன்னூல் முற்றிற்று` is kept as artifact
+  metadata rather than invented as நூற்பா 463 — Nannūl has exactly 462.
 - Tholkappiyam extraction: 1486 நூற்பா; the grammar-critical இயல் are gap-free. Four verses
   elsewhere (வினையியல் 9, பொருளியல் 2, மெய்ப்பாட்டியல் 17, உவமயியல் 7) remain unextracted and are
   recorded per-இயல்.
