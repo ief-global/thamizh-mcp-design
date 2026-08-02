@@ -95,7 +95,7 @@ merit rather than the honest-minimal v1. Not scheduled yet; captured so it isn't
 All repos now live under the **`ief-global`** GitHub org (was `ief-admin`, a user, until 2026-07-18).
 `ief-admin` is now an admin user *inside* `ief-global`; `ssaravanan3` (Saran's personal account) is an
 additional org owner. Remotes use `git@github.com:ief-global/<repo>.git`. This design folder is its own
-private repo `ief-global/thamizh-mcp-design`; the code is `ief-global/thamizh-mcp`. Keep them separate —
+public repo `ief-global/thamizh-mcp-design`; the code is `ief-global/thamizh-mcp`. Keep them separate —
 never nest, never commit design docs into the public code repo.
 
 ## Workflow (so history stays clean)
