@@ -31,3 +31,12 @@ thamizh-eval/results/*.jsonl
 thamizh-eval/results/*.log
 thamizh-eval/results/*.txt
 thamizh-eval/results/*/
+
+# Source documents are reference material, not redistributables. Keep the folder structure and the
+# READMEs in git; do NOT commit third-party textbooks (TVA PDFs/ePUBs) even to this private repo
+# until redistribution terms are confirmed. Remove a pattern below if a document is cleared.
+sources/tva/**/*.pdf
+sources/tva/**/*.epub
+sources/tva/**/*.mobi
+sources/classical/**/*.pdf
+sources/classical/**/*.epub
