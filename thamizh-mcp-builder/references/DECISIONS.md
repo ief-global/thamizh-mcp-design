@@ -175,8 +175,41 @@ Clarification recorded with it: neither the LLM nor the runtime "reads" Tholkapp
 human-encoded rule table (design time) + per-claim citations (runtime). Verse pinning completes that
 chain end-to-end.
 
-*Status: active — scheduled, not yet built.* *Links: DESIGN.md §4/§6/§7; tamil-grammar.md source-priority
-note; kb sources-provenance + roadmap articles.*
+### Update — 2026-08-02 · Tholkappiyam edition PINNED; verse-level citation is live
+
+**Edition pinned: Project Madurai**, chosen for the community validation effort behind its texts.
+
+| அதிகாரம் | URL |
+|---|---|
+| எழுத்ததிகாரம் | https://tamilnation.org/literature/grammar/mp100a |
+| சொல்லதிகாரம் | https://tamilnation.org/literature/grammar/mp100b |
+| பொருளதிகாரம் | https://tamilnation.org/literature/grammar/mp100c |
+
+Attribution is required and recorded in `sources/classical/README.md` (© Project Madurai 1999-2001;
+etext Dr. K. Kalyanasundaram; proof-reading N. D. Logasundaram). We cite verses and credit the project;
+we do not redistribute the full text publicly.
+
+**Citation format — நூற்பா numbers RESTART in every இயல்,** so they collide both across அதிகாரம் and
+across இயல் within one அதிகாரம். A bare number is unusable. Qualify to the இயல்:
+`தொல்காப்பியம், எழுத்ததிகாரம், புணரியல், நூற்பா 7`. Nannūl numbering *is* continuous, so
+`நன்னூல், நூற்பா 244` is unambiguous. Nannūl verses arrive via TVA's verbatim quotations, so no
+separate Nannūl edition is pinned yet.
+
+**Why this got re-opened:** the first four TVA-derived rule tables cited Nannūl as `authority` for
+வேற்றுமை and புணர்ச்சி — topics `tamil-grammar.md` assigns to **Tholkappiyam** — purely because TVA
+quotes Nannūl. Design rule #1 had drifted in practice while reading correctly on paper. Fixed at the
+source: every `data/grammar/*.json` now carries a **`source_priority`** block naming its governing
+authority and why, and the three affected tables were restructured to Tholkappiyam-primary with Nannūl
+as a cited `fallback`. A table without `source_priority` is incomplete. See DESIGN.md §4a.
+
+**Substantive finding:** the authorities differ, and the difference is content. Tholkappiyam gives the
+third-case உருபு as **ஒடு** alone (வேற்றுமையியல் 12); Nannūl 297 gives ஆல், ஆன், ஒடு, ஓடு. Likewise
+Tholkappiyam names the three விகாரம் as `மெய் பிறிது ஆதல் மிகுதல் குன்றல்` (புணரியல் 7) where Nannūl 154
+says `தோன்றல், திரிதல், கெடுதல்`. Record both; never collapse one into the other.
+
+*Status: Tholkappiyam CLOSED; Nannūl carried via TVA. Residual: mirror the Project Madurai text into
+`data/` as a version-locked artifact (currently URL-referenced).* *Links: DESIGN.md §4a/§6/§7;
+`sources/classical/README.md`; tamil-grammar.md source-priority table; D-014 (cited rule tables).*
 
 ## D-012 · 2026-07-26 · Licensing SETTLED — mixed-licence product, cleared for public serving
 

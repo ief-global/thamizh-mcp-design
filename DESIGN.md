@@ -71,11 +71,49 @@ and does its one job (Indic→pure-Tamil mappings). Nothing replaces it; it gets
   **Blocking pre-step:** locate the actual data distribution + verify its license (not on HF; no public
   GitHub repo found from the sandbox; paper PDF / authors are the lead) — network-open job, same bucket as
   the Madras Lexicon + TVA snapshots.
-- **Verse-level classical grounding (D-011, added 2026-07-19):** pin digitized **Tholkappiyam + Nannūl**
-  editions (Project Madurai / Tamil Virtual Academy / better gold source at pinning time) as
-  version-locked anchors, and upgrade rule-table `SourceRef`s from section names to **நூற்பா numbers**
-  (optional `verse` field — additive). Closes the gap that grammar claims cite only at section level
-  while FST claims are commit-pinned.
+- **Verse-level classical grounding (D-011, added 2026-07-19; Tholkappiyam PINNED 2026-08-02):** the
+  **Tholkappiyam edition is now pinned — Project Madurai** (see §4a below), and Nannūl நூற்பா are
+  carried via the TVA course material, which quotes them verbatim with verse numbers. Rule-table
+  `SourceRef`s therefore cite **நூற்பா numbers**, not section names (optional `verse` field — additive).
+  Closes the gap that grammar claims cited only at section level while FST claims are commit-pinned.
+
+### 4a. Tholkappiyam-first, and how a citation is written
+
+This is design rule #1 and it has drifted once already — a set of rule tables was built citing Nannūl
+as `authority` for topics Tholkappiyam governs, purely because the TVA lessons quote Nannūl. Writing
+the rule down without the mechanism did not hold. The mechanism:
+
+**Priority (from `tamil-grammar.md`, authoritative):**
+
+| topic | primary | fallback |
+|---|---|---|
+| Origin classes (இயற்/திரி/திசை/வடசொல்) | **Tholkappiyam** — சொல்லதிகாரம் | Nannūl |
+| **வேற்றுமை** (8 cases) | **Tholkappiyam** — சொல்லதிகாரம், வேற்றுமையியல் | Nannūl |
+| **புணர்ச்சி / சந்தி / விகாரம்** | **Tholkappiyam** — எழுத்ததிகாரம், புணரியல் | Nannūl |
+| Six-part பகுபதம் (பகுதி/விகுதி/இடைநிலை/சாரியை/சந்தி/விகாரம்) | **Nannūl** — Tholkappiyam does not enumerate the six | — |
+
+Nannūl is a *fallback and an expansion*, never the headline authority where Tholkappiyam covers the
+ground. Where the two differ, say so rather than silently preferring the one that was easier to cite —
+e.g. Tholkappiyam gives the third-case உருபு as **ஒடு** (வேற்றுமையியல் 12), while Nannūl 297 gives
+ஆல், ஆன், ஒடு, ஓடு. That difference is content, not noise.
+
+**Citation format — நூற்பா numbers RESTART in every இயல்.** They collide both across அதிகாரம் and
+across இயல் within one அதிகாரம், so a bare number is ambiguous and unusable. Always qualify to the
+இயல்:
+
+```
+தொல்காப்பியம், எழுத்ததிகாரம், புணரியல், நூற்பா 7
+தொல்காப்பியம், சொல்லதிகாரம், வேற்றுமையியல், நூற்பா 3
+நன்னூல், நூற்பா 244            ← Nannūl numbering IS continuous; no இயல் needed
+```
+
+Render however the surface demands — the point is that a reader can find the verse in the pinned
+edition. `SourceRef` carries `authority` + `ref` (the அதிகாரம்/இயல் path) + `verse`. In a rule table:
+`authority` names the primary, and a `fallback` field carries Nannūl with its own verse.
+
+**Enforcement:** every `data/grammar/*.json` table carries a `source_priority` block restating which
+authority governs it and why. A new table without that block is incomplete. That is what stops the
+next drift.
 - **ILAKKANAM:** already fully incorporated (blueprint §12, thamizh-eval, D-005). The ResearchGate item
   ("Evaluating Linguistic Knowledge of LLMs in Tamil: The ILAKKANAM Benchmark") is the same work's
   published form. Dataset still not public as of 2026-07-18 — thamizh-eval's check-else-build-fixtures
@@ -112,8 +150,10 @@ lock the namespace and the card/versioning discipline; the Spaces demo lands wit
    honest-unknowns) — top code item.
 2. **Run the morphological-lift eval** (thamizh-eval; fixtures → A/B → per-category report). Flagship.
 3. Network-open sourcing session: Madras Lexicon + TVA கலைச்சொல் snapshots **+ locate/license Aalamaram**.
-4. Pin digitized Tholkappiyam + Nannūl editions and add நூற்பா numbers to rule-table SourceRefs
-   (D-011) — batch the text sourcing with the same network-open session.
+4. ~~Pin digitized Tholkappiyam + Nannūl editions and add நூற்பா numbers to rule-table SourceRefs
+   (D-011).~~ **DONE 2026-08-02** — Tholkappiyam pinned to Project Madurai (§4a); Nannūl நூற்பா carried
+   via TVA, which quotes them verbatim. Remaining: mirror the Project Madurai text into `data/` as a
+   version-locked artifact rather than relying on the live URLs.
 5. License audit Gate-0 (I2PT MIT verify is overdue) → release rungs 0–1 (uvx → PyPI + Docker/GHCR).
 6. **Create HF `ief-global` org**; first curation export (dataset v0) from the live transactions table.
 7. Registry + tamil-nlp-catalog listings (after Gate-0).
@@ -138,9 +178,12 @@ consent/licensing model before any pooling feature.
 - **Licenses:** I2PT MIT verify (overdue, vendored+public) · Madras Lexicon + TVA terms before snapshots
   ship · Wiktionary CC BY-SA position before the hosted instance serves cached text · Aalamaram license
   unknown until located. Gate-0 blocks every public rung.
-- **D-011 (scheduled):** grammar citations are section-level until the Tholkappiyam/Nannūl editions
-  are pinned and நூற்பா numbers land in SourceRefs — say "section-level" honestly in public claims
-  until then.
+- **D-011 (Tholkappiyam CLOSED 2026-08-02):** verse-level citation is live for both authorities —
+  Tholkappiyam from the pinned Project Madurai edition, Nannūl via TVA's verbatim quotations. Public
+  claims may now say **நூற்பா-level**, qualified to the இயல் (§4a). Residual risk: the Project Madurai
+  text is referenced by URL, not yet mirrored as a version-locked artifact in `data/`. Standing rule
+  unchanged — **never write a verse number from memory**; if the pinned source does not print it,
+  record `verse: null` and say so.
 - **D-007 (OPEN):** community gold-pooling needs consent/privacy/license design first.
 - **ILAKKANAM release watch** — if it publishes, it becomes the held-out test set (our fixtures stay dev).
 - Origin disputes, evolving-source quality, objective-5 hallucination risk — unchanged from blueprint §10,

@@ -19,11 +19,21 @@ only where Tholkappiyam does not enumerate the point. Concretely:
 
 Always record which authority a grammar claim used, so the priority is auditable.
 
-**Verse-level grounding (D-011, 2026-07-19):** cite down to the **நூற்பா number**, not just the section —
-"தொல்காப்பியம், சொல்லதிகாரம், வேற்றுமையியல், நூற்பா <n>" — once the digitized Tholkappiyam + Nannūl
-editions are pinned as anchor artifacts (candidates: Project Madurai, Tamil Virtual Academy; record the
-edition/recension chosen, as editions vary). Until then, section-level citations are the honest interim
-and should be described as such. `SourceRef` gains an optional `verse` field (additive).
+**Verse-level grounding (D-011, 2026-07-19 — Tholkappiyam PINNED 2026-08-02):** cite down to the
+**நூற்பா number**, not just the section — "தொல்காப்பியம், சொல்லதிகாரம், வேற்றுமையியல், நூற்பா 3".
+The Tholkappiyam edition is pinned to **Project Madurai** (`sources/classical/README.md`); Nannūl
+நூற்பா arrive via the TVA course material, which quotes them verbatim with numbers. Section-level is no
+longer the interim for these two authorities. `SourceRef` carries the optional `verse` field (additive).
+
+⚠️ **நூற்பா numbers RESTART in every இயல்** of Tholkappiyam — they collide across அதிகாரம் *and* across
+இயல் within one அதிகாரம், so always qualify to the இயல். Nannūl numbering is continuous, so a bare
+number is fine there. **Never write a verse number from memory**; if the pinned source does not print
+it, record `verse: null`.
+
+Where the two authorities differ, that is content: Tholkappiyam gives the third-case உருபு as **ஒடு**
+(வேற்றுமையியல் 12) where Nannūl 297 gives ஆல், ஆன், ஒடு, ஓடு; Tholkappiyam names the three விகாரம் as
+`மெய் பிறிது ஆதல் மிகுதல் குன்றல்` (எழுத்ததிகாரம், புணரியல் 7) where Nannūl 154 says
+`தோன்றல், திரிதல், கெடுதல்`. Record both.
 
 ## Table of contents
 
