@@ -19,6 +19,26 @@ Observed FST tags (real `flookup` output, this box):
 
 ---
 
+## ✅ ALL FIXED — 2026-08-02
+
+Every finding below is now implemented in `core/decoder.py`, each with a regression test in
+`tests/test_formation.py` (A1–A8 + B1). 149 tests pass. Saran's three rulings:
+
+1. **causative `வி` IS an இடைநிலை** — Nannūl's positional definition (C0212 §5.3.3) governs over
+   TVA C0212 §6.1.7's பிறவினை-விகுதி listing. B1 resolved; the existing label was correct.
+2. **`கள்` is a modern plural accretion** — emitted as its own component, labelled so, with
+   `authority=None` because no classical authority sanctions it.
+3. **விகாரம் are emitted under Tholkappiyam's names** (மிகுதல் / குன்றல் / பிறிது ஆதல்) rather than
+   Nannūl's (தோன்றல் / கெடுதல் / திரிதல்) — "let's gently nudge the users to Tholkappiyam first".
+   Nannūl's names remain valid in the schema.
+
+One bug surfaced while fixing A5 that the audit had missed: an உருபு is listed standalone (இல்) but
+**fuses into the stem on the surface** (மரம்+இல் → மரத்**தில்**), so matching the standalone form
+never succeeded and every vowel-initial உருபு fell through to the fallback. Fixed with a
+vowel-sign realisation step; `test_a5_...` locks it in.
+
+---
+
 ## A. CONFIRMED — same bug class as கிற்/கிறு
 
 ### A1. `euph=` is dropped entirely — the சாரியை உறுப்பு vanishes
