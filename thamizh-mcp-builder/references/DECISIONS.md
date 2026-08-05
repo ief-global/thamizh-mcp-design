@@ -361,3 +361,67 @@ emit — Nannūl defines இடைநிலை positionally, and வி does sit
 
 *Status: active.* *Links: `thamizh-mcp/data/grammar/{idainilai,vikuthi,sariyai,verrumai_urubu,vikaram}.json`;
 `DECODER-AUDIT-D014.md`; `sources/README.md`; D-011 (verse citations); D-012 (licensing).*
+
+## D-015 · 2026-08-05 · Origin: orthography proves NON-NATIVENESS, etymology proves PROVENANCE
+
+**Trigger.** A 108-word everyday sweep — the first real measurement of origin quality — found the
+classifier wrong on **17 of the 76 words where it committed to an answer**, and 11 of those at its
+*highest* confidence (0.9). All one defect: Grantha letters (ஸ ஷ ஜ ஹ ஶ) were read as a Sanskrit
+signal, so பஸ், ஸ்கூல், ஹோட்டல், ஆபீஸ், நர்ஸ், ஸ்டேஷன், கிளாஸ், ஹாஸ்பிட்டல் (English), ஜன்னல்
+(Portuguese) and ஜாமீன், ஜில்லா (Urdu) all came back **வடசொல்**.
+
+**The premise was wrong, not the tuning.** Grantha is how Tamil writes sounds its own எழுத்து set
+lacks — from *any* language. The diagnostic that made this obvious: the classifier was simultaneously
+**over**-calling வடசொல் on Grantha-spelled English and **under**-calling it on naturalised Sanskrit
+written without Grantha (புத்தகம், ஆசிரியர், சூரியன் were already `unknown`). One letter set cannot
+carry both jobs.
+
+**Decision — separate the two questions.**
+1. **Is it native?** Orthography answers this well: Grantha and a முதல் எழுத்து violation both prove
+   *not native*. Neither may assert a source language. Both now return "borrowed, source
+   undetermined" with வடசொல் and loanword as alternatives.
+2. **Which language?** Needs positive evidence. `adapters/etymology.py` reads en.wiktionary's
+   machine-readable templates — `{{bor+|ta|pt|janela}}`, `{{inh+|ta|dra-pro|*maran}}`. The inherited
+   case matters as much as the borrowed one: it is positive proof a word IS native, which the
+   native-by-default branch never had.
+
+**Exception, deliberately kept.** The இறுதி எழுத்து rule still asserts `loanword`. It turns on
+morphological *assimilation*, not letters: Sanskrit borrowings are adapted and take Tamil endings
+(ரூபம், யோகம், மனிதன்), so a bare vallinam final really is evidence of a non-Sanskrit loan.
+Reviewable — if a Sanskrit borrowing keeps a bare vallinam final, it joins the other two.
+
+**Result.** correct 59 → **82**, honest unknown 30 → 23, wrong **17 → 1**.
+
+**Interim cost, recorded honestly.** Fixing the rules *before* the lexicon landed pushed unknowns to
+51 of 108 — worse as a product, even though every answer was defensible. Saran's checkpoint caught
+this: *"marking a lot of them as unknown will also reduce trust for this product."* **Honesty is a
+floor, not a goal.** Removing a wrong answer without adding evidence moves the failure from *wrong*
+to *useless*. Sequence the evidence source with the rule fix in future.
+
+**Tiering.** en.wiktionary is `evolving` — evidence, not authority. Crowd-edited and some etymologies
+are contested (பசு is given as Sanskrit *paśu* while a Dravidian *pacu* is also argued). Confidence
+caps at 0.8, the competing class always stays in `alternatives`, and the citation always travels.
+**Madras Tamil Lexicon** (dsal.uchicago.edu) is the intended ANCHOR upgrade — not a replacement for
+citing this honestly.
+
+**Two traps found by measuring, not reading.** Both have regression tests.
+- **Homographs.** A headword carries one Etymology section *per sense* and they disagree: கால் = leg
+  (inherited) AND time (Skt काल); பூ = flower AND earth; சாலை = road (native சால்+ஐ) AND hall
+  (Skt शाला); கார் = black (native) AND car (English). Ranking by template strength picks `bor` over
+  `inh` every time, so **four core native words were labelled வடசொல் at 0.8** — the kind of error a
+  Tamil scholar would never forgive, and it nearly shipped. Now reported as ambiguous.
+  `Origin.is_native` became `Optional`: a homograph is neither native nor not.
+- **Dravidian sub-family codes.** மழை is `{{inh+|ta|dra-sdo-pro|*maẓay}}`. An enumerated native-code
+  list missed that branch and reported the word as *borrowed from a language called "dra-sdo-pro"*.
+  Matched by prefix now.
+
+**▶ OPEN — the Session 3 objective.** Homograph origin is currently reported as `unknown` + both
+alternatives. That is honest but discards real information (5 of the 23 remaining unknowns).
+**Origin is modelled per-HEADWORD but is really per-SENSE.** The adapter already parses both senses;
+only the schema and presentation need deciding. Options: (a) `Origin.senses[]`, (b) headword-level
+class + a `senses` breakdown, (c) caller passes a sense hint. `Meaning.senses` already exists —
+aligning origin to it is the natural move.
+
+*Status: active; homograph handling open.* *Links: `thamizh-mcp/src/thamizh_mcp/adapters/etymology.py`,
+`core/classifier.py`, `tests/test_etymology.py`, `scripts/quality_sweep.py`; D-008 (Aalamaram),
+D-012 (licensing), D-014 (cited rule tables).*
