@@ -415,13 +415,46 @@ citing this honestly.
   list missed that branch and reported the word as *borrowed from a language called "dra-sdo-pro"*.
   Matched by prefix now.
 
-**▶ OPEN — the Session 3 objective.** Homograph origin is currently reported as `unknown` + both
-alternatives. That is honest but discards real information (5 of the 23 remaining unknowns).
-**Origin is modelled per-HEADWORD but is really per-SENSE.** The adapter already parses both senses;
-only the schema and presentation need deciding. Options: (a) `Origin.senses[]`, (b) headword-level
-class + a `senses` breakdown, (c) caller passes a sense hint. `Meaning.senses` already exists —
-aligning origin to it is the natural move.
+**▶ CLOSED 2026-08-05 (Session 3) — origin is now modelled per SENSE.** Shape (a) from the
+options above: `Origin.senses[]`, a new `SenseOrigin` mirroring the existing `Meaning.senses`.
+Purely additive, so no existing field changed meaning and no consumer broke.
 
-*Status: active; homograph handling open.* *Links: `thamizh-mcp/src/thamizh_mcp/adapters/etymology.py`,
+**The structural half.** The parser read the whole ==Tamil== section at once and ranked templates
+across it. That is what picks `bor` over `inh` every time. en.wiktionary actually separates senses
+into `===Etymology N===` blocks, so each block is now parsed on its own, and the sense LABEL comes
+off the page machine-readably — `{{ety|ta|id=leg|…}}` where present, else the relation template's
+gloss (`{{bor|ta|sa|काल|t=time}}`), else the block's first definition line. Measuring against the
+real pages showed the data is richer than this entry assumed: கால் has **six** etymology blocks
+(leg, canal, forest, wind, time, a conjunction), not two.
+
+**Saran's ruling — the Tamil sense leads.** *"When there is a homograph between Tamil and Sanskrit,
+Tamil meaning wins. It's a Thamizh MCP after all. But we'll cite the Sanskrit meaning as well
+below."* So the headword class takes the Tamil sense, and the borrowed sense is never suppressed:
+it rides in the evidence string, in `alternatives`, and in full in `senses[]`. Confidence 0.7 —
+below a clean single-etymology 0.8, because the headword class is a **reporting ruling layered on
+the evidence**, not the evidence alone. Where no Tamil sense exists at all (கிளாஸ் = English
+class AND English glass) the headword stays `unknown`; nothing in the ruling picks a winner there.
+A sense whose block states no relation — கால் 'wind' (bare cognates), கார் 'to darken' ("From the
+above") — is omitted rather than padded in as an unknown sense (Saran's call).
+
+**Two defects the change exposed, both fixed here.**
+- The native short-circuit in `_fill_native_equivalent` gated on `is_native` alone. A homograph
+  leading native would therefore have silently dropped the attested equivalents of its BORROWED
+  sense. Now gated on native AND no borrowed sense — பசு's 'cow' sense keeps ஆ / உயிர்.
+- `force_refresh` reached only the meaning cache, never etymology. `refresh_sources` did nothing
+  for origin, so a parser upgrade left old-shape cached dicts served forever — which would have
+  made this very change unmeasurable without clearing the store by hand.
+
+**Result.** correct 82 → **86**, honest unknown 23 → **18**, wrong **1** (unchanged), formation
+26/30 (unchanged). 16 of the 108 sweep words now carry a per-sense breakdown, printed as its own
+sweep section.
+
+**⚠️ Open for Saran.** கார் was moved to the sweep's *uncertain* bucket rather than silently
+re-labelled. The ruling was stated for Tamil-vs-Sanskrit; the same logic covers Tamil-vs-English,
+and கார் is genuinely native Tamil (blackness / monsoon — கார்காலம்). Leading it native contradicts
+its previous expected `loanword`. If the ruling is meant to be Sanskrit-only, the rule needs a
+source-language condition and கார் goes back to `loanword`.
+
+*Status: CLOSED 2026-08-05 (homograph handling landed per-sense; கார் flagged for ruling).* *Links: `thamizh-mcp/src/thamizh_mcp/adapters/etymology.py`,
 `core/classifier.py`, `tests/test_etymology.py`, `scripts/quality_sweep.py`; D-008 (Aalamaram),
 D-012 (licensing), D-014 (cited rule tables).*
