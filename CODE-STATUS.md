@@ -29,7 +29,7 @@ the expected labels inside it are **assessments, not authority**, and need Saran
 
 | | 2026-08-02 start | Session 2 end | now |
 |---|---|---|---|
-| **Origin** correct | 59 | 82 | **86** |
+| **Origin** correct | 59 | 82 | **87** |
 | honest `unknown` | 30 | 23 | **18** |
 | **wrong** | 17 | 1 | **1** |
 | **Formation** decoded | — | 26/30 | 26/30 |
@@ -58,8 +58,12 @@ word is *not native* but never *which language*, and en.wiktionary now supplies 
 `Meaning.senses`; the etymology parser reads each `===Etymology N===` block on its own instead of
 ranking templates across the whole Tamil section (the defect that picked `bor` over `inh`). Sense
 labels come off the page machine-readably. **Saran's ruling: the Tamil sense leads at headword
-level** — a Thamizh server points the reader at the Tamil word first — with the borrowed sense
-always cited in the evidence, in `alternatives`, and in full in `senses[]`.
+level for EVERY source language** (Sanskrit, English, Urdu, Marathi, Telugu) — a Thamizh server
+points the reader at the Tamil word first — with the borrowed sense always cited in the evidence,
+in `alternatives`, and in full in `senses[]`. A borrowed sense also hands back its Tamil word via
+`SenseOrigin.tamil_alternatives` (கார் 'car' → மகிழுந்து), filtered so a synonym that is itself
+borrowed (ரோடு) cannot surface. Deliberately NOT called `native_equivalents`: orthography proves
+non-nativeness only, so naturalized Sanskrit still passes — the loanword lexicon is the real fix.
 
 Two defects it exposed, both fixed: the native short-circuit dropped the equivalents of a
 homograph's borrowed sense, and `force_refresh` never reached the etymology cache (so

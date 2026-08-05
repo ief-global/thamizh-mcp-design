@@ -445,16 +445,47 @@ above") — is omitted rather than padded in as an unknown sense (Saran's call).
   for origin, so a parser upgrade left old-shape cached dicts served forever — which would have
   made this very change unmeasurable without clearing the store by hand.
 
-**Result.** correct 82 → **86**, honest unknown 23 → **18**, wrong **1** (unchanged), formation
+**Result.** correct 82 → **87**, honest unknown 23 → **18**, wrong **1** (unchanged), formation
 26/30 (unchanged). 16 of the 108 sweep words now carry a per-sense breakdown, printed as its own
 sweep section.
 
-**⚠️ Open for Saran.** கார் was moved to the sweep's *uncertain* bucket rather than silently
-re-labelled. The ruling was stated for Tamil-vs-Sanskrit; the same logic covers Tamil-vs-English,
-and கார் is genuinely native Tamil (blackness / monsoon — கார்காலம்). Leading it native contradicts
-its previous expected `loanword`. If the ruling is meant to be Sanskrit-only, the rule needs a
-source-language condition and கார் goes back to `loanword`.
+**Ruling extended — ANY source language, not Sanskrit only (Saran, 2026-08-05).** கார் was first
+parked in the sweep's *uncertain* bucket, because the ruling had been stated for Tamil-vs-Sanskrit
+while கார் is Tamil-vs-English. Saran resolved it: *"We should follow the same rule for both
+Tamil-vs-Sanskrit and Tamil-vs-English — or any other transliteratory words from Urdu, Marathi,
+Telugu etc. Always prioritize the native Tamil word but give the other meanings from Sanskrit,
+English etc., so the user is aware of both."* கார் therefore leads native (blackness / monsoon —
+கார்காலம்) and is a ruled expectation, not an open question.
 
-*Status: CLOSED 2026-08-05 (homograph handling landed per-sense; கார் flagged for ruling).* *Links: `thamizh-mcp/src/thamizh_mcp/adapters/etymology.py`,
+**Consequence he also asked for: the borrowed sense hands back its Tamil word.** *"Sometimes the
+user meant the English word, that he can pick up from the 2nd choice word, but now he knows the
+native equivalent of it."* So `SenseOrigin.tamil_alternatives` carries them per sense — கார் 'car'
+→ மகிழுந்து / சீருந்து / தானுந்து; கிளாஸ் → வகுப்பு ('class') and கண்ணாடி ('glass'); சாலை's Sanskrit
+'hall' → வீடு / மனை / இல்லம். Source is the page's own `{{syn|ta|…}}`, collected per Etymology block
+so synonyms cannot leak across senses.
+
+**Filtered, because a synonym can itself be a borrowing.** en.wiktionary lists ரோடு — English
+"road" — as a synonym of சாலை's road sense. `classifier.looks_orthographically_native` drops those,
+reusing the D-015 insight that orthography proves NON-nativeness.
+
+**Named `tamil_alternatives`, not `native_equivalents`, deliberately.** That same insight caps what
+may be claimed: the rules prove non-nativeness only, so naturalized Sanskrit passes them — தானம்
+'place' yields சுவர்க்கம் (< स्वर्ग) and சக்தி (< शक्ति), மந்திரம் yields மண்டபம் (< मण्डप). Labelling
+those "pure Tamil" would over-claim in exactly the place D-015 says we cannot. Evolving tier,
+confidence 0.6. **The loanword lexicon (Madras Tamil Lexicon) is what would let this assert
+nativeness — do not re-label until it lands.**
+
+**They also feed the headword `native_equivalent` when I2PT misses.** I2PT is keyed on borrowed
+HEADWORDS, so it has no கார் row at all — கார் is a native word that merely shares its form — which
+means `suggest_native_equivalent` was silent for every homograph before this.
+
+**Also fixed in passing (its own commit):** `inh+` and `lbor+` were missing from the "stated"
+certainty list while `bor+` was in it, so every `{{inh+}}` word scored 0.65 against 0.8 for
+Sanskrit/English `{{bor+}}` borrowings — a systematic tilt against native words. Only `der`/`der+`
+are genuinely a weaker relation. Labels unaffected; confidences only.
+
+**Final sweep: correct 82 → 87, honest unknown 23 → 18, wrong 1 (unchanged), formation 26/30.**
+
+*Status: CLOSED 2026-08-05 (homograph handling landed per-sense; ruling covers every source language).* *Links: `thamizh-mcp/src/thamizh_mcp/adapters/etymology.py`,
 `core/classifier.py`, `tests/test_etymology.py`, `scripts/quality_sweep.py`; D-008 (Aalamaram),
 D-012 (licensing), D-014 (cited rule tables).*
