@@ -49,7 +49,9 @@ so they need *no per-word maintenance* — the FST generates millions of forms f
 These give **meaning** (and often etymology notes that help with origin).
 
 ### Madras University Tamil Lexicon (via DSAL, U. Chicago) — authoritative meaning *(anchor)*
-- The standard scholarly Tamil dictionary (1924–1936), searchable; entries often include etymology and source-language tags. `https://dsal.uchicago.edu/dictionaries/tamil-lex/`; also the DDSA Tamil Lexicon apps. No official REST API — plan a queried interface or an offline copy of the digitized data. Treat as a pinned anchor (data last refreshed Sep 2023).
+- The standard scholarly Tamil dictionary (1924–1936), searchable; entries often include etymology and source-language tags. `https://dsal.uchicago.edu/dictionaries/tamil-lex/`; also the DDSA Tamil Lexicon apps. No official REST API. Pinned anchor (data last refreshed Sep 2023).
+- ⚠️ **Licence: CC BY-NC-ND 2.0, © University of Madras (verified 2026-08-07, D-016).** The **ND** term rules out an offline digitized copy or a restructured store, and **NC** makes bundling it into the Apache-2.0 product a licence conflict. Redistribution mode is therefore **consult-and-cite**: query it to establish a fact, store the *fact + citation*, never the entry text. Adapter is opt-in and off by default. Written permission from U. Madras / DSAL is being sought; until granted, the cautious reading stands.
+- **Method:** `sources/INTEGRATING-A-LEXICON.md` — how any lexicon is integrated, with this one as the worked example.
 
 ### Cologne Online Tamil Lexicon (OTL) *(anchor)*
 - Comprehensive Tamil dictionary at the University of Cologne; TSCII interface, mirrored at

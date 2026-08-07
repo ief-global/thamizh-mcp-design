@@ -175,9 +175,11 @@ consent/licensing model before any pooling feature.
 
 ## 7. Standing risks / open items
 
-- **Licenses:** I2PT MIT verify (overdue, vendored+public) · Madras Lexicon + TVA terms before snapshots
-  ship · Wiktionary CC BY-SA position before the hosted instance serves cached text · Aalamaram license
-  unknown until located. Gate-0 blocks every public rung.
+- **Licenses (mostly SETTLED by D-012; Gate-0-as-blocker framing superseded):** Wiktionary CC BY-SA and
+  I2PT MIT are cleared for use including public serving. **Madras Lexicon RESOLVED 2026-08-07 (D-016):
+  CC BY-NC-ND 2.0 — consult-and-cite only, never bundled, adapter opt-in**; permission request to
+  U. Madras / DSAL in flight. Method for any lexicon: `sources/INTEGRATING-A-LEXICON.md`.
+  Still open: TVA snapshot terms · Aalamaram license unknown until located (D-008).
 - **D-011 (Tholkappiyam CLOSED 2026-08-02):** verse-level citation is live for both authorities —
   Tholkappiyam from the pinned Project Madurai edition, Nannūl via TVA's verbatim quotations. Public
   claims may now say **நூற்பா-level**, qualified to the இயல் (§4a). Residual risk: the Project Madurai

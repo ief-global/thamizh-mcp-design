@@ -1,7 +1,11 @@
 # Research grounding — the two anchor papers and the architectural argument
 
-Digest for the builder. Full extractions: `From_Phonemes_to_Meaning.md` (project folder) and the
-ThamizhiMorph PDF. Added 2026-07-10 (v6).
+Digest for the builder. Read the papers at source — Jeyarajalingam, Velayuthan, Karunakaran, Rasan & Sarveswaran (2025), *From Phonemes to Meaning: Evaluating Large Language Models on Tamil* (ILAKKANAM benchmark, University of Jaffna), [arXiv:2511.12387](https://arxiv.org/abs/2511.12387); ThamizhiMorph:
+Sarveswaran, Dias & Butt (2021), *Machine Translation* 35:37–70. Added 2026-07-10 (v6).
+
+> A verbatim copy of the ILAKKANAM paper was previously committed here as
+> `From_Phonemes_to_Meaning.md`. It was removed 2026-08-07: arXiv's default licence does not
+> grant redistribution, and this repo is public. Cite and link — do not re-add the text.
 
 ## 1. ThamizhiMorph (Sarveswaran, Dias & Butt 2021, Machine Translation 35:37–70)
 
