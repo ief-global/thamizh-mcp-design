@@ -27,12 +27,14 @@ Live at **http://minnaham:8080** (systemd, 24/7). Terminals cannot shape Tamil �
 `uv run python scripts/quality_sweep.py` in the code repo. This is the only honest read on quality;
 the expected labels inside it are **assessments, not authority**, and need Saran's eye.
 
-| | 2026-08-02 start | now |
-|---|---|---|
-| **Origin** correct | 59 | **82** |
-| honest `unknown` | 30 | 23 |
-| **wrong** | 17 | **1** |
-| **Formation** decoded | — | 26/30 |
+| | 2026-08-02 start | Session 2 end | now |
+|---|---|---|---|
+| **Origin** correct | 59 | 82 | **87** |
+| honest `unknown` | 30 | 23 | **18** |
+| **wrong** | 17 | 1 | **1** |
+| **Formation** decoded | — | 26/30 | 26/30 |
+
+16 of the 108 words now carry a **per-sense** origin breakdown (`origin.senses[]`).
 
 Formation gaps: `கொடுக்க` `கொடுத்து` `கொடுக்கும்` (non-finite) and `வீட்டிற்கு` (noun dative).
 
@@ -50,13 +52,34 @@ enforces that every cited நூற்பா resolves in the pinned texts.
 **Origin rebuilt (D-015).** See the decision log — the short version is that orthography can prove a
 word is *not native* but never *which language*, and en.wiktionary now supplies the source.
 
+## What changed in Session 3 (2026-08-05)
+
+**D-015 CLOSED — origin is modelled per SENSE.** `Origin.senses[]` mirrors the existing
+`Meaning.senses`; the etymology parser reads each `===Etymology N===` block on its own instead of
+ranking templates across the whole Tamil section (the defect that picked `bor` over `inh`). Sense
+labels come off the page machine-readably. **Saran's ruling: the Tamil sense leads at headword
+level for EVERY source language** (Sanskrit, English, Urdu, Marathi, Telugu) — a Thamizh server
+points the reader at the Tamil word first — with the borrowed sense always cited in the evidence,
+in `alternatives`, and in full in `senses[]`. A borrowed sense also hands back its Tamil word via
+`SenseOrigin.tamil_alternatives` (கார் 'car' → மகிழுந்து), filtered so a synonym that is itself
+borrowed (ரோடு) cannot surface. Deliberately NOT called `native_equivalents`: orthography proves
+non-nativeness only, so naturalized Sanskrit still passes — the loanword lexicon is the real fix.
+
+Two defects it exposed, both fixed: the native short-circuit dropped the equivalents of a
+homograph's borrowed sense, and `force_refresh` never reached the etymology cache (so
+`refresh_sources` did nothing for origin).
+
 ## Standing traps (all cost real time to find)
 
 - **Never take a நூற்பா number from a secondary source.** TVA's 336/319/136 are **337/320/137** in
   the pinned edition. Three shipped tables were wrong before `data/classical/` existed.
 - **Tholkappiyam நூற்பா RESTART per இயல்** — cite அதிகாரம் › இயல் › நூற்பா. Nannūl is continuous 1–462.
 - **Grantha marks a non-native SOUND, not Sanskrit.** ஜன்னல் is Portuguese, பஸ் is English.
-- **Homographs differ in origin by sense** — கால் = leg (native) *and* time (Sanskrit).
+- **Homographs differ in origin by sense** — கால் = leg (native) *and* time (Sanskrit). Origin is
+  per-SENSE (`origin.senses[]`); the headword leads with the Tamil sense, borrowed senses are
+  cited, never suppressed. Ranking etymology templates across a whole page re-creates the bug.
+- **A cached etymology is a PARSE, not raw source.** An adapter upgrade leaves old-shape dicts
+  served forever unless `force_refresh` reaches the etymology cache — it did not, until Session 3.
 - The quality sweep **must** use `default_engine()`; a hand-built `Engine` omits the curated-paradigm
   fallback and 12 covered verbs look like FST gaps.
 

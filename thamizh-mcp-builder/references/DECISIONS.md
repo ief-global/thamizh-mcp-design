@@ -415,13 +415,77 @@ citing this honestly.
   list missed that branch and reported the word as *borrowed from a language called "dra-sdo-pro"*.
   Matched by prefix now.
 
-**▶ OPEN — the Session 3 objective.** Homograph origin is currently reported as `unknown` + both
-alternatives. That is honest but discards real information (5 of the 23 remaining unknowns).
-**Origin is modelled per-HEADWORD but is really per-SENSE.** The adapter already parses both senses;
-only the schema and presentation need deciding. Options: (a) `Origin.senses[]`, (b) headword-level
-class + a `senses` breakdown, (c) caller passes a sense hint. `Meaning.senses` already exists —
-aligning origin to it is the natural move.
+**▶ CLOSED 2026-08-05 (Session 3) — origin is now modelled per SENSE.** Shape (a) from the
+options above: `Origin.senses[]`, a new `SenseOrigin` mirroring the existing `Meaning.senses`.
+Purely additive, so no existing field changed meaning and no consumer broke.
 
-*Status: active; homograph handling open.* *Links: `thamizh-mcp/src/thamizh_mcp/adapters/etymology.py`,
+**The structural half.** The parser read the whole ==Tamil== section at once and ranked templates
+across it. That is what picks `bor` over `inh` every time. en.wiktionary actually separates senses
+into `===Etymology N===` blocks, so each block is now parsed on its own, and the sense LABEL comes
+off the page machine-readably — `{{ety|ta|id=leg|…}}` where present, else the relation template's
+gloss (`{{bor|ta|sa|काल|t=time}}`), else the block's first definition line. Measuring against the
+real pages showed the data is richer than this entry assumed: கால் has **six** etymology blocks
+(leg, canal, forest, wind, time, a conjunction), not two.
+
+**Saran's ruling — the Tamil sense leads.** *"When there is a homograph between Tamil and Sanskrit,
+Tamil meaning wins. It's a Thamizh MCP after all. But we'll cite the Sanskrit meaning as well
+below."* So the headword class takes the Tamil sense, and the borrowed sense is never suppressed:
+it rides in the evidence string, in `alternatives`, and in full in `senses[]`. Confidence 0.7 —
+below a clean single-etymology 0.8, because the headword class is a **reporting ruling layered on
+the evidence**, not the evidence alone. Where no Tamil sense exists at all (கிளாஸ் = English
+class AND English glass) the headword stays `unknown`; nothing in the ruling picks a winner there.
+A sense whose block states no relation — கால் 'wind' (bare cognates), கார் 'to darken' ("From the
+above") — is omitted rather than padded in as an unknown sense (Saran's call).
+
+**Two defects the change exposed, both fixed here.**
+- The native short-circuit in `_fill_native_equivalent` gated on `is_native` alone. A homograph
+  leading native would therefore have silently dropped the attested equivalents of its BORROWED
+  sense. Now gated on native AND no borrowed sense — பசு's 'cow' sense keeps ஆ / உயிர்.
+- `force_refresh` reached only the meaning cache, never etymology. `refresh_sources` did nothing
+  for origin, so a parser upgrade left old-shape cached dicts served forever — which would have
+  made this very change unmeasurable without clearing the store by hand.
+
+**Result.** correct 82 → **87**, honest unknown 23 → **18**, wrong **1** (unchanged), formation
+26/30 (unchanged). 16 of the 108 sweep words now carry a per-sense breakdown, printed as its own
+sweep section.
+
+**Ruling extended — ANY source language, not Sanskrit only (Saran, 2026-08-05).** கார் was first
+parked in the sweep's *uncertain* bucket, because the ruling had been stated for Tamil-vs-Sanskrit
+while கார் is Tamil-vs-English. Saran resolved it: *"We should follow the same rule for both
+Tamil-vs-Sanskrit and Tamil-vs-English — or any other transliteratory words from Urdu, Marathi,
+Telugu etc. Always prioritize the native Tamil word but give the other meanings from Sanskrit,
+English etc., so the user is aware of both."* கார் therefore leads native (blackness / monsoon —
+கார்காலம்) and is a ruled expectation, not an open question.
+
+**Consequence he also asked for: the borrowed sense hands back its Tamil word.** *"Sometimes the
+user meant the English word, that he can pick up from the 2nd choice word, but now he knows the
+native equivalent of it."* So `SenseOrigin.tamil_alternatives` carries them per sense — கார் 'car'
+→ மகிழுந்து / சீருந்து / தானுந்து; கிளாஸ் → வகுப்பு ('class') and கண்ணாடி ('glass'); சாலை's Sanskrit
+'hall' → வீடு / மனை / இல்லம். Source is the page's own `{{syn|ta|…}}`, collected per Etymology block
+so synonyms cannot leak across senses.
+
+**Filtered, because a synonym can itself be a borrowing.** en.wiktionary lists ரோடு — English
+"road" — as a synonym of சாலை's road sense. `classifier.looks_orthographically_native` drops those,
+reusing the D-015 insight that orthography proves NON-nativeness.
+
+**Named `tamil_alternatives`, not `native_equivalents`, deliberately.** That same insight caps what
+may be claimed: the rules prove non-nativeness only, so naturalized Sanskrit passes them — தானம்
+'place' yields சுவர்க்கம் (< स्वर्ग) and சக்தி (< शक्ति), மந்திரம் yields மண்டபம் (< मण्डप). Labelling
+those "pure Tamil" would over-claim in exactly the place D-015 says we cannot. Evolving tier,
+confidence 0.6. **The loanword lexicon (Madras Tamil Lexicon) is what would let this assert
+nativeness — do not re-label until it lands.**
+
+**They also feed the headword `native_equivalent` when I2PT misses.** I2PT is keyed on borrowed
+HEADWORDS, so it has no கார் row at all — கார் is a native word that merely shares its form — which
+means `suggest_native_equivalent` was silent for every homograph before this.
+
+**Also fixed in passing (its own commit):** `inh+` and `lbor+` were missing from the "stated"
+certainty list while `bor+` was in it, so every `{{inh+}}` word scored 0.65 against 0.8 for
+Sanskrit/English `{{bor+}}` borrowings — a systematic tilt against native words. Only `der`/`der+`
+are genuinely a weaker relation. Labels unaffected; confidences only.
+
+**Final sweep: correct 82 → 87, honest unknown 23 → 18, wrong 1 (unchanged), formation 26/30.**
+
+*Status: CLOSED 2026-08-05 (homograph handling landed per-sense; ruling covers every source language).* *Links: `thamizh-mcp/src/thamizh_mcp/adapters/etymology.py`,
 `core/classifier.py`, `tests/test_etymology.py`, `scripts/quality_sweep.py`; D-008 (Aalamaram),
 D-012 (licensing), D-014 (cited rule tables).*
