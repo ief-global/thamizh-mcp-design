@@ -15,7 +15,11 @@ Reference documents used to build (and audit) the grammar rule tables that ship 
 - **Dictionaries and lexicons** are a third case again: some may not be redistributed *or* served,
   only consulted and cited. See **[INTEGRATING-A-LEXICON.md](INTEGRATING-A-LEXICON.md)** — how a
   lexicon becomes a grounded source, what the three redistribution modes are, and why the Madras
-  Tamil Lexicon (CC BY-NC-ND) is consult-and-cite only.
+  Tamil Lexicon (CC BY-NC-ND) is consult-and-cite only. **[lexicon/](lexicon/)** records which
+  lexicons have been assessed and rejected, so the same evaluation is not repeated.
+- **Where a source's terms are unstated, we ask in writing** rather than assume. Letters and
+  replies live in **[correspondence/](correspondence/)**; granted terms are then recorded in the
+  code repo's `data/PINS.md` and `LICENSING.md`, which remain the authority.
 
 ## Why the split
 
