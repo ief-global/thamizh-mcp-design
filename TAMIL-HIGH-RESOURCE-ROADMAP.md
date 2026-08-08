@@ -86,8 +86,9 @@ and medium term create. Revisit when the gold corpus is ≥ ~100k verified recor
 
 ## Sources
 
-- From Phonemes to Meaning: Evaluating LLMs on Tamil (ILAKKANAM), arXiv:2511.12387 — extraction in
-  `From_Phonemes_to_Meaning.md`.
+- Jeyarajalingam, Velayuthan, Karunakaran, Rasan & Sarveswaran (2025), *From Phonemes to Meaning: Evaluating Large Language Models on Tamil* (ILAKKANAM benchmark, University of Jaffna), [arXiv:2511.12387](https://arxiv.org/abs/2511.12387).
+  Note Sarveswaran is also the author of ThamizhiMorph and a co-author of Aalamaram — the same
+  lineage the server already depends on.
 - Sarveswaran, Dias & Butt (2021), ThamizhiMorph, Machine Translation 35:37–70.
 - `tamil_llm_tokenization_analysis_gemini.md` (de-agglutination/MCP architecture argument).
 - `Tamil-Small-Language-Models-by-Gemini.md` (SLM feasibility + serving architectures).

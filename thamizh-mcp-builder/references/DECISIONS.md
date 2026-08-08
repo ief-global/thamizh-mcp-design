@@ -489,3 +489,66 @@ are genuinely a weaker relation. Labels unaffected; confidences only.
 *Status: CLOSED 2026-08-05 (homograph handling landed per-sense; ruling covers every source language).* *Links: `thamizh-mcp/src/thamizh_mcp/adapters/etymology.py`,
 `core/classifier.py`, `tests/test_etymology.py`, `scripts/quality_sweep.py`; D-008 (Aalamaram),
 D-012 (licensing), D-014 (cited rule tables).*
+
+## D-016 · 2026-08-07 · Madras Lexicon is CC BY-NC-ND — sources need a REDISTRIBUTION MODE, not just a tier
+
+**Trigger.** Session 4 opened on the loanword lexicon — the intended anchor upgrade that would finally
+close the `native-by-default` branch in origin classification. Before designing the adapter we read
+DSAL's actual terms, which D-012 had listed as *"still genuinely open (sourcing tasks, NOT blockers)"*.
+
+**Finding.** The Madras University Tamil Lexicon at `dsal.uchicago.edu/dictionaries/tamil-lex/` is
+published under **Creative Commons BY-NC-ND 2.0**, copyright **University of Madras** (original
+1924–1936), digitization last refreshed **September 2023**. There is no public API.
+
+Both trailing terms bite:
+- **ND (NoDerivatives)** — parsing entries into a restructured store and serving them is plausibly a
+  derivative work.
+- **NC (NonCommercial)** — `thamizh-mcp` is Apache-2.0 and anyone may run it, including commercially.
+  Bundling NC data inside it pushes a restriction onto downstream users who never agreed to it —
+  the same error as relicensing CC BY-SA Wiktionary text, which D-012 forbids.
+
+This **closes an option the code stub had left open**: `adapters/lexicon.py` proposed "scrape-at-query
+vs offline digitized copy (blueprint §10)". The offline copy is not available to us.
+
+**Decision — tier and licence are INDEPENDENT axes.** We had been treating "how much do we trust it"
+and "what may we do with the bytes" as one property. They are not. Every source now declares BOTH a
+`tier` (anchor / evolving) and a **redistribution mode**:
+
+| Mode | Example | Permitted |
+|---|---|---|
+| **Redistribute** | Project Madurai classical; I2PT (MIT) | ship the data as a version-locked artifact |
+| **Serve with attribution** | Tamil Wiktionary (CC BY-SA) | cache + serve, attribution travels, never relicensed |
+| **Consult and cite** | **Madras Tamil Lexicon (CC BY-NC-ND)** | consult to establish a fact; store the FACT + citation, never the entry text |
+
+A consult-and-cite source is not second-class — MTL is the most authoritative lexicon we have. The
+mode constrains **distribution**, not **trust**.
+
+**Why consult-and-cite is legitimate, not a workaround.** It is the same facts-vs-expression argument
+already applied to the TVA course books in `sources/README.md`: *"Facts aren't copyrightable, and
+citing the source is scholarship."* That a word is attested as an English borrowing is a fact; the
+lexicon's wording of its entry is expression. We record the former and cite where we verified it.
+
+**Consequences for the MTL adapter (Saran's call, 2026-08-07 — proceed on this basis):**
+- no bundled copy in the code repo; query-time lookup only
+- cached in the machine-local, gitignored `data/knowledge.sqlite3` — a private cache is not distribution
+- store the derived claim + citation URL, never the entry text
+- excluded from the gold-corpus export (D-012's per-source classification makes this a filter)
+- **opt-in, disabled by default**, so the shipped Apache-2.0 product carries no NC dependency
+- courteous access: descriptive UA, rate limiting, `robots.txt`, cache-once
+
+**Recorded honestly: this is the cautious reading.** We are not lawyers and NC/ND is where a cautious
+and a permissive reading diverge. **Saran is approaching the University of Chicago / DSAL for written
+permission** for this specific use. If granted, the mode widens; until then it does not.
+
+**Also decided:** the method is documented **source-agnostically** — `sources/INTEGRATING-A-LEXICON.md`,
+written for scholars, with MTL as the worked example rather than the subject. This is risk management,
+not tidiness: if permission is refused, Cologne OTL or another lexicon takes MTL's place under the same
+architecture and the document still stands.
+
+**Still open.** Aalamaram licence (D-008) — unchanged. DESIGN.md §7's "Gate-0 blocks every public rung"
+framing remains superseded by D-012.
+
+*Status: active; adapter implementation next, permission request in parallel.* *Links:
+`sources/INTEGRATING-A-LEXICON.md`; `thamizh-mcp/src/thamizh_mcp/adapters/lexicon.py` (stub),
+`core/classifier.py` (the native-by-default branch this closes); D-008 (Aalamaram), D-012 (licensing),
+D-015 (origin per sense — `tamil_alternatives` is capped pending exactly this lexicon).*

@@ -12,6 +12,11 @@ Reference documents used to build (and audit) the grammar rule tables that ship 
   their header stays intact, so those DO ship — as version-locked artifacts in the code repo's
   `data/classical/`, header included.
 
+- **Dictionaries and lexicons** are a third case again: some may not be redistributed *or* served,
+  only consulted and cited. See **[INTEGRATING-A-LEXICON.md](INTEGRATING-A-LEXICON.md)** — how a
+  lexicon becomes a grounded source, what the three redistribution modes are, and why the Madras
+  Tamil Lexicon (CC BY-NC-ND) is consult-and-cite only.
+
 ## Why the split
 
 The rule tables encode **facts about Tamil grammar** — the inventory of இடைநிலை, the eight வேற்றுமை,
