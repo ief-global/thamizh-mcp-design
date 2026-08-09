@@ -11,6 +11,10 @@
 >   you are a TVA alumnus writing to a Tamil institution, **a Tamil version would land better** —
 >   say the word and I will draft one for you to correct. The salutation and closing are already in
 >   Tamil.
+> - **The Wikimedia precedent is the strongest lever in this letter** (its own section below).
+>   Verified 2026-08-08: TVA material is already on Tamil Wikisource under **CC0 1.0**, with the
+>   collaboration documented at `ta.wikisource.org/s/4kx`. Asking them to extend terms they have
+>   already granted elsewhere is a much easier request than asking for a new policy.
 > - **Ask 2 is the one that matters most to the project.** It would let us retire an unlicensed
 >   community word-list — the only genuine licence gap we currently ship — and replace it with a
 >   government glossary. Ask 1 is cheap for them and unblocks the course books too.
@@ -80,6 +84,25 @@ We have found that scanned images do not serve this purpose: we assessed the arc
 Madras University Tamil Lexicon, including those in TVA's own collection, and while the Tamil OCR is
 far better than other scans available, the bracketed etymological and English portions do not survive
 OCR at all. Structured data avoids that problem entirely.
+
+## A precedent you have already set
+
+I should say that I am not asking TVA to do something new in kind. The Global Tamil Wikimedia
+Community's collaboration with TVA has already placed TVA material on Tamil Wikisource under the
+**CC0 1.0 Universal Public Domain Dedication** — the works carry the note *"This book is uploaded as
+part of the collaboration between Global Tamil Wikimedia Community and Tamil Virtual Academy"*, and
+the collaboration itself is documented at `ta.wikisource.org/s/4kx`.
+
+That collaboration is, I think, exactly the right instinct: material released freely so that others
+can build on it. What I am asking for is the same instinct applied to the கலைச்சொல் glossaries as
+structured data. If the terms extended to the Wikisource collaboration could simply be extended here,
+that would settle the question entirely — and we would be glad to accept CC0, CC BY, or any narrower
+terms you prefer.
+
+I mention it also because the position is currently uneven: some TVA-related works on Wikisource carry
+that CC0 dedication and others carry no licence statement at all, so a good-faith user cannot tell
+which is which. A single statement of terms for the collection would resolve that for everyone, not
+only for us.
 
 ## What we would do with it
 
