@@ -6,7 +6,7 @@
 >
 > **Companion docs** — `Thamizh-MCP-blueprint.md` (server spec) · `CODE-STATUS.md` (what is actually
 > built, written from the code side) · `Glossary.md` (morphology terms in Tamil-grammar language —
-> read this if any term below is unfamiliar) · `thamizh-mcp-builder/references/DECISIONS.md`
+> read this if any term below is unfamiliar) · `DECISIONS.md`
 > (append-only decision log, D-000…D-013) · the four skills (builder v6, eval, data-curation, release).
 
 ## How to read this document

@@ -268,8 +268,12 @@ system prompt, not just the build process.
   which existing tool powers which MCP tool ("wrap, don't rebuild").
 - `references/research-grounding.md` — digests of the two anchor papers (ThamizhiMorph 2021; ILAKKANAM
   arXiv 2511.12387) plus the token-explosion/de-agglutination argument, and what each changes in the build.
-- `references/DECISIONS.md` — append-only log of resolved decisions with rationale + date. Read first when
-  a past choice is in question; append a superseding entry rather than editing history.
+- **`DECISIONS.md` — at the REPO ROOT, not in `references/`** (moved 2026-08-10). Append-only log of
+  resolved decisions with rationale + date. Read first when a past choice is in question; append a
+  superseding entry rather than editing history. It sits at the root deliberately: it is a *living
+  program record* — the most-edited file in the repo — cited from README, DESIGN, Glossary and the
+  code repo, not skill teaching material. It is therefore **not bundled into the packaged skill**; a
+  frozen snapshot of a decision log would be wrong by the next session. Read it from the repo.
 - `references/IMPROVEMENT-LOOP.md` — the continuous-improvement playbook: routing rule for where each new
   insight goes, per-session triage, skill versioning.
 - `assets/word_analysis_schema.json` — canonical JSON contract for one word analysis.

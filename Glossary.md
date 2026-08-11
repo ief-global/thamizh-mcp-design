@@ -569,7 +569,7 @@ wants to say "he had it done" should not have to produce the string செய்
 - **The program map and roadmap** — `DESIGN.md`
 - **The server specification** — `Thamizh-MCP-blueprint.md`
 - **What is actually built right now** — `CODE-STATUS.md`
-- **Why a past choice was made** — `thamizh-mcp-builder/references/DECISIONS.md`
+- **Why a past choice was made** — `DECISIONS.md`
 - **Tamil grammar itself, with Tholkappiyam citations** —
   `thamizh-mcp-builder/references/tamil-grammar.md`
 - **The research this rests on** — `thamizh-mcp-builder/references/research-grounding.md`,

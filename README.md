@@ -16,7 +16,7 @@ Built by the nonprofit [International Educational Foundation](https://ief-global
 |---|---|
 | [`DESIGN.md`](DESIGN.md) | The program design. **§4a** is the one to read first — Tholkappiyam-first priority, and how a citation is written. |
 | [`Thamizh-MCP-blueprint.md`](Thamizh-MCP-blueprint.md) | Architecture of the server itself. |
-| [`thamizh-mcp-builder/references/DECISIONS.md`](thamizh-mcp-builder/references/DECISIONS.md) | Decision log — every non-obvious choice, with its trigger and its consequences. |
+| [`DECISIONS.md`](DECISIONS.md) | Decision log — every non-obvious choice, with its trigger and its consequences. |
 | [`thamizh-mcp-builder/references/tamil-grammar.md`](thamizh-mcp-builder/references/tamil-grammar.md) | The grammar reference the code is built against, including the **source-priority table**. |
 | [`DECODER-AUDIT-D014.md`](DECODER-AUDIT-D014.md) | A worked audit of where our output drifted from classical naming — the most concrete example of how this project checks itself. |
 | [`sources/`](sources/) | Which texts ground which rule, how they are cited, and what we may redistribute. |
