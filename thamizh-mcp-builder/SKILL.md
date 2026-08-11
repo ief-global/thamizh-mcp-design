@@ -276,5 +276,10 @@ system prompt, not just the build process.
   frozen snapshot of a decision log would be wrong by the next session. Read it from the repo.
 - `references/IMPROVEMENT-LOOP.md` — the continuous-improvement playbook: routing rule for where each new
   insight goes, per-session triage, skill versioning.
-- `assets/word_analysis_schema.json` — canonical JSON contract for one word analysis.
+- `assets/word_analysis_schema.json` — the **Phase-0 SEED** of the word-analysis contract, kept as a
+  template. ⚠️ **No longer canonical and has diverged** (checked 2026-08-11: ~7.8 KB against the
+  shipped 15 KB; lacks `verse_text` from D-018, `tamil_alternatives` and the shared
+  `equivalent_candidate` definition from D-015). The live contract is
+  `thamizh-mcp/src/thamizh_mcp/schema.py` (Pydantic, authoritative), mirrored as JSON Schema in
+  `thamizh-mcp/schemas/`. Read the contract from the code repo, never from here.
 - `assets/planning-blueprint-template.md` — fill this in for the Phase 0 deliverable.
