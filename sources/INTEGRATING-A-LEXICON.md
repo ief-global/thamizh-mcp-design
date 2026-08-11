@@ -8,7 +8,7 @@ not exist yet.
 
 > **Companion documents.** `README.md` (this folder) — what source materials we hold and why some
 > ship and some do not. `../thamizh-mcp-builder/references/sources.md` — the catalog of individual
-> sources and the field they each ground. `../thamizh-mcp-builder/references/DECISIONS.md` — D-016
+> sources and the field they each ground. `../DECISIONS.md` — D-016
 > records the licence finding that produced the third question below.
 
 ---

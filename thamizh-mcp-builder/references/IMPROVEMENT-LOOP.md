@@ -7,7 +7,7 @@ grows. The aim is that no useful insight is lost and no insight lands in the wro
 
 After any substantive discussion, sort each takeaway into exactly one destination:
 
-1. **A decision or fact about *this specific build*** → `DECISIONS.md` (and, if it changes the spec, the
+1. **A decision or fact about *this specific build*** → `DECISIONS.md` **at the repo root** (and, if it changes the spec, the
    blueprint). Examples: choice of stack, "wrap ThamizhiMorph," positioning claims.
 2. **Reusable procedure or domain knowledge Claude should apply automatically** → update the *existing*
    `thamizh-mcp-builder` skill's reference files (`sources.md`, `tool-design.md`, `tamil-grammar.md`).
@@ -50,7 +50,7 @@ A 30-second pass at the end of a working discussion:
 | Artifact | Holds | Changes when |
 |---|---|---|
 | `blueprint` (Phase 0) | what we're building + why | scope/spec decisions |
-| `DECISIONS.md` | the choices + rationale, over time | any decision is made or reversed |
+| `DECISIONS.md` (repo root) | the choices + rationale, over time | any decision is made or reversed |
 | skill `references/*` | reusable how-to + authoritative facts | procedure or domain knowledge improves |
 | eval set | proof the server stays honest | a new failure mode is found |
 | `IMPROVEMENT-LOOP.md` (this doc) | the process itself | the process itself improves |
