@@ -27,6 +27,7 @@ one cadence to remember, not two.
 | Path | What |
 |---|---|
 | `DESIGN.md` | Program design. **§4a = Tholkappiyam-first priority + citation format.** |
+| `Glossary.md` | **Computational-linguistics vocabulary mapped onto Tamil grammar terms** — for scholars who know வேற்றுமை/விகுதி but not "lemma"/"FST"/"treebank". Added 2026-08-10. Read §1.1 and the §8 worked examples first. |
 | `Thamizh-MCP-blueprint.md` | Server architecture. |
 | `thamizh-mcp-builder/references/DECISIONS.md` | Decision log, D-001…D-014. Append, never rewrite history. |
 | `thamizh-mcp-builder/references/tamil-grammar.md` | Grammar reference + **source-priority table** (which authority governs which topic). |
