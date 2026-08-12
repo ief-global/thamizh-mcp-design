@@ -552,3 +552,111 @@ framing remains superseded by D-012.
 `sources/INTEGRATING-A-LEXICON.md`; `thamizh-mcp/src/thamizh_mcp/adapters/lexicon.py` (stub),
 `core/classifier.py` (the native-by-default branch this closes); D-008 (Aalamaram), D-012 (licensing),
 D-015 (origin per sense — `tamil_alternatives` is capped pending exactly this lexicon).*
+
+---
+
+## D-017 · 2026-08-08 · The S2PT licence claim is WITHDRAWN — and provenance becomes a REGISTRY, not prose
+
+*Recorded 2026-08-11. The decision was taken on 2026-08-08 and implemented across Sessions 5–6; the log
+entry was missed at the time, while seven documents had already begun citing "D-017". That gap is itself
+an instance of what this entry is about.*
+
+**Trigger.** A routine check of the vendored வடசொல் word lists ahead of wiring `suggest_native_equivalent`
+more widely. `LICENSING.md` and `data/PINS.md` both recorded the source as **MIT — cleared for use and
+redistribution**.
+
+**Finding.** It is not. Upstream — `github.com/narVidhai/Sanskrit-To-Pure-Tamil-Dictionary` — has **no
+LICENSE file** and states no terms in its README. Its four sub-lists are scraped from community sites
+(viruba.com, tamilchol.com, thamizhdna.org, tamilmantram.com) whose own terms are also unstated. Last
+upstream commit: 2020. Sibling repos in the same org *do* carry explicit MIT, which suggests an omission
+rather than an intent to restrict — **but an omission is not a grant.** The MIT claim is withdrawn.
+
+Two related corrections landed with it: the source had been called **"I2PT" / Indic-To-Pure-Tamil**, and
+GitHub's silent redirect from the renamed repo hid the drift for weeks; and its scope is specifically
+**வடசொல்** (its README is titled "வடசொல் to தமிழ்"), so membership is evidence of a *Sanskrit* source, not
+of "borrowed" in general.
+
+**What we do about it (unchanged from the 2026-08-08 disposition).** The lists stay vendored and used —
+they are attested and unique at their job — but every claim they support is **confidence-capped at 0.55**,
+the lowest committing score in the classifier; the evidence string **names the weakness in the answer
+itself**; an en.wiktionary etymology always outranks them; and they are **marked for supersession** by
+authenticated sources (TVA / government கலைச்சொல் glossaries). Treat S2PT as a working placeholder, never
+an anchor.
+
+**The systemic decision — this is the part that matters.** The defect was never that we shipped a weak
+source. Weak sources are fine and always will be; the project cannot wait for a complete, impeccably
+licensed Tamil corpus that does not exist. The defect was that **the weakness was not declared anywhere a
+machine could read.** Licence and quality facts lived in three prose locations — `LICENSING.md`,
+`data/PINS.md`, per-adapter docstrings — and *nothing checked that a shipped adapter had been through any
+of them*. A source could become load-bearing without ever being reviewed.
+
+So: **every source gets a registry entry, and omission fails the build.**
+
+| Field | What it records |
+|---|---|
+| `grade` (A–D) | **Evidential standing only.** A = primary authority (the classical text, or a table carrying its நூற்பா); B = scholarly/institutional publication; C = community-edited and revisable; D = unattributed, unmaintained compilation. |
+| `confidence_cap` | The ceiling that grade supports — A 0.95, B 0.85, C 0.80, D 0.55. A **ceiling, never a score**: it can only lower a confidence, never invent one. |
+| `redistribution` | D-016's three modes: redistribute / serve-with-attribution / consult-and-cite. |
+| `licence` + `licence_status` | `"unstated"` is a **passing** value. Recording "we do not know" is an honest fact; silence is not. |
+| `maintenance`, `pin`, `supersession` | Is anyone still maintaining it, which bytes we ship, and what is meant to replace it. |
+
+⚠️ **`grade` and `redistribution` are INDEPENDENT axes**, and the registry is where D-016's finding becomes
+mechanical rather than remembered. The **Madras Tamil Lexicon is grade A *and* consult-and-cite** — the most
+authoritative lexicon we have and the most restrictively licensed. S2PT is grade D and freely servable.
+Deriving either axis from the other is exactly the error D-016 was written to correct, and there is a test
+asserting the two have not collapsed.
+
+**Framing to carry forward:** *authenticity comes from every claim carrying a graded, citable provenance the
+user can check — not from every source being impeccable.* A grade D source is fine to ship, as long as the
+answer says it is grade D. The grade is now stamped onto every `SourceRef` and shown beside the source name
+in the web app, so a reader can tell Nannūl from a scraped community list at a glance — which a
+comma-separated list of names never allowed.
+
+*Status: active; registry shipped 2026-08-11 (`data/sources.json`, `core/sources.py`,
+`tests/test_sources_registry.py`). The S2PT licence gap itself remains OPEN and is the one genuine licence
+gap we ship.* *Links: `thamizh-mcp/data/sources.json`; `thamizh-mcp/LICENSING.md` (reasoning; the registry
+holds the machine-checkable facts); D-016 (redistribution modes — the axis split this generalises), D-012
+(licensing settled), D-015 (origin per sense), D-008 (Aalamaram, still unlocated).*
+
+---
+
+## D-018 · 2026-08-08 · The pinned நூற்பா are served at RUNTIME, so a claim QUOTES its authority
+
+*Recorded 2026-08-11, with D-017, for the same reason.*
+
+**Trigger.** Settling what the second `த்` in வா + த் + த் + ஏன் is called took several exchanges. The
+answer — **நன்னூல் 133**, which names all six பகுபத உறுப்பு including சந்தி — had been in the repo the
+whole time. It had to be grepped by hand.
+
+**Finding.** D-011 pinned Tholkappiyam and Nannūl, but `data/classical/` was read **only** by
+`tests/test_citations.py` — a design-time guard proving every cited நூற்பா number resolves. Nothing in
+`src/` opened it. `SourceRef.verse` was therefore always `None`, the 462 Nannūl verses and Tholkappiyam's
+1,486 sat unused at runtime, and a user asking *"on whose authority?"* got a chapter name.
+
+**Decision.** `core/classical.py` serves verses at runtime. `SourceRef.verse_text` carries the நூற்பா
+verbatim and the web app displays it.
+
+- **Nannūl** is continuous 1–462 → `classical.nannul_verse(133)`.
+- **Tholkappiyam** numbers RESTART per இயல் and collide, so there is deliberately **no bare-number API** —
+  `classical.tholkappiyam_verse(அதிகாரம், இயல், n)`. A bare number is a bug, not a shortcut, and the module
+  offers no way to pass one.
+- **Quoting obliges attribution.** Project Madurai grants distribution provided its header travels with the
+  text, so any surface that quotes must show the credit (`classical.attribution`).
+- **Only VERIFIED verses are wired.** An unconfirmed citation keeps `verse=None` and cites the section.
+  *Completed 2026-08-11:* the last three decoder `SourceRef`s were verse-cited, so every one now quotes.
+  Note that Tholkappiyam states the four word classes across **two** நூற்பா — பெயரியல் 4 (பெயர், வினை) and
+  5 (இடை, உரி) — and both travel, rather than crediting one verse with classes it does not name.
+
+**Why this is a decision and not a feature.** The project's promise is that every grammatical claim is
+grounded in Tholkappiyam and Nannūl. Until now that promise was kept at *design* time and merely asserted at
+*answer* time. A citation tells a scholar where to look; the verse shows them. The related discipline is
+recorded as a standing rule because it has already failed once: **quote from `data/classical/`
+programmatically, never retype a verse.** The verbatim-quote test caught **five** நூற்பா transcriptions
+drifting minutes after they were read — confabulation is indistinguishable from derivation from the inside,
+so the mechanism, not the intention, is what holds.
+
+*Status: active; shipped. Extended 2026-08-11 — all decoder `SourceRef`s verse-cited, and
+`tests/test_citations.py` now asserts both that they quote a நூற்பா and that the quote matches the pinned
+edition verbatim.* *Links: `thamizh-mcp/src/thamizh_mcp/core/classical.py`,
+`thamizh-mcp/tests/test_citations.py`, `thamizh-mcp/data/PINS.md`; D-011 (verse-level grounding — this
+closes its runtime half), D-014 (cited rule tables).*

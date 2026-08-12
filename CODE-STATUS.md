@@ -2,8 +2,8 @@
 
 > Read-across from the **code side** so the design side can see the real state of the server without
 > reading the repo. Mirror of the code repo's `CLAUDE.md` "Current state" — if the two disagree, the
-> code repo wins and this needs updating. Last updated **2026-08-05**.
-> Code: `github.com/ief-global/thamizh-mcp` (`main`). **171 tests pass** (169 without live foma).
+> code repo wins and this needs updating. Last updated **2026-08-11**.
+> Code: `github.com/ief-global/thamizh-mcp` (`main`). **266 tests pass** (5 skip without live foma).
 
 ## Shape
 
@@ -12,9 +12,10 @@ changes, which validated that design).
 
 | Layer | What |
 |---|---|
-| Anchors | ThamizhiMorph FST (foma) · curated verb paradigms · pinned Tholkappiyam + Nannūl · cited grammar rule tables |
-| Evolving | ta.wiktionary (meanings) · **en.wiktionary (etymology → source language)** · I2PT (native equivalents) |
+| Anchors | ThamizhiMorph FST (foma) · curated verb paradigms · pinned Tholkappiyam + Nannūl, **read at RUNTIME so claims QUOTE their நூற்பா** (D-018) · cited grammar rule tables |
+| Evolving | ta.wiktionary (meanings) · **en.wiktionary (etymology → source language)** · **S2PT** (native equivalents — renamed from "I2PT"; licence UNSTATED, D-017) |
 | Store | zero-config SQLite, per-claim provenance + `transactions` gold log |
+| Registry | **`data/sources.json` (D-017)** — every source's evidential GRADE (A–D) and legal REDISTRIBUTION MODE as independent axes; the grade is stamped on every `SourceRef` and shown in the app |
 
 **Tools:** `analyze_word` `classify_origin` `get_root` `get_meaning` `suggest_native_equivalent`
 `enrich_word` `explain_formation` `explain_grammar` `refresh_sources`. Only optional
@@ -22,21 +23,28 @@ changes, which validated that design).
 
 Live at **http://minnaham:8080** (systemd, 24/7). Terminals cannot shape Tamil — use the browser.
 
-## Measured quality — 108-word everyday sweep (2026-08-05)
+## Measured quality — 108-word everyday sweep (re-measured 2026-08-11)
 
 `uv run python scripts/quality_sweep.py` in the code repo. This is the only honest read on quality;
 the expected labels inside it are **assessments, not authority**, and need Saran's eye.
 
-| | 2026-08-02 start | Session 2 end | now |
-|---|---|---|---|
-| **Origin** correct | 59 | 82 | **87** |
-| honest `unknown` | 30 | 23 | **18** |
-| **wrong** | 17 | 1 | **1** |
-| **Formation** decoded | — | 26/30 | 26/30 |
+| | 2026-08-02 start | Session 2 end | Session 3 | now |
+|---|---|---|---|---|
+| **Origin** correct | 59 | 82 | 87 | **94** |
+| honest `unknown` | 30 | 23 | 18 | **11** |
+| **wrong** | 17 | 1 | 1 | **1** |
+| **Formation** decoded | — | 26/30 | 26/30 | **26/29 in-scope** |
+
+The 2026-08-11 re-measure was taken after the D-017 registry landed and is **unchanged** from
+2026-08-08 — by design. The registry's confidence caps are ceilings that all currently sit at or
+above what the classifier emits, so they bind nothing yet; they start binding the day someone
+raises a confidence past what its source can support.
 
 16 of the 108 words now carry a **per-sense** origin breakdown (`origin.senses[]`).
 
-Formation gaps: `கொடுக்க` `கொடுத்து` `கொடுக்கும்` (non-finite) and `வீட்டிற்கு` (noun dative).
+Formation gaps: `கொடுக்க` `கொடுத்து` `கொடுக்கும்` (non-finite — **blocked on a pending ruling**, see
+`thamizh-mcp/data/grammar/concept_map.json` → `concepts.விகாரம்.inferred`). `வீட்டிற்கு` is **out of
+scope** for பகுபத உறுப்பிலக்கணம் — the புணர்ச்சி engine owns it (Saran's ruling), hence 26/**29**.
 
 ## What changed in Session 2 (2026-08-02 → 08-05)
 
