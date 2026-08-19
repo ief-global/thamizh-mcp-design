@@ -1,6 +1,9 @@
 # Draft letter — Tamil Virtual Academy
 
 **Status:** DRAFT for Saran's review and sending. Not yet sent.
+**Revised 2026-08-19** — shortened, now that `thamizh-ai.org/sources/tva` carries the context. The
+letter makes the request; the page carries the explanation, so a reader who wants detail can get it
+without the letter arguing for three pages.
 **To:** Tamil Virtual Academy (Govt. of Tamil Nadu) — Director / Content & Licensing
 **From:** Saran Saravanan, on behalf of the International Educational Foundation (IEF)
 **Two asks:** (1) a written licence statement covering the TVA archive.org collection;
@@ -18,8 +21,11 @@
 > - **Ask 2 is the one that matters most to the project.** It would let us retire an unlicensed
 >   community word-list — the only genuine licence gap we currently ship — and replace it with a
 >   government glossary. Ask 1 is cheap for them and unblocks the course books too.
-> - Everything factual below is verifiable in the public repos. Please correct anything about your
->   own standing or your relationship with the institution before sending.
+> - Everything factual below is verifiable at `thamizh-ai.org/sources/tva` and in the public repos.
+>   Please correct anything about your own standing or your relationship with the institution before
+>   sending.
+> - **Decide whether the alumnus detail belongs on the public page too.** It is in this letter and
+>   deliberately not on the site, because it is yours to disclose.
 
 ---
 
@@ -33,19 +39,17 @@ about a Tamil language-technology project where TVA's materials would make a dec
 
 **Thamizh MCP** is a free, open-source server that analyses a single Tamil word and returns its
 grammar: its origin (இயற்சொல் / வடசொல் / loanword), its root and meaning, its formation
-(பகுபத உறுப்பு, புணர்ச்சி), and its grammatical categories. It is designed so that AI assistants stop
-guessing about Tamil grammar and instead answer from cited Tamil sources.
+(பகுபத உறுப்பு, புணர்ச்சி), and its grammatical categories. It exists so that AI assistants stop
+guessing about Tamil grammar and answer from cited Tamil sources instead.
 
-Two design rules govern it, and they are why I am writing to you rather than simply scraping what is
-available:
+Two design rules govern it, and they are why I am writing rather than simply taking what is already
+online: **Tholkappiyam first**, with every grammatical claim citing its authority down to the நூற்பா
+from version-pinned editions; and **every claim carries its source**, with an explicit gap wherever
+nothing can ground one.
 
-1. **Tholkappiyam-first.** Every grammatical claim cites its authority — Tholkappiyam before Nannūl —
-   down to the நூற்பா number, from version-pinned editions.
-2. **Every claim carries its source.** The server never returns an unsourced answer. Where no source
-   can ground a field, it returns an explicit gap rather than a guess.
-
-The code is Apache-2.0 and public (`github.com/ief-global/thamizh-mcp`), the service is free to use,
-and there is no commercial product built on it.
+The full design, our current state, and what is still wrong with it are public at **`thamizh-ai.org`**.
+The page written for this request is **`thamizh-ai.org/sources/tva`**. The code is Apache-2.0 and
+public, the service is free, and no commercial product is built on it.
 
 ## Why I am writing
 
@@ -107,13 +111,12 @@ only for us.
 ## What we would do with it
 
 - **Attribution on every claim.** Each answer names the source that grounds it, so a TVA glossary
-  entry would be visible as such to every user, with the glossary and lesson cited.
-- **Per-source licensing, never relicensed.** Our product deliberately mixes licences and classifies
-  them per record. Apache-2.0 covers our own code and rule tables only; third-party material keeps
-  its own terms and is documented in a public `LICENSING.md`. We would honour whatever terms you set,
-  including "cite but do not redistribute".
-- **Corrections returned.** Where our users or reviewers identify an error, we would be glad to
-  report it back rather than silently patch our copy.
+  entry would be visible as such to every user, with the glossary and lesson cited. You can see how
+  this already works for our other sources at `thamizh-ai.org/sources`.
+- **Per-source licensing, never relicensed.** We classify every source separately and publish the
+  classification. Apache-2.0 covers our own code and rule tables only; third-party material keeps its
+  own terms. We would honour whatever terms you set, including "cite but do not redistribute".
+- **Corrections returned**, rather than silently patched in our copy.
 - **No commercial use** without returning to you first.
 
 ## Why this matters beyond our project
@@ -130,8 +133,8 @@ send this in Tamil.
 
 **Saran Saravanan**
 President, International Educational Foundation
-`saravanan3@duck.com`
-Project: `github.com/ief-global/thamizh-mcp`
+`thamizh@ief-global.org`
+Site: `thamizh-ai.org` · Code: `github.com/ief-global/thamizh-mcp`
 
 ---
 
@@ -139,9 +142,10 @@ Project: `github.com/ief-global/thamizh-mcp`
 
 | Claim | Where to verify |
 |---|---|
-| Apache-2.0, public repository | `github.com/ief-global/thamizh-mcp` |
-| Per-source licence classification | `LICENSING.md` in that repository |
-| Sources and version pins | `data/PINS.md` |
-| Tholkappiyam-first citation rule, with நூற்பா numbers | `data/grammar/*.json`, `data/classical/` |
-| The unlicensed list we want to replace | `data/equivalents/sanskrit-to-pure-tamil/`, and the S2PT section of `LICENSING.md` |
+| This request, set out in full | `thamizh-ai.org/sources/tva` |
+| Every source, its evidential grade and its licence | `thamizh-ai.org/sources` |
+| The unlicensed list we want to replace, named in public | `thamizh-ai.org/sources` |
+| Our current state, including what is wrong with it | `thamizh-ai.org/status` |
+| Tholkappiyam-first citation rule, with நூற்பா | `thamizh-ai.org/grammar` |
+| Apache-2.0, public repo, per-source licence classification | `github.com/ief-global/thamizh-mcp`, `LICENSING.md` |
 | Design and decision record | `github.com/ief-global/thamizh-mcp-design` |

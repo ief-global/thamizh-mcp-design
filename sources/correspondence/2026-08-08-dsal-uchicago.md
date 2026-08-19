@@ -1,6 +1,9 @@
 # Draft letter — Digital South Asia Library, University of Chicago
 
 **Status:** DRAFT for Saran's review and sending. Not yet sent.
+**Revised 2026-08-19** — the project description is now a link, since
+`thamizh-ai.org/sources/madras-lexicon` sets out our reading of the licence in public. The diligence
+sections stay in full: they are the substance of the request, not context.
 **To:** Digital South Asia Library (DSAL), University of Chicago — project contact for the
 Tamil Lexicon. (Find the current address on `dsal.uchicago.edu`; a general DSAL / Southern Asia
 collections contact is fine. Do not guess at an individual's name.)
@@ -31,12 +34,14 @@ be glad of an answer to the first even if the second is refused.
 ## What we are building, briefly
 
 **Thamizh MCP** is a free, open-source tool that analyses a single Tamil word and returns its grammar
-from cited sources: origin (native / Sanskrit-derived / other loanword), root, meaning, and word
-formation. Its purpose is to stop AI assistants from answering Tamil grammar questions from memory —
-they currently do, confidently and often wrongly — and make them cite Tamil scholarship instead.
-Every claim the server returns names the source that grounds it, and where no source can ground a
-field it returns an explicit gap rather than a guess. The code is Apache-2.0 and public; the service
-is free; there is no commercial product.
+from cited sources: origin, root, meaning and word formation. Its purpose is to stop AI assistants
+answering Tamil grammar questions from memory — they currently do, confidently and often wrongly —
+and make them cite Tamil scholarship instead. Every claim names the source that grounds it, and where
+no source can ground a field it returns an explicit gap rather than a guess.
+
+The design is public at **`thamizh-ai.org`**. Our reading of your licence, and the reason we have not
+acted on it, is set out at **`thamizh-ai.org/sources/madras-lexicon`** rather than only in this
+letter. The code is Apache-2.0; the service is free; there is no commercial product.
 
 ## First, a factual question
 
@@ -103,8 +108,8 @@ scholarship,
 
 **Saran Saravanan**
 President, International Educational Foundation
-`saravanan3@duck.com`
-Project: `github.com/ief-global/thamizh-mcp`
+`thamizh@ief-global.org`
+Site: `thamizh-ai.org` · Code: `github.com/ief-global/thamizh-mcp`
 
 ---
 
@@ -119,4 +124,7 @@ Project: `github.com/ief-global/thamizh-mcp`
 | archive.org DLI scan (1939) | 1.25 GB of page images, **zero Tamil codepoints** in its OCR layer |
 | TVA archive.org scans | real Tamil OCR (43–47%), but **zero etymology markers survive** across 1.3 M characters |
 
-Recorded in the project's decision log as D-016 (licence finding) and D-017.
+Recorded in the project's decision log as D-016 (licence finding) and D-017, and published at
+`thamizh-ai.org/sources/madras-lexicon` — including the sentence that we noticed the `robots.txt`
+rule and stopped. We would rather state that publicly than only in a letter asking you for
+something.
