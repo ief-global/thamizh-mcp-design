@@ -446,9 +446,20 @@ COLING 2025 tokenizer paper (§4.2) is the scholarly companion to our own measur
 5. **Hero imagery is in** (§4b), which amends `BRAND.md`. Public-domain and CC0 sources only, cited.
 6. **The S2PT licence gap stays public** on `/sources`.
 
+**Settled 2026-08-19:**
+
+7. **Content licence** — CC BY-SA 4.0 for prose and diagrams, Apache-2.0 for code → **D-020**.
+8. **Contact address** — `thamizh@ief-global.org`, created 2026-08-19. Goes on `/about` and into
+   anything an institution would reply to.
+9. **Repo** — `ief-global/thamizh-ai`, created public 2026-08-18.
+10. **Imagery** — `BRAND.md` amended. Tamil cultural and heritage material belongs to every Tamil
+    speaker; use it, cite it, public domain or CC0 only.
+11. **Deployment** — Cloudflare Workers static assets. The dashboard has no output-directory field
+    because `wrangler.jsonc` carries it. Build `npm run build`, deploy `npx wrangler deploy`.
+
 **Still open:**
 
-7. Content licence (§7) — recommend CC BY-SA 4.0 → **D-020**.
-8. Contact address for `/about`. A government office has to be willing to write back to it.
-9. Repo name `ief-global/thamizh-ai` — confirm, and confirm who creates it under the org.
-10. The COLING 2025 tokenizer citation (§4.2) — author list and venue to be verified before it ships.
+12. The COLING 2025 tokenizer citation (§4.2) — author list and venue to be verified before it ships.
+13. The palm-leaf தொல்காப்பியம் image is in the repo but off the home page (Saran's call: it does not
+    belong directly under the hero). It wants a home on `/grammar` or `/sources/project-madurai`,
+    where quoting the pinned text is the subject.

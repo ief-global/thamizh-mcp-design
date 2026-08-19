@@ -85,10 +85,33 @@ Tamil is a complex script requiring proper text shaping. Many deck tools and tem
 - Tables: hairline bottom borders only, no zebra striping, no boxes.
 - Cite sources in small muted text under the claim, never in a footnote nobody reads.
 
+## Imagery (revised 2026-08-18, D-019)
+
+**Tamil cultural and heritage imagery is welcome.** Temples, inscriptions, palm-leaf manuscripts,
+monuments, classical symbols — these belong to every Tamil speaker, not to any person or
+organisation, and using them is ordinary rather than presumptuous. Saran's ruling, and it reverses
+what this file said before, so do not reinstate the old rule from an older draft.
+
+Two conditions, both non-negotiable:
+
+- **Every image carries its citation**, in the page, the way every grammar claim does. A site that
+  lectures about source provenance and uses an uncredited photograph has lost the argument.
+- **Public domain or CC0 only**, unless there is a specific reason to accept an attribution
+  obligation — and then the attribution is visible, not buried in a credits file. Wikimedia Commons
+  is the practical source; check the licence on the file page yourself before using it.
+
+Currently in use on the site: a **வட்டெழுத்து** inscription at the Brihadeeswara temple, Thanjavur
+(CC0), and a palm-leaf manuscript of **தொல்காப்பியம்** (public domain). Both are recorded in
+`thamizh-ai/public/img/CREDITS.md`.
+
+**Where imagery does not go:** behind or inside a diagram. Diagrams are typography and SVG, because
+this audience reads them closely and a photograph underneath is decoration competing with meaning.
+
 ## Don'ts
 
 - No stock photography of "AI" (glowing brains, circuit boards, robots).
-- No Indian-cultural clip art — no temples, no kolam borders, no diyas. The typography is the culture.
+- No generic "Indian culture" stock imagery, and no kolam borders or diyas used as decoration.
+  Specific, cited, real Tamil heritage material is the opposite of clip art, and that is what to use.
 - No emoji in slide bodies.
 - No claims not present in `PRESENTATION-SOURCE.md` — every figure and Tamil form there is verified
   against the live build. **Do not invent examples**; a fabricated Tamil example in a deck about not
