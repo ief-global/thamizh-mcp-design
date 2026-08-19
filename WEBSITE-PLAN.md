@@ -1,7 +1,8 @@
 # thamizh-ai.org — public design & architecture site
 
-> Plan, drafted 2026-08-18 and revised the same day. **Session 1 is built and shipped** —
-> `github.com/ief-global/thamizh-ai`, PR #1. Decisions recorded as D-019 and D-020.
+> Plan, drafted 2026-08-18 and revised the same day. **All four build sessions are shipped** —
+> `github.com/ief-global/thamizh-ai`, 20 pages. Decisions recorded as D-019 and D-020.
+> What remains before launch: Saran reads the Tamil, then `DRAFT` in `Base.astro` flips to false.
 > Replaces the deck as the canonical way this project explains itself.
 > Companion docs: `DESIGN.md` (program), `Thamizh-MCP-blueprint.md` (server),
 > `BRAND.md` (identity + Tamil rendering rules), `distribution-roadmap.md`,
@@ -404,13 +405,13 @@ self-hosted Tamil font, `/_render-check` conjunct page, layout and nav, i18n rou
 Cloudflare Pages connected. Pages: `/` with the hero, **D1** the layer stack with its dialogs, and
 `/why` with **D2**. Ship behind a draft banner.
 
-**Session 2 — the layers.** `/grammar` (D3), `/morphology` (D4), `/engine` (D6). The engine page is the
+**Session 2 — the layers. ✅ DONE 2026-08-19.** `/grammar` (D3), `/morphology` (D4), `/engine` (D6). The engine page is the
 scorecard and the diagram is the most detailed on the site, so it gets the room.
 
-**Session 3 — the sources.** `/sources` (D5) and all six source pages, ThamizhiMorph first and most
+**Session 3 — the sources. ✅ DONE 2026-08-19.** `/sources` (D5) and all six source pages, ThamizhiMorph first and most
 carefully. This is the outreach session, and it is what the TVA and DSAL letters will link.
 
-**Session 4 — close it out.** `/distribution` (D7), `/horizon` (D8), `/status`, `/glossary`, `/about`.
+**Session 4 — close it out. ✅ DONE 2026-08-19.** `/distribution` (D7), `/horizon` (D8), `/status`, `/glossary`, `/about`.
 Link checker in CI, full Tamil proofread, remove the draft banner.
 
 **Session 5, separate and optional — the Tamil mirror** for `/`, `/why`, `/morphology` and `/sources`.
@@ -460,6 +461,10 @@ COLING 2025 tokenizer paper (§4.2) is the scholarly companion to our own measur
 **Still open:**
 
 12. The COLING 2025 tokenizer citation (§4.2) — author list and venue to be verified before it ships.
-13. The palm-leaf தொல்காப்பியம் image is in the repo but off the home page (Saran's call: it does not
-    belong directly under the hero). It wants a home on `/grammar` or `/sources/project-madurai`,
-    where quoting the pinned text is the subject.
+13. ~~The palm-leaf தொல்காப்பியம் image needs a home.~~ **CLOSED** — it lives on
+    `/sources/project-madurai`, where the pinned text is the subject.
+14. **Tamil written by Claude rather than copied by a script**, awaiting Saran's read: the five layer
+    names, `தமிழ் இணையக் கல்விக்கழகம்` on the TVA page, `ஆலமரம்`, and the two `/ta` placeholder
+    sentences. Everything else on the site is machine-copied from the pinned texts or this repo.
+15. Whether `/sources/tva` should say Saran is a TVA alumnus with a B.A. in Tamilology. It is in the
+    drafted letter and it would land well on the page; it is his to disclose, so it is not there.
