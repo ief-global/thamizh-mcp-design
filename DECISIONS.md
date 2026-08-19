@@ -660,3 +660,58 @@ so the mechanism, not the intention, is what holds.
 edition verbatim.* *Links: `thamizh-mcp/src/thamizh_mcp/core/classical.py`,
 `thamizh-mcp/tests/test_citations.py`, `thamizh-mcp/data/PINS.md`; D-011 (verse-level grounding — this
 closes its runtime half), D-014 (cited rule tables).*
+
+## D-019 · 2026-08-18 · The public design site is a PHASE, and it ends when the app ships
+
+**Trigger.** The deck (`PRESENTATION-SOURCE.md`) did not explain the project to Tamil scholars. Its
+spine was a demo — ten slides, six of them worked word examples — so a reader finished it knowing
+the tool splits மரத்தில் correctly and still not knowing what the project is. Rather than re-cut the
+deck, the material moves to a public site at `thamizh-ai.org`, structured around four layers
+(இலக்கணம் → பகுபத உறுப்பிலக்கணம் → மூலம் → பகிர்வு) and a horizon.
+
+**Decision.** The site launches on the apex, and **the app overwrites it when M2 ships.** Saran's
+reasoning, recorded because it inverts the usual instinct: once there is a working tool, the tool
+should speak for itself. A scholar should be using it and judging it, not bookmarking a design page
+and re-reading it. How we got here is history.
+
+**Consequences, all decided now so they are not improvised on launch day:**
+
+- **URL permanence is not a design constraint.** No path reservation, no `/design` prefix, no
+  subdomain. Content sits at clean top-level paths.
+- **Letters cite the design repo alongside the site.** `github.com/ief-global/thamizh-mcp-design` is
+  the address that still resolves in five years; the site URL is the readable one. This matters
+  because the TVA and DSAL letters will quote a URL and a reply may land a year later.
+- **On app day every old page redirects to the app**, rather than 404ing. Cloudflare bulk redirects.
+- **The archive is a git tag plus a `dist/` snapshot** on a GitHub release.
+- **The site says this about itself** on `/about`. Publishing an expiry date is consistent with a
+  project whose pitch is honesty about its own state.
+
+**Also settled in the same session.** English-first with a Tamil mirror for the four pages an
+outreach letter links · a page per institution (`/sources/thamizhimorph` most carefully, since it is
+the page Sarveswaran reads if he is written to) · the S2PT licence gap stays named in public ·
+**hero photography is IN**, which amends `BRAND.md`'s "no temples, the typography is the culture"
+rule: photography of primary Tamil sources and monuments is welcome and carries its citation like
+any other claim, while generic stock imagery, kolam borders and AI-brain art stay banned. The two
+images chosen are public domain (a palm-leaf manuscript of தொல்காப்பியம்) and CC0 (a வட்டெழுத்து
+inscription at Thanjavur).
+
+*Status: active; site repo created and session 1 shipped 2026-08-18.* *Links: `WEBSITE-PLAN.md`,
+`github.com/ief-global/thamizh-ai`, D-013 (the app is a separate deliverable, and it is what
+eventually takes this domain), `BRAND.md` (needs the imagery amendment).*
+
+## D-020 · 2026-08-18 · Site prose is CC BY-SA 4.0; site code stays Apache-2.0
+
+**Trigger.** A new public repo needed a licence, and one licence could not sensibly cover both Astro
+components and scholarly prose about Tamil grammar.
+
+**Decision.** Two licences in `ief-global/thamizh-ai`, stated in `LICENSE-CONTENT.md`: **Apache-2.0**
+for the code, matching the server repo so there is one software licence across the project, and
+**CC BY-SA 4.0** for the prose and diagrams.
+
+**Why share-alike rather than CC BY.** Tamil Wiktionary content is already CC BY-SA and it is one of
+the sources the writing describes, so share-alike avoids a licence-compatibility question before it
+arises. And scholarship about a shared language should stay reusable on the terms it was built from.
+Photography on the site is public domain or CC0 only, recorded in `public/img/CREDITS.md`, so no
+image inherits an attribution obligation the site could quietly break.
+
+*Status: active.* *Links: `WEBSITE-PLAN.md` §7, D-012 (licensing settled for the server), D-019.*
