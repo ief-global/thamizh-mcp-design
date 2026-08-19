@@ -1,5 +1,16 @@
 # Thamizh MCP — presentation source (for Claude Design / deck generation)
 
+> ⚠️ **SUPERSEDED as the canonical narrative, 2026-08-19.** The project now explains itself at
+> **[thamizh-ai.org](https://thamizh-ai.org)** (`ief-global/thamizh-ai`, planned in `WEBSITE-PLAN.md`),
+> which is structured around four layers rather than around a demo. This file's spine was a demo —
+> ten slides, six of them worked word examples — and a scholar could finish it without learning what
+> the project is.
+>
+> **What this file is still good for:** its examples and figures are fact-checked against the live
+> build, so it stays a verified pool to draw from, and its **accuracy guardrails at the bottom are
+> still binding** (they now also live in `thamizh-ai/CLAUDE.md`). `deck/index.html` also stays: a
+> room with a projector is a different job from a website.
+>
 > **Purpose:** feed this into Claude Design to generate a deck for **Tamil scholars and enthusiasts**.
 > Every number, Tamil form, and quoted output below is **verified against the live build**
 > (`thamizh-mcp` @ 2026-07-20, 9 tools, 104 tests). Do not add claims that aren't here — the whole
