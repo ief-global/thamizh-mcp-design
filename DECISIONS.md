@@ -1105,7 +1105,9 @@ on நன்னூல் 137 (உரைவளம் 5, p. 114, read on the scan)
 
 Two kinds he lists are catalogued but not applied, each with the reason: முதல் நீளல் (செல் → சேறல்; every
 example also needs the final ல்/ள் to change before a vowel, which no rule states yet) and இயல்பும்
-விகாரமும் உறழ்தல் (முழுகு → மூழ்கினான்; two changes at once). The framework is the commentators' on நன்னூல்
+விகாரமும் உறழ்தல் (முழுகு → மூழ்கினான்; two changes at once). *Later the same day, Saran: உறழ்தல் is not needed. மூழ் is the written root
+and முழுகு its colloquial form, so மூழ்கினான் and முழுகினான் each decode from their own root by the
+ordinary joins (மூழ்கு + இன் + ஆன், உகரம் கெடுதல்). The entry stays catalogued and says so.* The framework is the commentators' on நன்னூல்
 139: a பகுதி's changes lie within the three changes at a join and the nine விகாரம் (Tholkappiyam புணரியல் 7,
 சொல். எச்சவியல் 7; Nannūl 154–156). Each rule's `kind` is its name there.
 
