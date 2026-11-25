@@ -3,7 +3,7 @@
 > Read-across from the **code side** so the design side can see the real state of the server without
 > reading the repo. Mirror of the code repo's `CLAUDE.md` "Current state" — if the two disagree, the
 > code repo wins and this needs updating. Last updated **2026-11-24**.
-> Code: `github.com/ief-global/thamizh-mcp` (`main`). **266 tests pass** (5 skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
+> Code: `github.com/ief-global/thamizh-mcp` (`main`). **270 tests pass** (5 skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
 
 ## Shape
 
@@ -30,10 +30,12 @@ the expected labels inside it are **assessments, not authority**, and need Saran
 
 | | 2026-08-02 start | Session 2 end | Session 3 | 2026-08-11 | **2026-11-24** |
 |---|---|---|---|---|---|
-| **Origin** correct | 59 | 82 | 87 | 94 | **91** |
+| **Origin** correct | 59 | 82 | 87 | 94 | **92** |
 | honest `unknown` | 30 | 23 | 18 | 11 | **12** |
-| **wrong** | 17 | 1 | 1 | 1 | **3** |
+| **wrong** | 17 | 1 | 1 | 1 | **2** |
 | **Formation** decoded | — | 26/30 | 26/30 | 26/29 in-scope | **26/29 in-scope** ⚠️ |
+
+The 2026-11-24 column is after ruling (e); measured before it, the same day gave 91 / 12 / 3.
 
 **The 2026-11-24 drop is upstream drift, not a code change.** No code that affects analysis merged
 between the two measurements (#30 touched docs only). en.wiktionary, our evolving etymology source,
@@ -41,7 +43,7 @@ was edited under three sweep words:
 
 | Word | Upstream edit | What we now return |
 |---|---|---|
-| மனிதன் | 2026-08-25: etymology now `{{bor+\|ta\|pra\|…}}`, i.e. borrowed from **Prakrit**, no longer Sanskrit | `loanword` 0.80 (expected வடசொல்). **Open question for Saran:** does வடசொல் cover Prakrit borrowings? |
+| மனிதன் | 2026-08-25: etymology now `{{bor+\|ta\|pra\|…}}`, i.e. borrowed from **Prakrit**, no longer Sanskrit | **RESOLVED by ruling (e), D-022:** பிராகிருதம் is not வடசொல் and is now its own class. மனிதன் → பிராகிருதம். |
 | காலம் | 2026-11-10: Sanskrit origin rewritten in the new `{{ety\|…}}` / `{{af\|ta\|sa:काल\|-அம்}}` style | `இயற்சொல்` 0.60. Our parser reads only `bor`/`inh`/`der`, sees no relation, and falls through to native-by-default. **A parser gap, ours to fix.** |
 | கொடு | etymology now states Kannada/Malayalam cognates only, no `inh` template | honest `unknown`. Defensible: a cognate is not a stated inheritance. |
 
