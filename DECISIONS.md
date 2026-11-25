@@ -1142,7 +1142,7 @@ the same reason; correcting it changed no result.
 
 **Weight, stated.** Four of the seven rules rest only on Nannūl commentators: `muthal_aa_ekaram`,
 `naduk_kuril_neettal`, `ayal_kurukki_ra_virithal`, and the ந் after ய்/ர்/ழ். This is the fallback Saran named.
-The commentators range from மயிலைநாதர் (13th century) to the 20th; each quotation names its commentator.
+The commentators range from மயிலைநாதர், the oldest, to the 20th century; each quotation names its commentator.
 
 **Effect.** The sweep is unchanged: origin 92 / 12 / 2; formation 26/29. All 26 now have every step
 cited, and none is parked. Outside the sweep, every verb named above now rebuilds. No rule rests on a
