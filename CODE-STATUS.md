@@ -3,7 +3,7 @@
 > Read-across from the **code side** so the design side can see the real state of the server without
 > reading the repo. Mirror of the code repo's `CLAUDE.md` "Current state" — if the two disagree, the
 > code repo wins and this needs updating. Last updated **2026-11-24**.
-> Code: `github.com/ief-global/thamizh-mcp` (`main`). **279 tests pass** (5 skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
+> Code: `github.com/ief-global/thamizh-mcp` (`main`). **360 tests pass** (the FST tests skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
 
 ## Shape
 
@@ -28,12 +28,12 @@ Live at **http://minnaham:8080** (systemd, 24/7). Terminals cannot shape Tamil �
 `uv run python scripts/quality_sweep.py` in the code repo. This is the only honest read on quality;
 the expected labels inside it are **assessments, not authority**, and need Saran's eye.
 
-| | 2026-08-02 start | Session 2 end | Session 3 | 2026-08-11 | **2026-11-24** |
-|---|---|---|---|---|---|
-| **Origin** correct | 59 | 82 | 87 | 94 | **92** |
-| honest `unknown` | 30 | 23 | 18 | 11 | **12** |
-| **wrong** | 17 | 1 | 1 | 1 | **2** |
-| **Formation** decoded | — | 26/30 | 26/30 | 26/29 in-scope | **26/29 in-scope** ⚠️ |
+| | 2026-08-02 start | Session 2 end | Session 3 | 2026-08-11 | 2026-11-24 | **2026-11-25** |
+|---|---|---|---|---|---|---|
+| **Origin** correct | 59 | 82 | 87 | 94 | 92 | **92** |
+| honest `unknown` | 30 | 23 | 18 | 11 | 12 | **12** |
+| **wrong** | 17 | 1 | 1 | 1 | 2 | **2** |
+| **Formation** decoded | — | 26/30 | 26/30 | 26/29 in-scope ⚠️ | 26/29 in-scope ⚠️ | **26/29 in-scope, all rebuild** |
 
 The 2026-11-24 column is after ruling (e); measured before it, the same day gave 91 / 12 / 3.
 
@@ -49,10 +49,12 @@ was edited under three sweep words:
 
 This is exactly the risk the evolving tier carries, and why the sweep is re-run rather than trusted.
 
-⚠️ **The formation figure overstates quality.** A word counts as decoded when it yields more than one
-component; the split is never checked against the surface. Several past-tense forms lose a letter
-today (`வந்தான்` decodes as `வா + த் + ஆன்`, with no ந்). Fixing this (code repo `CLAUDE.md`, KNOWN
-DECODER DEFECTS 1) will make the number fall, because it will then be measuring the right thing.
+**From 2026-11-25 the formation figure counts a word only if its split rebuilds the word (D-023,
+D-025).** Before that, a word counted when it yielded more than one component, and five past-tense
+forms passed with a letter missing (`வந்தான்` as `வா + த் + ஆன்`, no ந்). The round-trip engine now
+finds that ந் and names it: `வா(வ) + த்(ந்) சந்தி + த் + ஆன்`, per TVA C0212 §5.3.6. Of the 26, 17
+rebuild on cited joins alone; 9 carry one parked element (a strong-verb doubled consonant named with no
+part label, or சொன் from a curated paradigm under ruling (a)).
 
 The 2026-08-11 re-measure was taken after the D-017 registry landed and is **unchanged** from
 2026-08-08 — by design. The registry's confidence caps are ceilings that all currently sit at or
@@ -113,5 +115,5 @@ homograph's borrowed sense, and `force_refresh` never reached the etymology cach
 ## Not done
 
 Non-finite FST coverage · full புணர்ச்சி sandhi engine · storage backend abstraction (D-013) ·
-Phase-4 eval re-measure (D-005) · formation split not yet checked against the surface (see above) ·
+Phase-4 eval re-measure (D-005) · the doubled-consonant label (ruling (d), parked) ·
 `{{af}}`/`{{ety}}` etymology templates not yet parsed · version still `0.1.0`, no release rung shipped.

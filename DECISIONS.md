@@ -831,3 +831,56 @@ us in three months, and the archive.org mirror was offline the same day. This is
 mirrored corpus proposed under D-021.
 
 *Status: active.* *Links: D-011, D-018, D-021, D-023; code repo `data/PINS.md`, `tests/test_urai.py`.*
+
+## D-025 · 2026-11-25 · The round-trip engine: the split is found by synthesis over cited joins
+
+**Trigger.** D-023 made round-trip validity a fundamental rule. This records how the code meets it,
+and which calls the implementation had to make.
+
+**Decision 1: split and join are one rule set by construction.** The split is not computed and then
+checked. It is *found* by joining: `core/punarchi.py` tries the join rules of
+`data/grammar/punarchi.json` at each boundary between the FST's parts and keeps a split only when the
+join reproduces the word exactly. Underneath, letters ↔ phonemes is Tholkappiyam's own pair:
+எழுத்ததிகாரம் › புணரியல் 36 (a vowel after a pulli fuses with it: the join) and 37 (strip the vowel
+and the consonant takes back its own form: the split). A guard re-renders all 1,602 pinned verses
+through that bijection.
+
+**Decision 2: every join rule cites its நூற்பா by address, Tholkappiyam first; the verse is quoted at
+runtime.** Seven classical rules: புணரியல் 12, 23, 31, 38, உருபியல் 13, குற்றியலுகரப்புணரியல் 6, with
+Nannūl 162, 183, 252 alongside. Two rest on Nannūl alone (164 உகரம் கெடுதல், 219 ம் → nasal) because a
+search of எழுத்ததிகாரம் found no Tholkappiyam verse for them; the table records that search, and a
+test fails a Nannūl-only rule that does not. The commentary's own worked examples are fixtures:
+under உருபியல் 13 நச்சினார்க்கினியர் gives மரத்தை, மரத்தொடு and says they are finished by புணரியல் 31 and
+23 together, which are exactly the two rules the engine applies.
+
+**Decision 3: three statuses, shown to the reader.** `classical` (a நூற்பா states it), `textbook`
+(a TVA course book states it verbatim; CC BY-SA 4.0, D-021), `parked` (the material is named so
+nothing is dropped, but no cited rule labels it). Every join step in the answer carries its status
+and its quoted source.
+
+**Decision 4: the ந் of வந்தான் is a சந்தி த் surfacing as ந் (`textbook`).** TVA C0212 §5.3.6 states
+it verbatim: "வா என்னும் பகுதி வ எனக் குறுகியும், த் என்னும் சந்தி ந் என்று மாற்றம் அடைந்தும்,
+விகாரமாகியுள்ளன". It agrees with Saran's 2026-08-11 ruling and with நன்னூல் 142, which lists the past
+இடைநிலை as த்/ட்/ற்/இன் only. The same section gives வா → வ as குறுகல்.
+
+**Decision 5: the strong-verb doubled consonant is named, with no part label (`parked`).** It is a
+component with `part: null`, so படிக்கிறான் = படி + க் + கிறு + ஆன் rebuilds without claiming what
+the க் is. The previous சந்தி label and its மிகுதல் event are removed. The strongest text found is
+TVA C0212 §5.3.5, which defines சந்தி by position ("சந்தி பெரும்பாலும் முதனிலை (பகுதி)க்கும்
+இடைநிலைக்கும் இடையில் வரும்", e.g. நட + த் + தல்) — close to the withdrawn 2026-08-08 entry. It is a
+course book, not a நூற்பா or a classical உரை, so it is recorded and not applied. **Whether a TVA course
+book is enough to settle ruling (d) is Saran's call.**
+
+**Decision 6: the engine decodes the first FST analysis that rebuilds the word.** The FST's order is
+not a judgement: it lists செய்தான் as the noun செய் + a focus tag first, which cannot account for
+-தான். If no analysis rebuilds, the answer carries a formation Gap naming the letters nothing accounts
+for.
+
+**Result.** The sweep's formation figure is still 26/29 in-scope, but it now means "rebuilds its word":
+17 on cited joins alone, 9 with one parked element (eight doubled consonants; சொன் from a curated
+paradigm, ruling (a)). Five of the 26 (வந்தான், வந்தனன், வந்தார்கள், வந்தீர்கள், நடந்தன) used to pass with
+the ந் missing. The number did not fall as predicted because the engine names the material instead of
+failing on it.
+
+*Status: active.* *Links: D-014, D-018, D-021, D-023, D-024; code repo `core/punarchi.py`,
+`data/grammar/punarchi.json`, `tests/test_roundtrip.py`.*
