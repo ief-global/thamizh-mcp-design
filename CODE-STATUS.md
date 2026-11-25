@@ -3,7 +3,7 @@
 > Read-across from the **code side** so the design side can see the real state of the server without
 > reading the repo. Mirror of the code repo's `CLAUDE.md` "Current state" — if the two disagree, the
 > code repo wins and this needs updating. Last updated **2026-11-24**.
-> Code: `github.com/ief-global/thamizh-mcp` (`main`). **395 tests pass** (the FST tests skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
+> Code: `github.com/ief-global/thamizh-mcp` (`main`). **439 tests pass** (the FST tests skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
 
 ## Shape
 
@@ -54,9 +54,10 @@ D-025).** Before that, a word counted when it yielded more than one component, a
 forms passed with a letter missing (`வந்தான்` as `வா + த் + ஆன்`, no ந்). The round-trip engine now
 finds that ந் and names it: `வா(வ) + ந்(இடைநிலை) + த்(இடைநிலை) + ஆன்`. Since D-028 that ந் and the
 strong-verb doubled consonant are both இடைநிலை எழுத்து on நச்சினார்க்கினியர்'s உரை, superseding the TVA
-course book's சந்தி (D-026). Of the 26, 25 have every step cited, through a நூற்பா or a classical
-commentary quoted as read on the page; only சொன்னான் keeps a parked step (its curated stem: no text
-splits it, D-029).
+course book's சந்தி (D-026). All 26 have every step cited, through a நூற்பா or a commentary quoted as
+read on the page; none is parked. Since D-030 a verb's stem change comes from one rule catalogue tried
+on every verb, not from a list, so சொன்னான் is cited and verbs outside the sweep (கொன்றான், சென்றான்,
+நீண்டது, வாழ்ந்தான்) rebuild too.
 
 The 2026-08-11 re-measure was taken after the D-017 registry landed and is **unchanged** from
 2026-08-08 — by design. The registry's confidence caps are ceilings that all currently sit at or
@@ -117,5 +118,5 @@ homograph's borrowed sense, and `force_refresh` never reached the etymology cach
 ## Not done
 
 Non-finite FST coverage · full புணர்ச்சி sandhi engine · storage backend abstraction (D-013) ·
-Phase-4 eval re-measure (D-005) · **சொல் → சொன்னான்: no text splits it (the rest of ruling (a) is settled, D-029)** ·
+Phase-4 eval re-measure (D-005) · two catalogued stem changes not applied (முதல் நீளல், உறழ்தல்; D-030) ·
 `{{af}}`/`{{ety}}` etymology templates not yet parsed · version still `0.1.0`, no release rung shipped.
