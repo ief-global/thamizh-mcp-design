@@ -2,6 +2,10 @@
 
 Tamil Virtual Academy, Government of Tamil Nadu — degree-level accredited course material.
 
+**Licence: CC BY-SA 4.0 (D-021, 2026-11-24).** Attribute TVA wherever TVA-derived content travels,
+and keep it share-alike. tamilvu.org is often down; the same material is mirrored at
+`archive.org/details/TamilVirtualAcademy`.
+
 **In a rule table** (`data/grammar/*.json`):
 
 ```json

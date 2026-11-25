@@ -1,6 +1,7 @@
 # Draft letter — Tamil Virtual Academy
 
-**Status:** DRAFT for Saran's review and sending. Not yet sent.
+**Status:** NOT SENT — superseded. The licence was settled in person at TVA, Chennai, in November
+2026: CC BY-SA 4.0 (D-021). See [the reply record](2026-11-tamil-virtual-academy-reply.md).
 **Revised 2026-08-19** — shortened, now that `thamizh-ai.org/sources/tva` carries the context. The
 letter makes the request; the page carries the explanation, so a reader who wants detail can get it
 without the letter arguing for three pages.
