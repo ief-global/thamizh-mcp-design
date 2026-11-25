@@ -3,7 +3,7 @@
 > Read-across from the **code side** so the design side can see the real state of the server without
 > reading the repo. Mirror of the code repo's `CLAUDE.md` "Current state" — if the two disagree, the
 > code repo wins and this needs updating. Last updated **2026-11-24**.
-> Code: `github.com/ief-global/thamizh-mcp` (`main`). **360 tests pass** (the FST tests skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
+> Code: `github.com/ief-global/thamizh-mcp` (`main`). **361 tests pass** (the FST tests skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
 
 ## Shape
 
@@ -52,9 +52,10 @@ This is exactly the risk the evolving tier carries, and why the sweep is re-run 
 **From 2026-11-25 the formation figure counts a word only if its split rebuilds the word (D-023,
 D-025).** Before that, a word counted when it yielded more than one component, and five past-tense
 forms passed with a letter missing (`வந்தான்` as `வா + த் + ஆன்`, no ந்). The round-trip engine now
-finds that ந் and names it: `வா(வ) + த்(ந்) சந்தி + த் + ஆன்`, per TVA C0212 §5.3.6. Of the 26, 17
-rebuild on cited joins alone; 9 carry one parked element (a strong-verb doubled consonant named with no
-part label, or சொன் from a curated paradigm under ruling (a)).
+finds that ந் and names it: `வா(வ) + த்(ந்) சந்தி + த் + ஆன்`, per TVA C0212 §5.3.6. Since D-026 the
+strong-verb doubled consonant is labelled சந்தி on TVA C0212 §5.3.5 (provisional: a classical
+சொல்லதிகாரம் உரை would take precedence). Of the 26, 25 have every step cited, through a நூற்பா or a
+course book quoted verbatim; only சொன்னான் keeps a parked step (its curated stem, ruling (a)).
 
 The 2026-08-11 re-measure was taken after the D-017 registry landed and is **unchanged** from
 2026-08-08 — by design. The registry's confidence caps are ceilings that all currently sit at or
@@ -115,5 +116,6 @@ homograph's borrowed sense, and `force_refresh` never reached the etymology cach
 ## Not done
 
 Non-finite FST coverage · full புணர்ச்சி sandhi engine · storage backend abstraction (D-013) ·
-Phase-4 eval re-measure (D-005) · the doubled-consonant label (ruling (d), parked) ·
+Phase-4 eval re-measure (D-005) · **a classical சொல்லதிகாரம் உரை to confirm or replace the
+provisional சந்தி label (D-026; resolve soon)** ·
 `{{af}}`/`{{ety}}` etymology templates not yet parsed · version still `0.1.0`, no release rung shipped.

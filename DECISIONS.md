@@ -882,5 +882,37 @@ paradigm, ruling (a)). Five of the 26 (வந்தான், வந்தனன
 the ந் missing. The number did not fall as predicted because the engine names the material instead of
 failing on it.
 
-*Status: active.* *Links: D-014, D-018, D-021, D-023, D-024; code repo `core/punarchi.py`,
+*Status: active; Decision 5 superseded by D-026.* *Links: D-014, D-018, D-021, D-023, D-024; code repo `core/punarchi.py`,
 `data/grammar/punarchi.json`, `tests/test_roundtrip.py`.*
+
+## D-026 · 2026-11-25 · The doubled consonant is a சந்தி on the TVA course book, until a classical உரை says otherwise
+
+**Trigger.** D-025 left the strong-verb doubled consonant (படி + க் + கிறு + ஆன்) named with no part
+label (ruling (d), parked under D-023). The strongest text found was TVA C0212 §5.3.5, a course book.
+D-025 asked whether a course book is enough.
+
+**Decision 1: yes, for now (Saran, 2026-11-25).** The slot is labelled **சந்தி** on TVA C0212 §5.3.5:
+"சந்தி பெரும்பாலும் முதனிலை (பகுதி)க்கும் இடைநிலைக்கும் இடையில் வரும். பகுதிக்கும் விகுதிக்கும்
+இடையிலும் சிறுபான்மை வரக்கூடும். உறுப்புகளின் இணைவில் (சந்தி), அவற்றை இணைக்க வருவது சந்தி." Its own
+example is நடத்தல் = நட + த் + தல். The rule (`irattitha_otru` in `punarchi.json`) moves from `parked` to
+`textbook`, quotes that passage, and cites நன்னூல் 133 alongside, which names சந்தி among the six உறுப்பு
+but does not say where it comes. There is no மிகுதல் event, because the text names an உறுப்பு and not a
+change. The 2026-08-02 and 2026-08-08 entries stay withdrawn: the label rests on the text, not on them.
+
+**Decision 2: a classical commentary takes precedence.** If an authentic classical உரை on தொல்காப்பியம்
+சொல்லதிகாரம் names this slot, it overrides the course book, whatever it says. The rule records that in
+`supersede_when`. Finding and pinning such an உரை is an **open item to resolve soon**. Pin it from its
+publisher, checksum it and align it by verse text, as D-024 did for the எழுத்ததிகாரம் உரை. The same
+commentary would also bear on rulings (a) and (c), which are verb questions.
+
+**Decision 3: D-023's rule is refined, not reversed.** Ambiguities are still settled from texts. A TVA
+course book that states the analysis verbatim can now carry a label **provisionally**, and a நூற்பா or
+classical உரை found later outranks it. In code, when both a நூற்பா and a course book rebuild a word,
+the search takes the நூற்பா.
+
+**Result.** The sweep is unchanged at 26/29 in scope. 25 of the 26 now have every step cited, through a
+நூற்பா or a course book quoted verbatim. Only சொன்னான் keeps a parked step, because its curated stem
+falls under ruling (a). Previously 9 had a parked step.
+
+*Status: active, provisional (see Decision 2).* *Links: D-021 (TVA licence), D-023, D-024, D-025; code
+repo `data/grammar/punarchi.json` → `irattitha_otru`, `CLAUDE.md` Next tasks 1.*
