@@ -1023,3 +1023,57 @@ the course book now rests on the commentary; only காண் → கண் is 
 *Status: active.* *Links: D-021, D-023, D-026 (superseded), D-027; code repo `data/grammar/punarchi.json`
 (`idainilai_na`, `irattitha_otru`), `data/classical/verified_quotations.json`,
 `data/classical/tholkappiyam_sol_urai_senavaraiyar.json`.*
+
+## D-029 · 2026-11-25 · Ruling (a): a changed root is one விகாரம் plus a listed tense letter, on the texts; சொல் stays open
+
+**Trigger.** Ruling (a) asked what the curated stems of சொன்னான், கற்றான், கேட்டான், விற்றான், நின்றான்,
+கொண்டான் are. They had been parked since 2026-08 because no text was found. Saran asked for it to be
+taken up after D-028. Following his standing rule, archive.org's TVA collection was searched first.
+
+**Decision 1: pin the Nannūl commentaries on பதவியல், cited pages only.** நன்னூல் உரைவளம் தொகுதி 5
+(ed. இரா. கண்ணன், உலகத் தமிழாராய்ச்சி நிறுவனம், 2010; archive.org `tdl.6041-5`) prints every commentator
+on each பதவியல் நூற்பா side by side. The scan and OCR are mirrored in `sources/classical/nannul-urai/`.
+The code repo keeps only the OCR of the four pages a rule cites, rebuilt and checked by
+`scripts/build_nannul_uraivalam.py`. This edition's 138 is our 139; quotations use our number.
+
+**Decision 2: the analysis is the one நன்னூல் 142 already licenses**, as the 2026-08-11 re-derivation
+said: ONE விகாரம் in the பகுதி, then a listed tense letter. The texts, read against the page images:
+- **நில் → நின் + ற்.** நச்சினார்க்கினியர் (p. 203) and சேனாவரையர் (vol. 2 p. 13), both on சொல். வினையியல்
+  5: "நில்லென்பது லகரம் னகரமாய்த் தனக்கேற்ற றகரம் பெற்று நிற்கும்". மயிலைநாதர் (நன்னூல் 139, p. 145)
+  gives the same change for கொல், செல், வெல்: "லகாரம் னகாரமாகியும்".
+- **கொள் → கொண் + ட்.** நச்சினார்க்கினியர் (p. 467) and மயிலைநாதர் (p. 144): "கொள்ளென்பகுதி, கொண்டான் …
+  ளகாரம் ணகாரமாகியும்".
+- **கல் → கற் + ற், கேள் → கேட் + ட், வில் → விற் + ற்.** No Tholkappiyam commentator names these
+  verbs. The citation is a chain of three texts:
+  1. The join is Tholkappiyam's: எழுத்து. புள்ளிமயங்கியல் 71 with 37 (ல் before a hard consonant becomes
+     ற்) and 101 with 7 (ள் becomes ட்). நச்சினார்க்கினியர்: "லகரம் றகரமாய்த் திரிந்துமுடியும்"
+     (கற்குறை). These are stated for a பெயர் in a வேற்றுமை join.
+  2. சங்கர நமச்சிவாயர் – சிவஞான முனிவர் (நன்னூல் 139, p. 145) say where a verb's stem changes belong:
+     "பகுபதவுறுப்பாக மாட்டெறிந்து கொண்ட மூன்று சந்தியுள்ளும் ஒன்பது விகாரத்துள்ளும்", that is, in the
+     புணர்ச்சி joins carried over to the பகுபதம்.
+  3. விசாகப் பெருமாளையர் (நன்னூல் 137, p. 114) names the verb: "கல் – கற்றான் என வீற்றுமெய்
+     வருமெய்யாகத் திரிந்தும்". சே. கிருஷ்ணமாசாரியார் (p. 125) adds கேள் – கேட்டான்.
+
+  வில் is கல்'s case exactly, and Saran's 2026-08-11 ruling (வில் + ற் + ஆன்) is applied:
+  `verb_paradigms.json` now has the lemma வில், not விற்.
+- **The same join is NOT a generator.** It would give *கொற்றான் for கொல், which is கொன்றான். So every
+  change is LISTED per verb in `punarchi.json → stem_alternants`, each with its own நூற்பா and quotations
+  and an `urai_scope` saying how far they reach. A curated stem with no entry stays parked.
+
+**Not settled: சொல் → சொன்னான்.** மயிலைநாதர் (on the எழுத்ததிகாரம் புறனடை) says only that it does not
+take the இன் இடைநிலை. விசாகப் பெருமாளையர் lists it among roots that change "பலவிதமாக" and leaves it
+to புணர்ச்சி விகாரம். Nothing splits the ன்ன். It stays parked, and its ன் stays labelled as the FST
+gives it. போனான்'s ன் has the same open question (not listed in 142) and was never in ruling (a).
+
+**Weight, stated.** For கல், கேள் and வில், the verb is named only by 19th- and 20th-century Nannūl
+commentators. The classical texts supply the join and where it applies. Saran may wish to rank these
+later commentators; if a classical commentary is found that names these verbs, it takes precedence.
+
+**Effect.** Every curated stem except சொல் now carries a cited விகாரம். The sweep is unchanged
+(origin 92 / 12 / 2; formation 26/29), because only சொன்னான் from ruling (a) is a sweep word.
+Non-finite FST coverage is no longer blocked on ruling (a).
+
+*Status: active.* *Links: D-023, D-028; code repo `data/grammar/punarchi.json` (stem_alternants),
+`data/verb_paradigms.json`, `data/classical/nannul_uraivalam_padaviyal.json`,
+`data/classical/verified_quotations.json`.*
+
