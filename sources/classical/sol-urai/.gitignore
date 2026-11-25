@@ -1,0 +1,6 @@
+# The pinned scans and raw OCR are mirrored here on minnaham but kept out of git for size
+# (~500 MB of scans, ~19 MB of OCR). Checksums are in README.md and in the code repo's
+# data/PINS.md and scripts/build_sol_urai.py.
+*
+!.gitignore
+!README.md
