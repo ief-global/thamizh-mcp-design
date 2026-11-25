@@ -10,8 +10,8 @@ should be auditable by Tamil scholars, and contributions are wanted.
 
 ## Git identity — use everywhere, no exceptions
 Commit as **Saran Saravanan <saravanan3@duck.com>**, GitHub **ssaravanan3**.
-NEVER commit under the legacy `asaravanan75@gmail.com` / `asaravanan75-eng`.
-Verify: `git log --format='%an <%ae>' -1`.
+Any other author address is wrong: stop and fix it before pushing. Never write a personal email
+address into this public repo. Verify: `git log --format='%an <%ae>' -1` must print exactly the line above.
 
 ## Branch workflow — same as the code repo
 `main` = stable. `develop` = integration. Loop: work on **`develop`** → push → open PR
