@@ -1023,3 +1023,131 @@ the course book now rests on the commentary; only காண் → கண் is 
 *Status: active.* *Links: D-021, D-023, D-026 (superseded), D-027; code repo `data/grammar/punarchi.json`
 (`idainilai_na`, `irattitha_otru`), `data/classical/verified_quotations.json`,
 `data/classical/tholkappiyam_sol_urai_senavaraiyar.json`.*
+
+## D-029 · 2026-11-25 · Ruling (a): a changed root is one விகாரம் plus a listed tense letter, on the texts; சொல் stays open
+
+**Trigger.** Ruling (a) asked what the curated stems of சொன்னான், கற்றான், கேட்டான், விற்றான், நின்றான்,
+கொண்டான் are. They had been parked since 2026-08 because no text was found. Saran asked for it to be
+taken up after D-028. Following his standing rule, archive.org's TVA collection was searched first.
+
+**Decision 1: pin the Nannūl commentaries on பதவியல், cited pages only.** நன்னூல் உரைவளம் தொகுதி 5
+(ed. இரா. கண்ணன், உலகத் தமிழாராய்ச்சி நிறுவனம், 2010; archive.org `tdl.6041-5`) prints every commentator
+on each பதவியல் நூற்பா side by side. The scan and OCR are mirrored in `sources/classical/nannul-urai/`.
+The code repo keeps only the OCR of the four pages a rule cites, rebuilt and checked by
+`scripts/build_nannul_uraivalam.py`. This edition's 138 is our 139; quotations use our number.
+
+**Decision 2: the analysis is the one நன்னூல் 142 already licenses**, as the 2026-08-11 re-derivation
+said: ONE விகாரம் in the பகுதி, then a listed tense letter. The texts, read against the page images:
+- **நில் → நின் + ற்.** நச்சினார்க்கினியர் (p. 203) and சேனாவரையர் (vol. 2 p. 13), both on சொல். வினையியல்
+  5: "நில்லென்பது லகரம் னகரமாய்த் தனக்கேற்ற றகரம் பெற்று நிற்கும்". மயிலைநாதர் (நன்னூல் 139, p. 145)
+  gives the same change for கொல், செல், வெல்: "லகாரம் னகாரமாகியும்".
+- **கொள் → கொண் + ட்.** நச்சினார்க்கினியர் (p. 467) and மயிலைநாதர் (p. 144): "கொள்ளென்பகுதி, கொண்டான் …
+  ளகாரம் ணகாரமாகியும்".
+- **கல் → கற் + ற், கேள் → கேட் + ட், வில் → விற் + ற்.** No Tholkappiyam commentator names these
+  verbs. The citation is a chain of three texts:
+  1. The join is Tholkappiyam's: எழுத்து. புள்ளிமயங்கியல் 71 with 37 (ல் before a hard consonant becomes
+     ற்) and 101 with 7 (ள் becomes ட்). நச்சினார்க்கினியர்: "லகரம் றகரமாய்த் திரிந்துமுடியும்"
+     (கற்குறை). These are stated for a பெயர் in a வேற்றுமை join.
+  2. சங்கர நமச்சிவாயர் – சிவஞான முனிவர் (நன்னூல் 139, p. 145) say where a verb's stem changes belong:
+     "பகுபதவுறுப்பாக மாட்டெறிந்து கொண்ட மூன்று சந்தியுள்ளும் ஒன்பது விகாரத்துள்ளும்", that is, in the
+     புணர்ச்சி joins carried over to the பகுபதம்.
+  3. விசாகப் பெருமாளையர் (நன்னூல் 137, p. 114) names the verb: "கல் – கற்றான் என வீற்றுமெய்
+     வருமெய்யாகத் திரிந்தும்". சே. கிருஷ்ணமாசாரியார் (p. 125) adds கேள் – கேட்டான்.
+
+  வில் is கல்'s case exactly, and Saran's 2026-08-11 ruling (வில் + ற் + ஆன்) is applied:
+  `verb_paradigms.json` now has the lemma வில், not விற்.
+- **The same join is NOT a generator.** It would give *கொற்றான் for கொல், which is கொன்றான். So every
+  change is LISTED per verb in `punarchi.json → stem_alternants`, each with its own நூற்பா and quotations
+  and an `urai_scope` saying how far they reach. A curated stem with no entry stays parked.
+
+**Not settled: சொல் → சொன்னான்.** மயிலைநாதர் (on the எழுத்ததிகாரம் புறனடை) says only that it does not
+take the இன் இடைநிலை. விசாகப் பெருமாளையர் lists it among roots that change "பலவிதமாக" and leaves it
+to புணர்ச்சி விகாரம். Nothing splits the ன்ன். It stays parked, and its ன் stays labelled as the FST
+gives it. போனான்'s ன் has the same open question (not listed in 142) and was never in ruling (a).
+
+**Weight, stated.** For கல், கேள் and வில், the verb is named only by 19th- and 20th-century Nannūl
+commentators. The classical texts supply the join and where it applies. Saran may wish to rank these
+later commentators; if a classical commentary is found that names these verbs, it takes precedence.
+
+**Effect.** Every curated stem except சொல் now carries a cited விகாரம். The sweep is unchanged
+(origin 92 / 12 / 2; formation 26/29), because only சொன்னான் from ruling (a) is a sweep word.
+Non-finite FST coverage is no longer blocked on ruling (a).
+
+*Status: Decision 2's per-verb list superseded by D-030; Decision 1 and the readings stand.* *Links: D-023, D-028, D-030; code repo `data/grammar/punarchi.json` (stem_alternants, now pakuthi_vikaram),
+`data/verb_paradigms.json`, `data/classical/nannul_uraivalam_padaviyal.json`,
+`data/classical/verified_quotations.json`.*
+
+## D-030 · 2026-11-25 · A பகுதி's changes are one cited rule catalogue, not a list of verbs; சொல் follows நில்
+
+**Trigger.** Saran, on D-029: சொன்னான் and நின்றான் follow the same pattern for the root (நில் → நின்,
+சொல் → சொன்). Where no classical commentator gives a citation, the fallback is the Nannūl commentators,
+and their உரை may be pinned as sources. And the split variations should be a rule engine that combines
+the classical and the later sources, applied to any word, instead of being entered word by word.
+
+**What the per-verb list cost.** D-029 listed six roots by name. Every other verb whose root changes
+failed to rebuild: கொன்றான், சென்றான், வென்றான், நீண்டது, போன்றான், சான்றான். The FST decodes all of them
+correctly; only the list did not know them. The same probe found that the ந் before த் fired only after
+a vowel, so சேர்ந்தான், வாழ்ந்தான், தேய்ந்தான், வளர்ந்தான் failed too.
+
+**Decision 1: the catalogue is the commentator's own list of the kinds of change.** விசாகப் பெருமாளையர்,
+on நன்னூல் 137 (உரைவளம் 5, p. 114, read on the scan), lists how a verb's பகுதி changes when it joins its
+விகுதி, each with an example. Every kind becomes one rule in `punarchi.json → pakuthi_vikaram`:
+
+| Rule | Kind | His example | Also stated by |
+|---|---|---|---|
+| `muthanilai_kurukkal` | குறுக்கல் | தா → தந்தான் | நச்சினார்க்கினியர் (வா, "முதனிலை குறுகி"); மோசசு பொன்னையா (காண் / கண்) |
+| `muthal_aa_ekaram` | திரிதல் | சா → செத்தான் | — |
+| `kurukki_uyirmei_virithal` | குறுக்கல், விரித்தல் | வா → வருகிறான் | நச்சினார்க்கினியர் (வருகின்றான்) |
+| `naduk_kuril_neettal` | நீட்டல் | விரவு → விராவினான் | — |
+| `ayal_kurukki_ra_virithal` | குறுக்கல், விரித்தல் | கொணா → கொணர்ந்தான் | — |
+| `eetrumei_varumei_thirithal` | திரிதல் | கல் → கற்றான் | Tholkappiyam's join (புள்ளிமயங்கியல் 71/37/72, 101/7/102); சே. கிருஷ்ணமாசாரியார் (கேள்) |
+| `eetrumei_inam_thirithal` | திரிதல் | செல் → சென்றான் | நச்சினார்க்கினியர், சேனாவரையர் (நில்); மயிலைநாதர் (கொல், செல், வெல், கொள்) |
+
+Two kinds he lists are catalogued but not applied, each with the reason: முதல் நீளல் (செல் → சேறல்; every
+example also needs the final ல்/ள் to change before a vowel, which no rule states yet) and இயல்பும்
+விகாரமும் உறழ்தல் (முழுகு → மூழ்கினான்; two changes at once). The framework is the commentators' on நன்னூல்
+139: a பகுதி's changes lie within the three changes at a join and the nine விகாரம் (Tholkappiyam புணரியல் 7,
+சொல். எச்சவியல் 7; Nannūl 154–156). Each rule's `kind` is its name there.
+
+**Decision 2: the word decides which change applies, not the root's shape.** The same passage says roots
+of one shape (கல், நில், சொல்) change in different ways ("ஒரு நிகராகிய பகுதிகள் பலவிதமாக
+விகாரப்படுதலால்"), so they cannot be listed one by one and the change is found from usage. D-029 read the
+*கொற்றான் problem as a reason to list verbs. The commentator's answer is usage, and in analysis the
+word being decoded is the usage. The engine tries every rule on every verb and keeps the split whose
+join rebuilds the word; exactly one does. Generation cannot choose this way: joining நில் + ற் + ஆன்
+offers both நின்றான் and நிற்றான், and the code says so.
+
+**Decision 3: சொல் → சொன் is the ல் before a nasal; its ன் is a tense letter under நன்னூல் 144.** Saran's
+reading holds on the texts. Tholkappiyam: a ல்-final word joins as a ன்-final one (புள்ளிமயங்கியல் 71), which
+before a nasal is ன் (72); Nannūl 227 states the same. The ன் after it is not among நூற்பா 142's four, but
+144 ends "இவை சில இல". சங்கர நமச்சிவாயர் (p. 228) reads it as: tense may then be shown by the ending, the
+root, or ANOTHER இடைநிலை. கூழங்கைத் தம்பிரான் (same page) names the verbs: "நக்கான், புக்கான்,
+சொன்னான், போனான், வைச்சான்". That closes போனான்'s ன் as well.
+
+**Decision 4: the Nannūl commentators are the fallback, as Saran ruled.** Each rule cites the Tholkappiyam
+commentator first where one states it, then the Nannūl commentator. The pin of நன்னூல் உரைவளம் 5 grows
+by leaf as rules need it (now leaves 114, 117, 125, 144, 145, 150, 228). Eleven passages were read against
+the scan pages and added to `verified_quotations.json`. Two notes from the pages: p. 114 prints சா → செத்தான்
+as "ஏகாரமாகியும்" where the example shows எ (the rule follows the example); and மோசசு பொன்னையா
+calls காண் / கண் a root variant without naming the change, so `muthanilai_kurukkal`'s label for காண்
+comes from the earlier commentators.
+
+**Decision 5: the ந் before த் comes after ய், ர், ழ் as well as after a vowel.** நச்சினார்க்கினியர் names
+the letter (D-028); the Nannūl commentators' lists of past forms show where it comes: வாழ்ந்தான் (p. 114),
+சேர்ந்தான், கொணர்ந்தான் (p. 114), தேய்ந்தான் (முகவை இராமானுச கவிராயர், p. 117).
+
+**Also fixed.** The engine counted a vowel sign as a letter, so வா was two letters and a one-letter-root
+rule could not fire. One existing guard (`otru_irattal`'s two-letter case) had never been reachable for
+the same reason; correcting it changed no result.
+
+**Weight, stated.** Four of the seven rules rest only on Nannūl commentators: `muthal_aa_ekaram`,
+`naduk_kuril_neettal`, `ayal_kurukki_ra_virithal`, and the ந் after ய்/ர்/ழ். This is the fallback Saran named.
+The commentators range from மயிலைநாதர், the oldest, to the 20th century; each quotation names its commentator.
+
+**Effect.** The sweep is unchanged: origin 92 / 12 / 2; formation 26/29. All 26 now have every step
+cited, and none is parked. Outside the sweep, every verb named above now rebuilds. No rule rests on a
+course book: காண் → கண் moved from TVA to the commentaries. 439 tests pass.
+
+*Status: active.* *Links: D-023, D-028, D-029; code repo `data/grammar/punarchi.json` (pakuthi_vikaram),
+`core/punarchi.py`, `data/grammar/idainilai.json`, `data/classical/verified_quotations.json`,
+`data/classical/nannul_uraivalam_padaviyal.json`.*

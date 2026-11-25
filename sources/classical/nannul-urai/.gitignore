@@ -1,0 +1,6 @@
+# The pinned scan and raw OCR are mirrored here on minnaham but kept out of git for size
+# (~150 MB scan, ~8 MB OCR). Checksums are in README.md and in the code repo's data/PINS.md and
+# scripts/build_nannul_uraivalam.py.
+*
+!.gitignore
+!README.md
