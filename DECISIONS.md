@@ -715,3 +715,81 @@ Photography on the site is public domain or CC0 only, recorded in `public/img/CR
 image inherits an attribution obligation the site could quietly break.
 
 *Status: active.* *Links: `WEBSITE-PLAN.md` §7, D-012 (licensing settled for the server), D-019.*
+
+## D-021 · 2026-11-24 · TVA material is CC BY-SA 4.0
+
+**Trigger.** The licence question put to the Tamil Virtual Academy in the 2026-08-08 letter (never
+sent) was answered during Saran's visit to TVA, Chennai, in November 2026.
+
+**Evidence.** In writing, on tamilvu.org (the கணித்தமிழ்ப் பேரவை page): *"தமிழ்ப்பெருங்களஞ்சியத்தில் உள்ள
+ஆக்கங்கள் படைப்பாக்கப் பொதுமங்கள் (CC BY-SA 4.0) என்னும் உரிமத்தின் கீழ் அளிக்கப்படுகின்றது."* That
+statement names the works of the தமிழ்ப்பெருங்களஞ்சியம். It is **extended to all TVA materials**:
+course books, கலைச்சொல் glossaries, the annotated corpus, and the archive.org collection.
+
+**Decision.**
+- TVA material is **CC BY-SA 4.0**, redistribution mode **serve-with-attribution** (D-016). The code
+  repo's registry (`data/sources.json`, D-017) and `LICENSING.md` record it, and a test asserts they
+  agree.
+- TVA-derived data (rule tables, glossary entries, corpus extracts) may ship with attribution and
+  stays share-alike, never Apache-2.0.
+- The course books stay out of git for **size**, no longer for licence. The `.gitignore` patterns
+  stay: a source document is still ignored by default and committed deliberately.
+- **TVA's servers are unreliable**, and TVA cannot restore them quickly. Read from tamilvu.org when it
+  is up and from `archive.org/details/TamilVirtualAcademy` (98,920 items, no licence metadata of its
+  own) when it is not. Proposed, not yet decided: a mirrored, checksummed corpus of TVA material in the
+  app's Postgres (raw bytes → decoded text → parsed units), so a TVA outage never blocks us.
+
+**What it unblocks.** The கலைச்சொல் glossaries can now replace S2PT, the one unlicensed source we ship,
+once they are found as data. The annotated corpus becomes usable as evaluation gold.
+
+*Status: active.* *Links: D-016, D-017, `sources/correspondence/`, code repo `LICENSING.md`.*
+
+## D-022 · 2026-11-24 · பிராகிருதம் is its own origin class, not வடசொல்
+
+**Trigger.** en.wiktionary changed மனிதன்'s etymology on 2026-08-25 from Sanskrit to **Prakrit**
+(`{{bor+|ta|pra|…}}`). The classifier had two borrowed classes, வடசொல் for Sanskrit and `loanword` for
+everything else, so it called மனிதன் a loanword and the 2026-11-24 sweep counted it wrong.
+
+**Ruling (Saran, 2026-11-24).** Prakrit (பிராகிருதம்) is **not** வடசொல். Where there is enough evidence
+that a word is from Prakrit, it gets its own class.
+
+**Decision.**
+- New origin class **பிராகிருதம்**, outside Tholkappiyam's four like `loanword`. Assigned only when a
+  source names Prakrit: Wiktionary codes `pra`, `pmh`, `psu`, `pka`. No மொழிமரபு verse is cited for
+  it, since Tholkappiyam's frame does not name it; the evidence is the etymology itself.
+- **Pali (`pi`) is not included.** The ruling named Prakrit, and extending it to a related language
+  would be our inference. Pali stays `loanword` until ruled.
+- மனிதன் moves to பிராகிருதம்; the sweep goes from 91/12/3 to **92/12/2**.
+
+*Status: active.* *Links: D-015 (orthography proves non-nativeness, etymology proves provenance).*
+
+## D-023 · 2026-11-24 · A split must rebuild its word; ambiguities are settled by texts, not rulings
+
+**Trigger.** Two linked problems. (1) The decoder builds a split from FST tags and never rebuilds
+the word, so material absent from the tags is dropped in silence: காத்திருந்தாள் decodes without its
+ந். (2) What the doubled consonant of a strong verb is called (வா + த் + த் + ஏன்) had three different
+answers in our own records, including two "rulings" that contradicted each other.
+
+**Decision 1: round-trip validity is a fundamental rule (Saran).** A word split is valid only if
+joining its parts back, under the **same** rule tables, rebuilds the word. Split and join follow one
+rule set. A split that does not rebuild its word declares a gap and never drops material. This is
+the definition of the defect-1 fix, and it gives the engine one rule set used in both directions.
+
+**Decision 2: grammar ambiguities are resolved from the texts.** Saran's direction: he will not
+settle an ambiguity by ruling, because a ruling made without a source becomes a rule nobody can
+check. The engine must follow a rule it can cite with confidence. Until that rule is found, the
+question is **parked**, and the engine names what it can ground and declares the rest a gap.
+
+**Applied now.** The doubled-consonant label is parked. The 2026-08-02 ("it is சந்தி") and 2026-08-08
+("it is not சந்தி") entries in `idainilai.json` are withdrawn as rulings. The சந்தி the decoder still
+emits is marked as an unruled label until the round-trip work replaces it. Rulings that do rest on a
+source stand.
+
+**Where the rules will come from.** The நூற்பா are terse; the classical உரை explain them with worked
+examples. Project Madurai's எழுத்ததிகாரம் with நச்சினார்க்கினியர் உரை (pmuni0516, same distribution
+terms as our pinned texts) has 485 units, 373 of them with `எ-டு … என வரும்` examples. Those examples
+are the natural fixtures for the round-trip engine. It numbers verses continuously and divides two
+இயல் differently from our pin, so it must be aligned by verse text, never by number.
+
+*Status: active.* *Links: D-014 (grammar rules as cited tables), D-018 (verse grounding), code repo
+`CLAUDE.md` KNOWN DECODER DEFECTS.*

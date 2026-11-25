@@ -33,8 +33,9 @@ thamizh-eval/results/*.txt
 thamizh-eval/results/*/
 
 # Source documents are reference material, not redistributables. Keep the folder structure and the
-# READMEs in git; do NOT commit third-party textbooks (TVA PDFs/ePUBs) even to this private repo
-# until redistribution terms are confirmed. Remove a pattern below if a document is cleared.
+# READMEs in git; do NOT commit third-party textbooks even to this repo until redistribution terms
+# are confirmed. TVA is CLEARED (CC BY-SA 4.0, D-021) but its books stay out for SIZE: a cleared
+# document is committed deliberately (git add -f), never by default.
 # FAIL-SAFE by extension, not by folder. The rule used to name sources/tva/ and
 # sources/classical/ explicitly, so a NEW source folder arrived unprotected —
 # sources/lexicon/ (a 1.25 GB Madras Lexicon ePub) was untracked-but-committable in this

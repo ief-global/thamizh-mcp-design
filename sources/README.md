@@ -27,6 +27,10 @@ The rule tables encode **facts about Tamil grammar** — the inventory of இட
 the six பகுபத உறுப்பு. Facts aren't copyrightable, and citing the source is scholarship. Redistributing
 complete third-party textbooks is a different act with a different licence question, so we don't.
 
+**TVA is the exception since 2026-11-24 (D-021):** its material is CC BY-SA 4.0, so TVA-derived data
+may ship with attribution and stays share-alike. The books themselves still stay out of git, now for
+size rather than licence. Other sources keep the default above until their terms are confirmed.
+
 ## Layout
 
 ```

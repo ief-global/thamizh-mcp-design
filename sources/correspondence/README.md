@@ -7,7 +7,7 @@ for a permission; one of them exists to credit work properly and offer something
 
 | Date | To | Asks | Status |
 |---|---|---|---|
-| 2026-08-08 | [Tamil Virtual Academy](2026-08-08-tamil-virtual-academy.md) | written licence for the archive.org collection · கலைச்சொல் glossaries as data | **DRAFT** — send first |
+| 2026-08-08 | [Tamil Virtual Academy](2026-08-08-tamil-virtual-academy.md) | written licence for the archive.org collection · கலைச்சொல் glossaries as data | **Not sent: answered in person, 2026-11.** Licence GRANTED (CC BY-SA 4.0, D-021); glossaries as data still open. [Reply](2026-11-tamil-virtual-academy-reply.md) |
 | 2026-08-19 | [Dr. K. Sarveswaran](2026-08-19-sarveswaran.md) | not a permission ask — credit, an offer of corrected data, and three questions | **DRAFT** — send any time |
 | 2026-08-08 | [DSAL, U. Chicago](2026-08-08-dsal-uchicago.md) | does the edition carry machine-readable etymology? · rate-limited query permission | **DRAFT** — send last |
 
