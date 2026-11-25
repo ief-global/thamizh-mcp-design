@@ -3,7 +3,7 @@
 > Read-across from the **code side** so the design side can see the real state of the server without
 > reading the repo. Mirror of the code repo's `CLAUDE.md` "Current state" — if the two disagree, the
 > code repo wins and this needs updating. Last updated **2026-11-24**.
-> Code: `github.com/ief-global/thamizh-mcp` (`main`). **361 tests pass** (the FST tests skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
+> Code: `github.com/ief-global/thamizh-mcp` (`main`). **376 tests pass** (the FST tests skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
 
 ## Shape
 
@@ -116,6 +116,6 @@ homograph's borrowed sense, and `force_refresh` never reached the etymology cach
 ## Not done
 
 Non-finite FST coverage · full புணர்ச்சி sandhi engine · storage backend abstraction (D-013) ·
-Phase-4 eval re-measure (D-005) · **a classical சொல்லதிகாரம் உரை to confirm or replace the
-provisional சந்தி label (D-026; resolve soon)** ·
+Phase-4 eval re-measure (D-005) · **applying the pinned சொல்லதிகாரம் உரை to the doubled-consonant
+label: pinned and read (D-027), Saran's call on what it settles** ·
 `{{af}}`/`{{ety}}` etymology templates not yet parsed · version still `0.1.0`, no release rung shipped.

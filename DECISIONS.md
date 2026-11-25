@@ -916,3 +916,50 @@ falls under ruling (a). Previously 9 had a parked step.
 
 *Status: active, provisional (see Decision 2).* *Links: D-021 (TVA licence), D-023, D-024, D-025; code
 repo `data/grammar/punarchi.json` → `irattitha_otru`, `CLAUDE.md` Next tasks 1.*
+
+## D-027 · 2026-11-25 · The சொல்லதிகாரம் உரை is pinned from TVA scans; what it says on the verb slot
+
+**Trigger.** D-026 labelled the strong-verb doubled consonant சந்தி on a TVA course book, provisionally,
+and made finding a classical உரை on சொல்லதிகாரம் an open item to resolve soon. Project Madurai holds
+நச்சினார்க்கினியர் on எழுத்ததிகாரம் and பொருளதிகாரம், but not on சொல்லதிகாரம். tamilvu.org's own
+Tholkappiyam library did not respond. Saran pointed to two Tamil Digital Library scans in TVA's
+archive.org collection.
+
+**Decision 1: pin both commentaries.** நச்சினார்க்கினியர் (சரசுவதி மகால் நூலகம், 1999) reads uniformly
+with the எழுத்ததிகாரம் உரை of D-024. இளம்பூரணர் (தமிழ்ப் பல்கலைக்கழகம், 1988) is the earliest
+commentator. Licence: CC BY-SA 4.0 under D-021.
+
+**Decision 2: the pinned text is archive.org's OCR, and it is labelled as OCR.** No typed etext of
+either commentary was found. The build (`scripts/build_sol_urai.py`, code repo) reads the `_djvu.xml`
+OCR, because it keeps each line's scan leaf. It aligns the OCR to our 463 verses by text: நச்சினார்க்கினியர்
+463/463, இளம்பூரணர் 462/463. Every unit names its scan pages. The scans, the OCR and the page maps are
+pinned by sha256 and mirrored in `sources/classical/sol-urai/`, outside git. The registry grades the pin
+**B**, not A, because the text is not proof-read; the commentators themselves are not in question.
+
+**Decision 3: a passage may back a rule only after it is read against the scan.** Passages checked
+that way are listed in `data/classical/verified_quotations.json` (code repo), transcribed as printed,
+the edition's misprints included. A test keeps each one findable in its unit.
+
+**Finding (scan-verified, all நச்சினார்க்கினியர்).**
+- He never calls any part of a verb **சந்தி**. His parts are முதனிலை, the tense letter, இடைநிலை எழுத்து,
+  ஈறு, and விகாரம.
+- Tense letters: "இக் கட தறக்கள் முதனிலையை யடுத்து வருங்கா லிறப்பு மீற்றினை யடுத்து வருங்கா
+  லெதிர்வு முணர்த்தும்" (வினையியல் 5, p. 205).
+- வந்தான்: "முதனிலை குறுகி, கால வெழுத்திற் கேற்ற விடை நிலை யெழுத்துப் பெற்று" (p. 467). The letter TVA
+  calls a சந்தி த் surfacing as ந் is, for him, an இடைநிலை letter suited to the tense letter.
+- Causatives (நடப்பித்தான் …): "இடை நிலையாகிய வெழுத்துக்களும் பெற்று", and the இ of வி becomes an
+  இடைநிலை (p. 237). This agrees with the 2026-08-02 ruling that வி is an இடைநிலை.
+- Feminine nouns: "தகர வொற்றிரட்டியு மிரண்டிடை நிலை யெழுத்துக்களைப் பெற்றும் … இடைநிலை
+  யெழுத்துக்களும் பெற்று" (p. 174). A doubled த ஒற்று is among the இடைநிலை letters, in nouns.
+- Ruling (a), ல்/ள் roots: "லகாரம் னகாரமாய்த் திரிந்து, தனக்கேற்ற றகர வொற்றுப் பெற்று" (கொன்றான்,
+  சென்றான், வென்றான்); "ளகாரம் ணகாரமாயும்" (கொண்டான்) (p. 467).
+- He does **not** split a strong verb's two த் (கொடுத்தான்) explicitly. இளம்பூரணர் says nothing on tense
+  letters. நச்சினார்க்கினியர் names சேனாவரையர் as one who separates them; that commentary is not pinned.
+
+**Open (Saran).** Under D-026 a classical commentary that names the slot outranks the course book.
+Whether these passages name the strong-verb slot, and whether `santhi_tha_na`'s ந் should follow, is
+Saran's call. Nothing in the engine changes until then. The same holds for ruling (a).
+
+*Status: active.* *Links: D-021, D-024, D-026; code repo `scripts/build_sol_urai.py`,
+`data/classical/tholkappiyam_sol_urai_*.json`, `data/classical/verified_quotations.json`.*
+
