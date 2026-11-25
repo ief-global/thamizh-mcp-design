@@ -1153,3 +1153,60 @@ course book: காண் → கண் moved from TVA to the commentaries. 439 
 *Status: active.* *Links: D-023, D-028, D-029; code repo `data/grammar/punarchi.json` (pakuthi_vikaram),
 `core/punarchi.py`, `data/grammar/idainilai.json`, `data/classical/verified_quotations.json`,
 `data/classical/nannul_uraivalam_padaviyal.json`.*
+
+## D-031 · 2026-11-25 · தேவநேயப் பாவாணர் breaks ties; the letter after the பகுதி is the சந்தி
+
+**Trigger.** Saran found பாவாணர்'s books in archive.org's TVA collection and asked for them to be
+pinned. He described பாவாணர் as authoritative, with his statements to be used to break ties. Three are
+pinned: பாவாணர் தமிழ்க் களஞ்சியம் 25, இயற்றமிழ் இலக்கணம் (tdl.48547-25), his grammar; களஞ்சியம் 19,
+வேர்ச்சொற் கட்டுரைகள் 3 (tdl.48510-19-3), his root-word essays; and தொல்காப்பியம் எழுத்ததிகாரம் with
+நச்சினார்க்கினியர் உரை and பாவாணர்'s footnotes (கழகம், 1972; dli.jZY9lup2kZl6TuXGlZQdjZMdl0Uy). The OCR of
+eight more volumes was searched for our open questions; இயற்றமிழ் இலக்கணம் answers three of them.
+
+**Decision 1: the letter that appears after the பகுதி is the சந்தி (Saran's choice).** §57 (p. 66):
+"சந்தியென்பது புணர்ச்சி. அது தோன்றல், திரிதல், கெடுதல் என்னும் மூவகைப் புணர்ச்சி விகாரங்களுள், தோன்றல்
+ஒன்றையே குறிக்கும் … பகுதியும் அதற்கடுத்த உறுப்பும் புணரும் புணர்ச்சியே சந்தியாகக் கூறப்படும். படித்தான்
+– படி + த் + தான் (த் + ஆன்) – த் சந்தி. வந்தான் – வ + ந் + தான் (த் + ஆன்) – ந் – சந்தி." This conflicted
+with D-028, which labelled both letters இடைநிலை எழுத்து after நச்சினார்க்கினியர். The question was put to
+Saran with the facts: நச்சினார்க்கினியர் names வந்தான்'s ந் but never splits a strong verb's two த்; he works
+in Tholkappiyam's frame, which does not use Nannūl 133's six உறுப்பு; பாவாணர் places both letters within
+those six, which is the label set the engine reports. Saran chose சந்தி for both. The rules are now
+`santhi_na` and `santhi_otru`, status `scholar`. நச்சினார்க்கினியர்'s passages stay cited as descriptions
+of the letter, and D-028's label is kept on each rule as `superseded`. This is the label's fourth state
+in its history: சந்தி (TVA, D-026), இடைநிலை எழுத்து (D-028), and சந்தி again on பாவாணர்.
+
+**Decision 2: பாவாணர் limits சந்தி to the பகுதி's join, and the engine follows him.** A doubled letter
+after another part (செய்வித்தான் = செய் + வி + த் + த் + ஆன், the த்த் after வி) is not a சந்தி by his
+definition. It keeps D-028's இடைநிலை எழுத்து (`irattitha_otru`), which still describes it.
+
+**Decision 3: போனான்'s ன் is the இடைநிலை இன் with its first letter dropped.** §104 (p. 32): "இன் என்னும்
+இடைநிலை ன் என முதல் குறைந்தும், இ எனக் கடை குறைந்தும் நிற்கும். உ-ம். போனான் – போ + ன் + ஆன்". D-030 had
+read the ன் as another இடைநிலை under நன்னூல் 144 (சங்கர நமச்சிவாயர், கூழங்கைத் தம்பிரான்). That is a tie
+between later sources, and பாவாணர் breaks it. New rule `in_muthal_kurai` (Nannūl 142 lists இன்; 156
+names the dropping of a first letter). சொன்னான் = சொல்(சொன்) + இன்(ன்) + ஆன்: he names போனான் only, and
+the rule applies to the same letter in சொன்னான்.
+
+**Decision 4: ruling (c)'s letter is உ.** §116 (p. 37): "உ, இ, ய் என்பன இறந்தகால வினையெச்ச விகுதிகள்; அ
+என்பது நிகழ்கால வினையெச்ச விகுதி; இன் என்பது எதிர்கால வினையெச்ச விகுதி" (the edition prints ய் as "-").
+`vikuthi.json` already had உ from TVA; it now carries this citation, and the reading of நன்னூல் 140's து
+as this விகுதி is set aside.
+
+**Decision 5: where பாவாணர் stands.** Status `scholar`, between a classical உரை and a course book.
+His statement decides a label where the classical sources are silent or disagree. When two splits both
+rebuild a word, the engine still prefers the one resting on the older text. A நூற்பா is never set aside
+for him. Also cited from §60 (p. 67): "புணர்ச்சி விகாரம் சந்தியுளடங்குதலாற் பகுதியின் விகாரம் என்பதே சிறந்த
+கொள்கையாகும்", that is, the விகாரம் உறுப்பு is the change in the பகுதி, the catalogue of D-030.
+
+**Pinned, not yet cited.** The 1972 edition's footnotes are mostly glosses, and none falls on a verse
+our rules cite. களஞ்சியம் 19 studies வேர்ச்சொல், the etymological root: a different notion from the
+பகுதி this engine splits off. It is pinned for a later வேர் feature. His other root-word volumes (17,
+18, 20) and grammar essays (41) are in the same collection.
+
+**Also.** The written verb in the D-030 example is மூழ்கு, not மூழ் (Saran's correction).
+
+**Effect.** The sweep is unchanged in its counts. 442 tests pass.
+
+*Status: active.* *Links: D-026, D-028, D-030; code repo `data/grammar/punarchi.json` (santhi_na,
+santhi_otru, irattitha_otru, in_muthal_kurai), `data/grammar/idainilai.json`, `data/grammar/vikuthi.json`,
+`data/classical/pavanar_iyatramil_ilakkanam.json`, `scripts/build_pavanar.py`.*
+

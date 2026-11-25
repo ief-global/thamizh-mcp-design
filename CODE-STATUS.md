@@ -3,7 +3,7 @@
 > Read-across from the **code side** so the design side can see the real state of the server without
 > reading the repo. Mirror of the code repo's `CLAUDE.md` "Current state" — if the two disagree, the
 > code repo wins and this needs updating. Last updated **2026-11-24**.
-> Code: `github.com/ief-global/thamizh-mcp` (`main`). **440 tests pass** (the FST tests skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
+> Code: `github.com/ief-global/thamizh-mcp` (`main`). **442 tests pass** (the FST tests skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
 
 ## Shape
 
@@ -52,9 +52,9 @@ This is exactly the risk the evolving tier carries, and why the sweep is re-run 
 **From 2026-11-25 the formation figure counts a word only if its split rebuilds the word (D-023,
 D-025).** Before that, a word counted when it yielded more than one component, and five past-tense
 forms passed with a letter missing (`வந்தான்` as `வா + த் + ஆன்`, no ந்). The round-trip engine now
-finds that ந் and names it: `வா(வ) + ந்(இடைநிலை) + த்(இடைநிலை) + ஆன்`. Since D-028 that ந் and the
-strong-verb doubled consonant are both இடைநிலை எழுத்து on நச்சினார்க்கினியர்'s உரை, superseding the TVA
-course book's சந்தி (D-026). All 26 have every step cited, through a நூற்பா or a commentary quoted as
+finds that ந் and names it: `வா(வ) + ந்(சந்தி) + த்(இடைநிலை) + ஆன்`. Since D-031 that ந் and the
+strong-verb doubled consonant are the சந்தி on தேவநேயப் பாவாணர் (இயற்றமிழ் இலக்கணம் §57), after D-026
+(சந்தி on TVA) and D-028 (இடைநிலை எழுத்து on நச்சினார்க்கினியர்). All 26 have every step cited, through a நூற்பா, a commentary or பாவாணர், each quoted as
 read on the page; none is parked. Since D-030 a verb's stem change comes from one rule catalogue tried
 on every verb, not from a list, so சொன்னான் is cited and verbs outside the sweep (கொன்றான், சென்றான்,
 நீண்டது, வாழ்ந்தான்) rebuild too.
