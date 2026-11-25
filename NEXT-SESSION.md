@@ -1,14 +1,16 @@
 # Thamizh MCP — resume here next session
 
+> ⚠️ **SUPERSEDED — historical snapshot from 2026-07-03.** Do not resume from this file. Current
+> state lives in `CODE-STATUS.md` (this repo) and `CLAUDE.md` in `ief-global/thamizh-mcp`; settled
+> decisions in `DECISIONS.md`. Kept for history only.
+
 Last worked: 2026-07-03. Everything below is on disk and in git; the repo is PUBLIC.
 
 ## Git identity — SETTLED 2026-07-03 (use everywhere, every session)
 
 Canonical for ALL commits + all machines/sessions: **Saran Saravanan** /
-**saravanan3@duck.com** / GitHub **ssaravanan3**. (Duck alias forwards to the gmail
-and strips trackers; keeps the gmail out of public repos.) Legacy
-`asaravanan75@gmail.com` / GitHub **asaravanan75-eng** = family/legacy — never
-commit under it. `git config --global` is set to the duck identity on both boxes,
+**saravanan3@duck.com** / GitHub **ssaravanan3**. No other identity is ever used
+for commits, and no personal email address is written into these public repos. `git config --global` is set to the duck identity on both boxes,
 and history was rewritten so every thamizh-mcp commit is under ssaravanan3.
 
 ## Where we are

@@ -2,8 +2,8 @@
 
 > Read-across from the **code side** so the design side can see the real state of the server without
 > reading the repo. Mirror of the code repo's `CLAUDE.md` "Current state" — if the two disagree, the
-> code repo wins and this needs updating. Last updated **2026-08-11**.
-> Code: `github.com/ief-global/thamizh-mcp` (`main`). **266 tests pass** (5 skip without live foma).
+> code repo wins and this needs updating. Last updated **2026-11-24**.
+> Code: `github.com/ief-global/thamizh-mcp` (`main`). **266 tests pass** (5 skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
 
 ## Shape
 
@@ -23,17 +23,34 @@ changes, which validated that design).
 
 Live at **http://minnaham:8080** (systemd, 24/7). Terminals cannot shape Tamil — use the browser.
 
-## Measured quality — 108-word everyday sweep (re-measured 2026-08-11)
+## Measured quality — 108-word everyday sweep (re-measured 2026-11-24)
 
 `uv run python scripts/quality_sweep.py` in the code repo. This is the only honest read on quality;
 the expected labels inside it are **assessments, not authority**, and need Saran's eye.
 
-| | 2026-08-02 start | Session 2 end | Session 3 | now |
-|---|---|---|---|---|
-| **Origin** correct | 59 | 82 | 87 | **94** |
-| honest `unknown` | 30 | 23 | 18 | **11** |
-| **wrong** | 17 | 1 | 1 | **1** |
-| **Formation** decoded | — | 26/30 | 26/30 | **26/29 in-scope** |
+| | 2026-08-02 start | Session 2 end | Session 3 | 2026-08-11 | **2026-11-24** |
+|---|---|---|---|---|---|
+| **Origin** correct | 59 | 82 | 87 | 94 | **91** |
+| honest `unknown` | 30 | 23 | 18 | 11 | **12** |
+| **wrong** | 17 | 1 | 1 | 1 | **3** |
+| **Formation** decoded | — | 26/30 | 26/30 | 26/29 in-scope | **26/29 in-scope** ⚠️ |
+
+**The 2026-11-24 drop is upstream drift, not a code change.** No code that affects analysis merged
+between the two measurements (#30 touched docs only). en.wiktionary, our evolving etymology source,
+was edited under three sweep words:
+
+| Word | Upstream edit | What we now return |
+|---|---|---|
+| மனிதன் | 2026-08-25: etymology now `{{bor+\|ta\|pra\|…}}`, i.e. borrowed from **Prakrit**, no longer Sanskrit | `loanword` 0.80 (expected வடசொல்). **Open question for Saran:** does வடசொல் cover Prakrit borrowings? |
+| காலம் | 2026-11-10: Sanskrit origin rewritten in the new `{{ety\|…}}` / `{{af\|ta\|sa:काल\|-அம்}}` style | `இயற்சொல்` 0.60. Our parser reads only `bor`/`inh`/`der`, sees no relation, and falls through to native-by-default. **A parser gap, ours to fix.** |
+| கொடு | etymology now states Kannada/Malayalam cognates only, no `inh` template | honest `unknown`. Defensible: a cognate is not a stated inheritance. |
+
+This is exactly the risk the evolving tier carries, and why the sweep is re-run rather than trusted.
+
+⚠️ **The formation figure overstates quality.** A word counts as decoded when it yields more than one
+component; the split is never checked against the surface. Several past-tense forms lose a letter
+today (`வந்தான்` decodes as `வா + த் + ஆன்`, with no ந்). Fixing this (code repo `CLAUDE.md`, KNOWN
+DECODER DEFECTS 1) will make the number fall, because it will then be measuring the right thing.
 
 The 2026-08-11 re-measure was taken after the D-017 registry landed and is **unchanged** from
 2026-08-08 — by design. The registry's confidence caps are ceilings that all currently sit at or
@@ -94,5 +111,5 @@ homograph's borrowed sense, and `force_refresh` never reached the etymology cach
 ## Not done
 
 Non-finite FST coverage · full புணர்ச்சி sandhi engine · storage backend abstraction (D-013) ·
-Phase-4 eval re-measure (D-005) · **no CI yet** (`.github/workflows/` absent) · version still `0.1.0`,
-no release rung shipped.
+Phase-4 eval re-measure (D-005) · formation split not yet checked against the surface (see above) ·
+`{{af}}`/`{{ety}}` etymology templates not yet parsed · version still `0.1.0`, no release rung shipped.
