@@ -885,7 +885,7 @@ failing on it.
 *Status: active; Decision 5 superseded by D-026.* *Links: D-014, D-018, D-021, D-023, D-024; code repo `core/punarchi.py`,
 `data/grammar/punarchi.json`, `tests/test_roundtrip.py`.*
 
-## D-026 · 2026-11-25 · The doubled consonant is a சந்தி on the TVA course book, until a classical உரை says otherwise
+## D-026 · 2026-11-25 · The doubled consonant is a சந்தி on the TVA course book, until a classical உரை says otherwise (SUPERSEDED by D-028)
 
 **Trigger.** D-025 left the strong-verb doubled consonant (படி + க் + கிறு + ஆன்) named with no part
 label (ruling (d), parked under D-023). The strongest text found was TVA C0212 §5.3.5, a course book.
@@ -960,6 +960,66 @@ the edition's misprints included. A test keeps each one findable in its unit.
 Whether these passages name the strong-verb slot, and whether `santhi_tha_na`'s ந் should follow, is
 Saran's call. Nothing in the engine changes until then. The same holds for ruling (a).
 
-*Status: active.* *Links: D-021, D-024, D-026; code repo `scripts/build_sol_urai.py`,
-`data/classical/tholkappiyam_sol_urai_*.json`, `data/classical/verified_quotations.json`.*
+*Status: active; its Open item is resolved by D-028.* *Links: D-021, D-024, D-026, D-028; code repo
+`scripts/build_sol_urai.py`, `data/classical/tholkappiyam_sol_urai_*.json`,
+`data/classical/verified_quotations.json`.*
 
+## D-028 · 2026-11-25 · A classical commentary always outranks the course book; சேனாவரையர் pinned; the verb slots are இடைநிலை
+
+**Trigger.** D-027 pinned நச்சினார்க்கினியர் and இளம்பூரணர் and asked whether their passages name the
+strong-verb slot. Saran answered: a commentary by நச்சினார்க்கினியர், இளம்பூரணர் or சேனாவரையர் takes
+precedence over TVA, so fix the labels from the commentaries, always. Quoting these scholars gives
+the authenticity; a course book can make mistakes. He also pointed to சேனாவரையர்'s commentary in TVA's
+archive.org collection, and asked that archive.org's TVA collection be searched FIRST for sources
+from now on.
+
+**Decision 1: precedence, as a standing rule.** நூற்பா > classical உரை > TVA course book. The
+round-trip engine has a new join status `urai`: the analysis is stated by a commentary, in a passage
+read against its page image and listed by id in `data/classical/verified_quotations.json`. A rule's
+`urai_scope` says exactly how far the passage reaches. When two splits rebuild a word, the engine
+prefers fewer `textbook` steps, then fewer `urai` steps.
+
+**Decision 2: pin சேனாவரையர்.** தொல்காப்பிய உரைத்தொகை 6 and 7 (தமிழ்மண் பதிப்பகம், 2018, reprinting
+சி. கணேசையர்'s 1938 edition with his notes), archive.org `tdl.49552-6-1` and `tdl.49554-7-2`. It is the
+publisher's typeset PDF rather than a scan, so its OCR is clean. Two volumes are read as one text and
+every page names its volume. கணேசையர்'s notes follow each இயல்; units stop at "… முற்றிற்று" and at his
+note headings, so the notes are not part of the commentary text. 461/463 verses align (விளிமரபு 13 and
+உரியியல் 27 do not). The three-volume உரைக்கொத்து (`tdl.41274/41279/41281`, all commentators side by
+side) was not needed. Licence as D-021; the 2018 edition's own prefaces are not used.
+
+**Decision 3: the two verb slots are இடைநிலை, on நச்சினார்க்கினியர்.** None of the three commentators
+calls any part of a verb சந்தி.
+- **வந்தான்'s ந்** is "கால வெழுத்திற் கேற்ற இடைநிலை யெழுத்து" (சொல். எச்சவியல் 67, p. 467). Rule
+  `idainilai_na` (was `santhi_tha_na`). This supersedes TVA C0212 §5.3.6 and Saran's 2026-08-11 ruling
+  (a சந்தி த் surfacing as ந்). நன்னூல் 142 lists the TENSE-SHOWING இடைநிலை only, so it does not exclude
+  this letter.
+- **The strong-verb doubled consonant** (படி + க் + கிறு + ஆன்) is an இடைநிலை எழுத்து. Rule
+  `irattitha_otru`. Its support, stated with its limits: he counts a doubled த ஒற்று among "இரண்டு
+  இடைநிலை எழுத்துக்கள்" in feminine nouns (பெயரியல் 11, p. 174), calls the ச/த/ட of such nouns
+  இடைநிலை (p. 468), and calls the ஆ of உண்ணாநின்றான் an "இடைநிலை எழுத்து" (p. 469). That is his only
+  name for a letter between the முதனிலை and the ஈறு. **No commentator splits a strong verb's two த்
+  explicitly**; the label applies his name for a medial letter to the first of them. This supersedes
+  D-026's சந்தி on TVA C0212 §5.3.5.
+- **வா → வ and வா → வரு** are both "முதனிலை குறுகி" in the same passage, so both stem alternants
+  now carry குறுகல் on the commentary. The second had no named change before.
+
+**Finding: சேனாவரையர** (vol. 2, read against the rendered page).
+- He names the tense letters "the letters that stand above the ஈறு": "நெறிப்பாடாவது அவ் வீற்றுமிசை
+  நிற்கும் எழுத்து வேறுபாடு" (வினையியல் 4, p. 11). He does not split them further. கணேசையர் notes that,
+  unlike Nannūl, he does not call them இடைநிலை (note 7, p. 56). So he neither confirms nor contradicts
+  Decision 3.
+- நில் in the present: "நில்லென்பது லகாரம் னகாரமாய் றகாரம் பெற்று நிற்கும்" (வினையியல் 5, p. 13). This
+  has the same shape as நச்சினார்க்கினியர் on கொல்/செல்/வெல்.
+- கணேசையர் also notes that சேனாவரையர் seems to take the ஆ of உண்ணாநின்றான் as a சாரியை. நச்சினார்க்கினியர்
+  calls it an இடைநிலை எழுத்து. That ஆ is not decoded by the engine, so nothing turns on it yet.
+
+**Not changed: ruling (a).** The commentaries give the ல்/ள் shape (ல் → ன் + ற்; ள் → ண்) for கொல்,
+செல், வெல், நில், கொள். None of the three analyses சொல், கல், கேள் or வில்/விற். The paradigm
+restructure lands as one change, so `verb_paradigms.json` is untouched.
+
+**Effect.** Sweep unchanged (origin 92 / 12 / 2; formation 26/29). Every sweep step that rested on
+the course book now rests on the commentary; only காண் → கண் is still `textbook`.
+
+*Status: active.* *Links: D-021, D-023, D-026 (superseded), D-027; code repo `data/grammar/punarchi.json`
+(`idainilai_na`, `irattitha_otru`), `data/classical/verified_quotations.json`,
+`data/classical/tholkappiyam_sol_urai_senavaraiyar.json`.*
