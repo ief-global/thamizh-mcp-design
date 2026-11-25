@@ -793,3 +793,41 @@ are the natural fixtures for the round-trip engine. It numbers verses continuous
 
 *Status: active.* *Links: D-014 (grammar rules as cited tables), D-018 (verse grounding), code repo
 `CLAUDE.md` KNOWN DECODER DEFECTS.*
+
+## D-024 · 2026-11-24 · Tholkappiyam is pinned from its publisher, and the classical உரை joins the pins
+
+**Trigger.** Pinning நச்சினார்க்கினியர்'s commentary on எழுத்ததிகாரம் (Project Madurai pmuni0516) as a
+source of textual rules (D-023) meant comparing it with our pinned Tholkappiyam. That exposed 21 of
+our verses carrying a literal `?` where ஃ belongs. The source we had pinned, the tamilnation.org
+mirror, was also returning HTTP 503 that day. Project Madurai hosts the same etext itself
+(pmuni0100), so the two were diffed verse by verse.
+
+**Finding.** The mirror was lossy, far beyond the 21 verses. Against Project Madurai's own page it
+had: ஃ lost as U+FFFD (repaired in August) and as `?` (never repaired); the vowel sign ொ dropped in
+85 verses (`மெய்யடு` for `மெய்யொடு`); about 130 verses missing other characters; four verses glued
+into a neighbour and therefore not addressable; and பொருளதிகாரம்'s மரபியல் filed under செய்யுளியல்,
+with the real செய்யுளியல் absent. **In the other direction, every character of the old pin is present
+in the new one.** These verses were being quoted to users verbatim (D-018).
+
+**Decision.**
+1. **Pin from the publisher, never from a mirror.** Tholkappiyam is re-pinned from pmuni0100: 1,602
+   verses in 27 இயல் (was 1,486 in 26), every இயல் gap-free. The retired mirror and the reason are
+   recorded inside the artifact.
+2. **Pin the classical உரை.** நச்சினார்க்கினியர் on எழுத்ததிகாரம் ships as its own artifact, 480 units
+   with verse, commentary, worked examples and footnotes, under the same Project Madurai terms.
+3. **Align commentaries by text, never by number.** This edition numbers continuously and divides two
+   இயல் differently. Result: 479 of 483 verses aligned (median similarity 0.98), one printed merged
+   with its neighbour, three absent from the etext. Every verse is accounted for, and the builder
+   refuses to write the artifact if that stops being true.
+4. **Assert that text is clean, not that a repair ran.** The old test checked a repair counter and so
+   could never see the `?` corruption. The guard now asserts the absence of corruption directly.
+
+**Also found.** Project Madurai's Nannūl page was revised upstream after we pinned it, and our parser
+reads the revision into a different text for all but 14 verses. The builder now refuses to overwrite
+the verified Nannūl pin. Adopting the revision is open work, to be done the same way: verse by verse.
+
+**Why it matters beyond this PR.** Two of our three classical sources changed or failed underneath
+us in three months, and the archive.org mirror was offline the same day. This is the case for the
+mirrored corpus proposed under D-021.
+
+*Status: active.* *Links: D-011, D-018, D-021, D-023; code repo `data/PINS.md`, `tests/test_urai.py`.*

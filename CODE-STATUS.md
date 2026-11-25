@@ -3,7 +3,7 @@
 > Read-across from the **code side** so the design side can see the real state of the server without
 > reading the repo. Mirror of the code repo's `CLAUDE.md` "Current state" — if the two disagree, the
 > code repo wins and this needs updating. Last updated **2026-11-24**.
-> Code: `github.com/ief-global/thamizh-mcp` (`main`). **270 tests pass** (5 skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
+> Code: `github.com/ief-global/thamizh-mcp` (`main`). **279 tests pass** (5 skip without live foma). CI runs them on every PR; `ci-ok` is the required check on `main`.
 
 ## Shape
 
@@ -67,7 +67,7 @@ scope** for பகுபத உறுப்பிலக்கணம் — the �
 
 ## What changed in Session 2 (2026-08-02 → 08-05)
 
-**D-011 CLOSED.** Tholkappiyam (1486 நூற்பா) and Nannūl (462) pinned from **Project Madurai** as
+**D-011 CLOSED.** Tholkappiyam (1486 நூற்பா; **1602 since the 2026-11-24 re-pin, D-024**) and Nannūl (462) pinned from **Project Madurai** as
 version-locked, verse-addressable artifacts in `data/classical/`, checksummed in `data/PINS.md`,
 rebuildable via `scripts/build_classical.py --verify`. They ship publicly because Project Madurai
 grants distribution with its header intact — unlike the TVA books.

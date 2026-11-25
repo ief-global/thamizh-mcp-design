@@ -5,18 +5,26 @@ expansion. See `DESIGN.md` §4a for the per-topic priority table and the citatio
 
 ## Tholkappiyam — pinned edition: Project Madurai
 
-Pinned 2026-08-02. Project Madurai is an open, volunteer, worldwide initiative that prepares electronic
-texts of Tamil literary works and distributes them free. The community has put substantial effort into
-validating these texts and removing transcription errors, which is why it is the chosen gold source.
+**Re-pinned 2026-11-24 (D-024)** from Project Madurai's **own** etext. Project Madurai is an open,
+volunteer, worldwide initiative that prepares electronic texts of Tamil literary works and
+distributes them free.
 
-| அதிகாரம் | URL |
+| Text | URL |
 |---|---|
-| எழுத்ததிகாரம் | https://tamilnation.org/literature/grammar/mp100a |
-| சொல்லதிகாரம் | https://tamilnation.org/literature/grammar/mp100b |
-| பொருளதிகாரம் | https://tamilnation.org/literature/grammar/mp100c |
+| Tholkappiyam, all three அதிகாரம் | https://www.projectmadurai.org/pm_etexts/utf8/pmuni0100.html |
+| எழுத்ததிகாரம் with நச்சினார்க்கினியர் உரை | https://www.projectmadurai.org/pm_etexts/utf8/pmuni0516_01.html · `_02.html` |
+
+**Retired: the tamilnation.org mirror** (`mp100a/b/c`), pinned 2026-08-02. Compared verse by verse
+with Project Madurai's own page, it was lossy: ஃ lost (as U+FFFD and as `?`), the vowel sign ொ
+dropped, ~130 verses missing other characters, four verses glued into a neighbour, and மரபியல் filed
+under செய்யுளியல். **A mirror is not the source.** Pin from the publisher.
 
 **Required attribution.** Reproduce this header wherever the text or its derived citations are
 redistributed:
+
+Each pinned file has its own header and the code artifacts reproduce each verbatim. For the
+Tholkappiyam page it reads `© Project Madurai 1999 - 2004 …`, for the commentary `© Project Madurai,
+1998-2015. …`. The general form:
 
 ```
 © Project Madurai 1999-2001
